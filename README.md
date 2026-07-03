@@ -8,7 +8,7 @@
 
 [**🌐 Live demo → marvel.kirmesch.ru**](https://marvel.kirmesch.ru/)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-3ecf8e?style=flat-square)](https://marvel.kirmeschc.ru/)
+[![Live Demo](https://img.shields.io/badge/demo-online-3ecf8e?style=flat-square)](https://marvel.kirmesch.ru/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e23636?style=flat-square)](LICENSE)
 [![Made with D3.js](https://img.shields.io/badge/made%20with-D3.js%20v7-f2a900?style=flat-square)](https://d3js.org)
 ![No build step](https://img.shields.io/badge/build-none%20·%20vanilla%20JS-5b8def?style=flat-square)
@@ -88,7 +88,7 @@ I welcome contributions — new characters, connections, titles or fixes. Open a
 
 ## 📄 License & credits
 
-Code — [MIT](LICENSE) © **Kirill Denisovich Meshcheryakov** ([kirmeschc.ru](https://kirmeschc.ru) · [GitHub](https://github.com/meschc) · [Telegram](https://t.me/kirillmeschc)).
+Code — [MIT](LICENSE) © **Kirill Denisovich Meshcheryakov** ([kirmesch.ru](https://kirmesch.ru) · [GitHub](https://github.com/meschc) · [Telegram](https://t.me/kirillmeschc)).
 
 Non-commercial fan project. Marvel characters, names, logos and artwork are property of **Marvel / The Walt Disney Company**. Images are loaded from public Fandom wikis ([MCU Wiki](https://marvelcinematicuniverse.fandom.com), [Marvel Database](https://marvel.fandom.com), [Into the Spider-Verse Wiki](https://intothespiderverse.fandom.com)) under CC-BY-SA, for informational use.
 
@@ -96,6 +96,6 @@ Built with [D3.js](https://d3js.org) and [Feather Icons](https://feathericons.co
 
 <div align="center">
 
-⭐ If you like it, star the repo — [**open the live map**](https://marvel.kirmeschc.ru/)
+⭐ If you like it, star the repo — [**open the live map**](https://marvel.kirmesch.ru/)
 
 </div>

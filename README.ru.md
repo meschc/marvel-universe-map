@@ -8,7 +8,7 @@
 
 [**🌐 Открыть карту → marvel.kirmesch.ru**](https://marvel.kirmesch.ru/)
 
-[![Демо](https://img.shields.io/badge/демо-онлайн-3ecf8e?style=flat-square)](https://marvel.kirmeschc.ru/)
+[![Демо](https://img.shields.io/badge/демо-онлайн-3ecf8e?style=flat-square)](https://marvel.kirmesch.ru/)
 [![Лицензия: MIT](https://img.shields.io/badge/лицензия-MIT-e23636?style=flat-square)](LICENSE)
 [![Сделано на D3.js](https://img.shields.io/badge/на-D3.js%20v7-f2a900?style=flat-square)](https://d3js.org)
 ![Без сборки](https://img.shields.io/badge/сборка-нет%20·%20ванильный%20JS-5b8def?style=flat-square)
@@ -84,11 +84,11 @@ DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_
 
 ## 🤝 Вклад
 
-Я рад правкам — новые персонажи, связи, тайтлы и исправления. Откройте pull request или заведите issue по готовому шаблону в [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Изменения данных затрагивают только `data.js`, их легко ревьюить.
+Я рад правкам — новые персонажи, связи, тайтлы или исправления. Откройте pull request или заведите issue по готовому шаблону в [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Изменения данных затрагивают только `data.js`, их легко ревьюить.
 
 ## 📄 Лицензия и авторство
 
-Код — [MIT](LICENSE) © **Мещеряков Кирилл Денисович** ([kirmeschc.ru](https://kirmeschc.ru) · [GitHub](https://github.com/meschc) · [Telegram](https://t.me/kirillmeschc)).
+Код — [MIT](LICENSE) © **Мещеряков Кирилл Денисович** ([kirmesch.ru](https://kirmesch.ru) · [GitHub](https://github.com/meschc) · [Telegram](https://t.me/kirillmeschc)).
 
 Некоммерческий фан-проект. Персонажи, названия, логотипы и изображения Marvel принадлежат **Marvel / The Walt Disney Company**. Иллюстрации загружаются с публичных вики Fandom ([MCU Wiki](https://marvelcinematicuniverse.fandom.com), [Marvel Database](https://marvel.fandom.com), [Into the Spider-Verse Wiki](https://intothespiderverse.fandom.com)) под CC-BY-SA, в информационных целях.
 
@@ -96,6 +96,6 @@ DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_
 
 <div align="center">
 
-⭐ Понравилось — поставь звезду репозиторию · [**открыть карту**](https://marvel.kirmeschc.ru/)
+⭐ Понравилось — поставь звезду репозиторию · [**открыть карту**](https://marvel.kirmesch.ru/)
 
 </div>
