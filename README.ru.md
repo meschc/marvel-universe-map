@@ -6,7 +6,7 @@
 
 **Интерактивный граф всей мультивселенной Marvel — персонажи, фильмы, сериалы и комиксы, и все связи между ними.**
 
-[**🌐 Открыть карту → marvel.kirmeschc.ru**](https://marvel.kirmeschc.ru/)
+[**🌐 Открыть карту → marvel.kirmesch.ru**](https://marvel.kirmesch.ru/)
 
 [![Демо](https://img.shields.io/badge/демо-онлайн-3ecf8e?style=flat-square)](https://marvel.kirmeschc.ru/)
 [![Лицензия: MIT](https://img.shields.io/badge/лицензия-MIT-e23636?style=flat-square)](LICENSE)
