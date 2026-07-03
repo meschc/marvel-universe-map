@@ -6,7 +6,7 @@
 
 **An interactive graph of the entire Marvel multiverse — characters, movies, series and comics, and every connection between them.**
 
-[**🌐 Live demo → marvel.kirmeschc.ru**](https://marvel.kirmesch.ru/)
+[**🌐 Live demo → marvel.kirmesch.ru**](https://marvel.kirmesch.ru/)
 
 [![Live Demo](https://img.shields.io/badge/demo-online-3ecf8e?style=flat-square)](https://marvel.kirmeschc.ru/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e23636?style=flat-square)](LICENSE)
