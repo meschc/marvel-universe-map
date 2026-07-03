@@ -11,7 +11,7 @@
 [![Демо](https://img.shields.io/badge/демо-онлайн-3ecf8e?style=flat-square)](https://marvel.kirmesch.ru/)
 [![Лицензия: MIT](https://img.shields.io/badge/лицензия-MIT-e23636?style=flat-square)](LICENSE)
 [![Сделано на D3.js](https://img.shields.io/badge/на-D3.js%20v7-f2a900?style=flat-square)](https://d3js.org)
-![Без сборки](https://img.shields.io/badge/сборка-нет%20·%20ванильный%20JS-5b8def?style=flat-square)
+![Без сборки](https://img.shields.io/badge/сборка-нет%20%C2·%20ванильный%20JS-5b8def?style=flat-square)
 
 🇬🇧 [English README](README.md)
 
