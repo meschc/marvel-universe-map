@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-default-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Карта Мультивселенной Marvel — интерактивный граф персонажей, фильмов и комиксов</title>
+<meta name="description" content="Хронология киновселенной Marvel и порядок просмотра фильмов и сериалов MCU, порядок чтения комиксов Marvel и связи между персонажами — на одной интерактивной карте: 360 героев, 139 фильмов и сериалов, 166 комиксов, 12 вселенных. Marvel timeline, MCU watch order and character connections map.">
+<meta name="keywords" content="хронология Marvel, хронология MCU, в каком порядке смотреть фильмы Marvel, порядок просмотра MCU, в каком порядке смотреть Марвел, связи персонажей Marvel, в каком порядке читать комиксы Marvel, карта Marvel, мультивселенная Marvel, таймлайн Marvel, Marvel timeline, MCU watch order, Marvel reading order, Marvel character connections, Мстители, Человек-паук, Люди Икс, Spider-Verse, Earth-616, Earth-828">
+<meta name="author" content="Кирилл Мещеряков">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://meschc.github.io/marvel-universe-map/">
+<meta name="theme-color" content="#0b0d14">
+<meta name="color-scheme" content="dark">
+<link rel="alternate" hreflang="ru" href="https://meschc.github.io/marvel-universe-map/">
+<link rel="alternate" hreflang="en" href="https://meschc.github.io/marvel-universe-map/">
+<link rel="alternate" hreflang="x-default" href="https://meschc.github.io/marvel-universe-map/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Marvel Multiverse Map">
+<meta property="og:title" content="Карта Мультивселенной Marvel — интерактивный граф">
+<meta property="og:description" content="Хронология Marvel, порядок просмотра фильмов MCU, порядок чтения комиксов и связи персонажей — интерактивная карта: 360 героев, 139 фильмов, 166 комиксов, 12 вселенных.">
+<meta property="og:url" content="https://meschc.github.io/marvel-universe-map/">
+<meta property="og:image" content="https://meschc.github.io/marvel-universe-map/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ru_RU">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Карта Мультивселенной Marvel">
+<meta name="twitter:description" content="Хронология MCU, порядок просмотра фильмов, порядок чтения комиксов и связи персонажей Marvel — интерактивная карта.">
+<meta name="twitter:image" content="https://meschc.github.io/marvel-universe-map/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23e23636'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%23fff' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Карта Мультивселенной Marvel",
+  "url": "https://meschc.github.io/marvel-universe-map/",
+  "applicationCategory": "EntertainmentApplication",
+  "operatingSystem": "Web",
+  "inLanguage": ["ru", "en"],
+  "description": "Интерактивная карта связей между персонажами, фильмами, сериалами и комиксами Marvel.",
+  "author": { "@type": "Person", "name": "Кирилл Мещеряков", "url": "https://kirmeschc.ru" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"В каком порядке смотреть фильмы и сериалы Marvel (MCU)?","acceptedAnswer":{"@type":"Answer","text":"На карте есть режим «Истории» с двумя раскладками: по фазам MCU и по внутренней хронологии событий. Хронологический вид показывает фильмы и сериалы в порядке событий во вселенной, а не по дате выхода — это и есть порядок просмотра."}},
+    {"@type":"Question","name":"Как устроена хронология киновселенной Marvel?","acceptedAnswer":{"@type":"Answer","text":"Карта раскладывает 139 фильмов и сериалов по оси времени: горизонтальные полосы — вселенные (MCU, Sony, Fox, анимация), внутри — годы событий. Видно, что за чем следует и как пересекаются линии."}},
+    {"@type":"Question","name":"В каком порядке читать комиксы Marvel?","acceptedAnswer":{"@type":"Answer","text":"Режим «Комиксы» показывает 166 выпусков в 12 линейках (серии Человека-паука, Людей Икс, Мстителей и др.) и раскладку «По хронологии» — по годам выхода, от первых появлений до классических событий."}},
+    {"@type":"Question","name":"Как связаны персонажи Marvel между собой?","acceptedAnswer":{"@type":"Answer","text":"Режим «Персонажи» — это граф из 360 героев и 710+ связей: команды, семья, романтические отношения, союзники, враги и альтернативные версии. Есть поиск кратчайшего пути между любыми двумя персонажами."}},
+    {"@type":"Question","name":"Что такое мультивселенная Marvel и какие вселенные есть?","acceptedAnswer":{"@type":"Answer","text":"На карте 12 вселенных: MCU (Земля-199999), комиксная Земля-616, Земля-828 («Первые шаги»), Spider-Verse, вселенные Sony и Fox, What If…? и космические сущности. Каждая выделена своим цветом."}}
+  ]
+}
+</script>
+</head>
+<body>
+<section class="seo-content" aria-hidden="false">
+  <h1>Карта Мультивселенной Marvel: хронология, порядок просмотра фильмов и связи персонажей</h1>
+  <p>Интерактивная карта вселенных Marvel собирает в одном месте <strong>хронологию киновселенной Marvel (MCU)</strong>, удобный способ понять, <strong>в каком порядке смотреть фильмы и сериалы</strong>, <strong>в каком порядке читать комиксы Marvel</strong>, и наглядный граф <strong>связей между персонажами Marvel</strong>. Всего на карте 360 персонажей, 139 фильмов и сериалов, 166 комиксов и 12 вселенных.</p>
+  <h2>Хронология MCU и порядок просмотра</h2>
+  <p>Режим «Истории» строит таймлайн фильмов и сериалов Marvel по фазам MCU и по внутренней хронологии событий. Так видно правильный порядок просмотра — по событиям во вселенной, а не только по дате выхода, — а также пересечения линий Sony, Fox и анимации.</p>
+  <h2>Порядок чтения комиксов Marvel</h2>
+  <p>Режим «Комиксы» показывает 166 выпусков в 12 линейках: серии Человека-паука, Людей Икс, Железного человека, Тора, Капитана Америки, Мстителей, космические и уличные серии, а также прологи к фильмам, первые появления героев и классические события. Раскладка «По хронологии» выстраивает их по годам выхода.</p>
+  <h2>Связи персонажей Marvel</h2>
+  <p>Граф персонажей показывает команды, семейные и романтические связи, союзников, врагов и альтернативные версии героев в мультивселенной. Можно найти кратчайший путь между любыми двумя персонажами — например, между Человеком-пауком и Тором.</p>
+  <h2>Вселенные Marvel</h2>
+  <p>Карта охватывает 12 вселенных: MCU (Земля-199999), комиксную Землю-616, Землю-828 из «Фантастической четвёрки: Первые шаги», Spider-Verse, вселенные Sony и Fox (Люди Икс), What If…? и космические сущности.</p>
+</section>
+<section class="seo-content" aria-hidden="false" lang="en">
+  <h2>Marvel Multiverse Map: timeline, MCU watch order and character connections</h2>
+  <p>An interactive map of the Marvel universes that brings together the <strong>Marvel Cinematic Universe (MCU) timeline</strong>, an easy way to figure out the <strong>order to watch the movies and shows</strong>, the <strong>Marvel comics reading order</strong>, and a visual graph of <strong>Marvel character connections</strong>. It covers 360 characters, 139 movies and series, 166 comics and 12 universes.</p>
+  <p>Use the Stories mode for the MCU watch order (by phase or in-universe chronology), the Comics mode for the reading order across 12 lines, and the Characters mode to explore teams, family, allies, enemies and multiverse variants — including the shortest path between any two heroes.</p>
+</section>
+<div id="app">
+  <svg id="graph"></svg>
+  <div id="topbar">
+    <div id="title-box">Marvel — Мультивселенная<span id="stats"></span></div>
+    <div id="mode-switch"><button data-mode="characters" class="active"></button><button data-mode="stories"></button><button data-mode="comics"></button></div>
+    <div id="story-layout-switch"><button data-slayout="phase" class="active"></button><button data-slayout="chrono"></button></div>
+    <div id="char-layout-switch"><button data-clayout="force" class="active"></button><button data-clayout="universe"></button></div><div id="comic-layout-switch"><button data-klayout="lines" class="active"></button><button data-klayout="chrono"></button></div>
+    <div id="lang-switch"><button data-lang="ru" class="active">RU</button><button data-lang="en">EN</button></div>
+    <div id="search-wrap"><svg class="ic search-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="search" autocomplete="off" role="searchbox" aria-label="Поиск по карте"><div id="search-results"></div></div>
+    <button id="filters-toggle"></button>
+  </div>
+  <div id="filters"></div>
+  <div id="detail">
+    <button id="detail-close" aria-label="Закрыть карточку"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <img id="detail-img" alt="" style="display:none" onerror="this.removeAttribute('src')">
+    <div id="detail-body-wrap"><div id="detail-body"></div></div>
+  </div>
+  <div id="path-banner"></div>
+  <div id="hint"></div>
+  <div id="contact"><button id="credits-btn" aria-label="О проекте"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>О проекте</button><a class="contact-mail" href="mailto:kirillmeschc@gmail.com"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>kirillmeschc@gmail.com</a></div>
+  <div id="credits-overlay">
+    <div id="credits-card">
+      <button class="cc-close" aria-label="Закрыть">✕</button>
+      <h2>Карта Мультивселенной Marvel</h2>
+      <div class="sub" id="cr-tagline">Интерактивная карта связей персонажей, фильмов, сериалов и комиксов Marvel.</div>
+      <div id="cr-body">
+        <h4 id="cr-h-about">О проекте</h4>
+        <div id="cr-about">Наглядная «карта входа» в мультивселенную: кто с кем связан, как пересекаются вселенные (MCU, Земля-616, Spider-Verse, Земля-828, Sony, Fox) и в каком порядке смотреть фильмы.</div>
+        <h4 id="cr-h-author">Автор</h4>
+        <div id="cr-author"><b>Кирилл Мещеряков</b> — идея, сбор и выверка данных, дизайн.</div>
+        <div id="cr-links" style="margin-top:6px">
+          <a href="https://kirmeschc.ru" target="_blank" rel="noopener">kirmeschc.ru</a> ·
+          <a href="https://github.com/meschc" target="_blank" rel="noopener">GitHub</a> ·
+          <a href="https://t.me/kirillmeschc" target="_blank" rel="noopener">Telegram</a> ·
+          <a href="mailto:kirillmeschc@gmail.com">Email</a>
+        </div>
+        <h4 id="cr-h-tech">Технологии</h4>
+        <div id="cr-tech">HTML + ванильный JavaScript · визуализация графа на D3.js v7 (force-simulation, zoom, drag) · SVG · CSS-переменные · иконки Feather · собрано и запрограммировано с помощью Claude (Claude Cowork от Anthropic).</div>
+        <h4 id="cr-h-data">Данные и изображения</h4>
+        <div id="cr-data"><a href="https://marvelcinematicuniverse.fandom.com" target="_blank" rel="noopener">MCU Wiki</a> · <a href="https://marvel.fandom.com" target="_blank" rel="noopener">Marvel Database</a> · <a href="https://intothespiderverse.fandom.com" target="_blank" rel="noopener">Spider-Verse Wiki</a></div>
+        <h4 id="cr-h-contact">Связь</h4>
+        <div><a href="mailto:kirillmeschc@gmail.com">kirillmeschc@gmail.com</a></div>
+        <div class="sub" id="cr-legal" style="margin-top:16px">Некоммерческий фан-проект. Персонажи, названия и изображения принадлежат Marvel / The Walt Disney Company. Код — MIT.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

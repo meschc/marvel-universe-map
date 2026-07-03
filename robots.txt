@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://meschc.github.io/marvel-universe-map/sitemap.xml
