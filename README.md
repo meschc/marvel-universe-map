@@ -6,9 +6,9 @@
 
 **An interactive graph of the entire Marvel multiverse — characters, movies, series and comics, and every connection between them.**
 
-[**🌐 Live demo → meschc.github.io/marvel-universe-map**](https://meschc.github.io/marvel-universe-map/)
+[**🌐 Live demo → marvel.kirmeschc.ru**](https://marvel.kirmeschc.ru/)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-3ecf8e?style=flat-square)](https://meschc.github.io/marvel-universe-map/)
+[![Live Demo](https://img.shields.io/badge/demo-online-3ecf8e?style=flat-square)](https://marvel.kirmeschc.ru/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e23636?style=flat-square)](LICENSE)
 [![Made with D3.js](https://img.shields.io/badge/made%20with-D3.js%20v7-f2a900?style=flat-square)](https://d3js.org)
 ![No build step](https://img.shields.io/badge/build-none%20·%20vanilla%20JS-5b8def?style=flat-square)
@@ -96,6 +96,6 @@ Built with [D3.js](https://d3js.org) and [Feather Icons](https://feathericons.co
 
 <div align="center">
 
-⭐ If you like it, star the repo — [**open the live map**](https://meschc.github.io/marvel-universe-map/)
+⭐ If you like it, star the repo — [**open the live map**](https://marvel.kirmeschc.ru/)
 
 </div>

@@ -6,9 +6,9 @@
 
 **Интерактивный граф всей мультивселенной Marvel — персонажи, фильмы, сериалы и комиксы, и все связи между ними.**
 
-[**🌐 Открыть карту → meschc.github.io/marvel-universe-map**](https://meschc.github.io/marvel-universe-map/)
+[**🌐 Открыть карту → marvel.kirmeschc.ru**](https://marvel.kirmeschc.ru/)
 
-[![Демо](https://img.shields.io/badge/демо-онлайн-3ecf8e?style=flat-square)](https://meschc.github.io/marvel-universe-map/)
+[![Демо](https://img.shields.io/badge/демо-онлайн-3ecf8e?style=flat-square)](https://marvel.kirmeschc.ru/)
 [![Лицензия: MIT](https://img.shields.io/badge/лицензия-MIT-e23636?style=flat-square)](LICENSE)
 [![Сделано на D3.js](https://img.shields.io/badge/на-D3.js%20v7-f2a900?style=flat-square)](https://d3js.org)
 ![Без сборки](https://img.shields.io/badge/сборка-нет%20·%20ванильный%20JS-5b8def?style=flat-square)
@@ -96,6 +96,6 @@ DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_
 
 <div align="center">
 
-⭐ Понравилось — поставь звезду репозиторию · [**открыть карту**](https://meschc.github.io/marvel-universe-map/)
+⭐ Понравилось — поставь звезду репозиторию · [**открыть карту**](https://marvel.kirmeschc.ru/)
 
 </div>
