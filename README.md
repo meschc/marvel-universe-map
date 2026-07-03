@@ -1,200 +1,123 @@
-# 🎬 Marvel Universe Interactive Map
+<div align="center">
 
-Интерактивная карта Marvel Cinematic Universe с полной визуализацией всех связей между персонажами, фильмами, сериалами и комиксами.
+<img src="og-image.png" alt="Marvel Multiverse Map" width="640">
 
-## 📊 Статистика
+# 🕸 Marvel Multiverse Map
 
-- **360 персонажей** — от основных героев до побочных
-- **139 фильмов & сериалов** — MCU Phases 1-6, One-shots, Disney+ Series
-- **166 комиксов** — 12 линеек: серии Человека-паука, Людей Икс, Железного человека, Тора, Капитана Америки, Космоса, Мстителей и Защитников улиц, плюс прологи к фильмам, адаптации, первые появления и классические события
+**An interactive graph of the entire Marvel multiverse — characters, movies, series and comics, and every connection between them.**
 
-### Логика отбора комиксов (чтобы не тонуть в тысячах выпусков)
+[**🌐 Live demo → meschc.github.io/marvel-universe-map**](https://meschc.github.io/marvel-universe-map/)
 
-Один узел на карте — это не отдельный выпуск, а **серия/ран целиком** («The Amazing Spider-Man Vol. 5, 2018–2022») или **ключевой веховый выпуск** (первое появление, знаковое событие: Civil War, Infinity Gauntlet). Критерий включения: (1) старт значимого тома/переезд героя в новый volume, (2) первое появление персонажа, который есть на карте, (3) кроссовер-событие, повлиявшее на экранизации. Обложка узла — первый выпуск серии. Так карта остаётся обозримой и показывает «скелет» издательской истории, а не каждый номер.
-- **12 вселенных** — MCU, Земля-616, Spider-Verse, Земля-828, Sony, Fox и другие
-- **713 связей** — взаимоотношения и переплетения
+[![Live Demo](https://img.shields.io/badge/demo-online-3ecf8e?style=flat-square)](https://meschc.github.io/marvel-universe-map/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-e23636?style=flat-square)](LICENSE)
+[![Made with D3.js](https://img.shields.io/badge/made%20with-D3.js%20v7-f2a900?style=flat-square)](https://d3js.org)
+![No build step](https://img.shields.io/badge/build-none%20·%20vanilla%20JS-5b8def?style=flat-square)
 
-## ✨ Возможности
+🇷🇺 [Русская версия README](README.ru.md)
 
-### Три режима просмотра
-1. **Персонажи** — Граф с Force layout или группировкой по вселенным
-   - Поиск по имени, реальному имени, актёру
-   - Фильтры: вселенная, группа (Avengers, X-Men), тип связи
-   - Вся информация: афилиации, появления в фильмах/сериалах/комиксах
-
-2. **Фильмы & Сериалы** — Временная шкала по фазам или хронологии
-   - Просмотры отслеживаются (кнопка "Watched")
-   - Связи: хронология, общие персонажи
-   - Для каждого: дата выхода, дата события, актёры, постер
-
-3. **Комиксы** — Каталог по линиям или дате выхода
-   - Tie-ins с MCU
-   - Персонажи в комиксах
-   - Связи между комиксами
-
-### Интерактивность
-- ✓ Полнотекстовый поиск (одна строка — все режимы)
-- ✓ Зум & панорамирование (mouse wheel, drag)
-- ✓ Динамические фильтры (сокрытие узлов в реальном времени)
-- ✓ Детальная информация при клике (side panel)
-- ✓ Кросс-ссылки между режимами (комикс → фильм → персонаж)
-- ✓ Путь между персонажами (Find path mode)
-- ✓ Просмотренные фильмы сохраняются (localStorage)
-
-### Поддержка языков
-- 🇷🇺 Русский
-- 🇬🇧 English
-
-### Адаптивность
-- Desktop, планшет, мобильный
-- Тёмный режим по умолчанию (CSS variables)
-
-## 🚀 Файлы проекта
-
-### Основной файл
-- **`index.html`** — Полнофункциональное веб-приложение (~590 КБ, один файл; копия `Marvel_Universe_Map_v6.html`)
-  - Встроены все данные (персонажи, фильмы, комиксы, связи)
-  - D3.js визуализация
-  - Динамический интерфейс с фильтрами
-  - Для библиотеки D3 (CDN) и изображений нужен интернет
-
-### Версии
-- `Marvel_Universe_Map.html` — базовая версия
-- `v2.html` — улучшения UI
-- `v3.html` — добавлены комиксы
-- `v4.html` — оптимизация производительности
-- `v5.html` — космические сущности, мультсериалы, вселенные персонажей
-- `v6.html` — **текущая**: Spider-Verse, Земля-828, 93 комикса, поиск пути, отметки просмотра
-
-## 🎮 Быстрый старт
-
-1. Откройте `Marvel_Universe_Map_v6.html` в браузере
-2. Используйте кнопки в верхнем левом углу для переключения режимов
-3. Ищите персонажей/фильмы через строку поиска
-4. Фильтруйте слева, смотрите детали справа
-
-### Горячие клавиши
-- `1` — Режим персонажей
-- `2` — Режим фильмов
-- `3` — Режим комиксов
-- `R` — Сбросить вид
-- `Esc` — Закрыть детали
-- `/` — Фокус на строку поиска
-- Drag node — Переместить (force layout)
-
-## 🛠 Для разработчиков
-
-Все инструкции в **`CLAUDE.md`**:
-- Архитектура (MODE, LAYOUT, data structures)
-- Добавление персонажей/фильмов/комиксов
-- Обновление локализации
-- Оптимизация производительности
-- Типичные задачи
-
-### Структура данных (в HTML)
-
-```javascript
-// Персонажи
-charNodes = [
-  { id, name, name_ru, group, universe, image, actor, wiki_url, ... }
-]
-charLinks = [
-  { source, target, type: 'team'|'family'|'romantic'|'ally'|'enemy'|'variant', label, weight }
-]
-
-// Фильмы/Сериалы
-storyNodes = [
-  { id, title, title_ru, type: 'movie'|'tv_series'|'one_shot', phase, poster, date, characters: [...] }
-]
-storyLinksRaw = [
-  { source, target, type: 'chronology'|'shared_characters' }
-]
-
-// Комиксы
-comicNodes = [
-  { id, title, title_ru, line, cover, date, tie_in, tie_in_chars: [...] }
-]
-comicLinksRaw = [
-  { source, target, type: 'sequence' }
-]
-```
-
-### Цвета & локализация
-
-```javascript
-UNIVERSE_COLORS = { 'Earth-199999': '#e23636', 'Spider-Verse': '#d500f9', ... }
-PHASE_COLORS = { '1': '#e23636', 'spiderverse': '#d500f9', ... }
-GROUP_COLORS = { avengers: '#e23636', spider_verse: '#ff3d7f', ... }
-
-UNIVERSE_LABELS() // { 'Earth-199999': 'Земля-199999 · MCU', ... }
-EDGE_LABELS() // { team: 'Команда/союз', ... }
-```
-
-## 🎨 Технологии
-
-- **D3.js 7.9.0** — Force simulation, zoom, drag
-- **Vanilla JS** — Без фреймворков, всё в одном файле
-- **SVG** — Crisp graphics, масштабируемо
-- **CSS переменные** — Легко менять тему
-
-## 📝 Примеры обновлений
-
-**Добавить персонажа:**
-Найти `charNodes`, добавить объект, указать группу, вселенную, связи.
-
-**Отметить фильм как просмотренный:**
-Откройте деталь фильма, нажмите "Watched" — сохраняется в browser.
-
-**Изменить цвет вселенной:**
-Отредактируйте `UNIVERSE_COLORS` в HTML.
-
-**Добавить новый язык:**
-Расширьте `UI()` функцию с новым языком.
-
-## ⚡ Производительность
-
-- **Один файл ~590 КБ** — все данные встроены; изображения подгружаются лениво (миниатюры с CDN Fandom)
-- **Визуализация:** 360 узлов, 710 рёбер без лага
-- **Зум/Панорама:** плавный 60 FPS
-- **Mobile:** оптимизировано для 720px ширины
-
-## 🔗 Источники данных
-
-- MCU Fandom Wiki: https://marvelcinematicuniverse.fandom.com/
-- Marvel Database: https://marvel.fandom.com/
-- Into the Spider-Verse Wiki: https://intothespiderverse.fandom.com/
-- Marvel Official: https://www.marvel.com/
-
-## 📁 Структура (разделённые файлы)
-
-```
-index.html    — разметка + SEO-мета, FAQ-разметка, подключение стилей и скриптов
-styles.css    — все стили и тёмная тема
-data.js       — данные (window.DATA): персонажи, истории, комиксы, связи
-app.js        — вся логика (D3-граф, режимы, поиск, фильтры, карточки)
-og-image.png  — превью для соцсетей (1200×630)
-robots.txt, sitemap.xml, .nojekyll — для поисковиков и GitHub Pages
-```
-
-`Marvel_Universe_Map_v6.html` (в родительской папке) — та же карта, собранная в один файл. Открывается двойным кликом где угодно.
-
-## 🚀 Публикация на GitHub Pages
-
-1. Создайте репозиторий `marvel-universe-map` на https://github.com/meschc и залейте туда содержимое папки `MARVEL`.
-2. **Settings → Pages → Deploy from a branch → main / (root).**
-3. Через минуту карта будет по адресу **https://meschc.github.io/marvel-universe-map/** (адрес уже прописан в canonical, og:url и sitemap).
-4. Перенесите шаблоны из `ISSUE_TEMPLATES.md` в `.github/ISSUE_TEMPLATE/`.
-5. Добавьте сайт в **Google Search Console** и **Яндекс.Вебмастер**, отправьте `sitemap.xml`.
-
-## 🔎 SEO
-
-Уникальные `title`/`description` под запросы (хронология MCU, порядок просмотра фильмов, порядок чтения комиксов, связи персонажей), ключевые слова RU+EN, Open Graph и Twitter-карточки с превью, `canonical` и `hreflang` (ru/en), структурированные данные `WebApplication` и `FAQPage` (ответы на ключевые вопросы прямо в поиске) и скрытый от глаз, но индексируемый блок с H1/H2. При смене домена обновите адрес в `index.html` (canonical, og:url, hreflang, JSON-LD), `sitemap.xml` и `robots.txt`.
-
-## 📄 Лицензия
-
-Код проекта — MIT (см. `LICENSE`). Некоммерческий фан-проект: все персонажи, названия и изображения принадлежат **Marvel / The Walt Disney Company**. Иллюстрации подгружаются с публичных вики Fandom (материалы сообществ — CC-BY-SA) и используются в информационных целях.
+</div>
 
 ---
 
-**Последнее обновление:** 2 июля 2026 г.  
-**Версия:** v6 (Final)
+## What is this
+
+**Marvel Multiverse Map** is a single-page, zero-dependency web app that lays out the whole Marvel universe as an explorable graph. It answers the questions fans actually ask:
+
+- **In what order do I watch the movies and shows?** → the in-universe chronology view.
+- **In what order do I read the comics?** → 166 issues across 12 lines, by release year.
+- **How is character A connected to character B?** → a force-directed graph with a shortest-path finder.
+- **How do the universes overlap?** → MCU, Earth-616, Earth-828, Spider-Verse, Sony, Fox, What If…? and more, colour-coded.
+
+<div align="center">
+
+|  |  |
+|:--:|:--:|
+| **360** characters | **710** connections |
+| **139** movies & series | **166** comics |
+| **12** universes | **RU / EN** |
+
+</div>
+
+## ✨ Features
+
+- **Three modes** — Characters (relationship graph), Stories (movie/series timeline), Comics (catalogue by line or by year).
+- **Two character layouts** — force-directed graph, or a "star" grouped by universe with the MCU at the centre.
+- **Path finder** 🧭 — the shortest chain of connections between any two heroes (e.g. Spider-Man → Thor).
+- **Global search** across characters, actors, movies and comics at once.
+- **Rich detail cards** — cast, appearances, affiliations, cross-links between modes, "where to watch / read".
+- **Bilingual** — English and Russian (extensible dropdown).
+- **Mobile-first controls** — bottom menu, slide-up sheets, tap-to-dismiss.
+- **Keyboard shortcuts** — `Esc` clear · `/` search · `1` / `2` / `3` modes · `R` reset view.
+- **Deep links** — `…/#iron_man` opens a character straight away.
+- **Fully static** — no backend, no build. Open the file, done.
+
+## 🎬 The three modes
+
+**Characters.** A D3 force simulation of 360 heroes and 710 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
+
+**Stories.** 139 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how Sony, Fox and animation lines interleave. This is the watch-order view.
+
+**Comics.** 166 key issues in 12 lines (Spider-Man, X-Men, Iron Man, Thor, Captain America, Avengers, Cosmic, Street-Level, plus movie preludes, adaptations, first appearances and classic events), viewable by line or on a shared release-year timeline.
+
+## 🚀 Run it
+
+It's a static site — no install, no build.
+
+```bash
+# just open it
+open index.html            # macOS
+# or serve locally
+python3 -m http.server 8000 # then visit http://localhost:8000
+```
+
+The single-file build `Marvel_Universe_Map_v6.html` (everything inlined) opens with a double-click anywhere.
+
+## 📁 Project structure
+
+```
+index.html    markup, SEO meta, structured data, script/style includes
+styles.css    all styles and the dark theme
+data.js       the data (window.DATA): characters, stories, comics, links
+app.js        all logic — D3 graph, modes, search, filters, cards, mobile UI
+og-image.png  social preview (1200×630)
+robots.txt · sitemap.xml · .nojekyll   for search engines & GitHub Pages
+```
+
+Data lives in `data.js` as one `DATA` object:
+
+```js
+DATA.characters.nodes  // { id, name, name_ru, actor, group, universe, image, … }
+DATA.characters.edges  // { source, target, type, label }   type: team|family|romantic|ally|enemy|variant
+DATA.stories.nodes     // { id, title, title_ru, type, phase, date, poster, characters[] }
+DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_in_chars[] }
+```
+
+### Add a character
+
+1. Add an object to `DATA.characters.nodes` in `data.js`.
+2. Add at least one edge to `DATA.characters.edges`.
+3. Refresh — the graph recomputes itself.
+
+Prefer not to touch code? Open an **Issue** using the templates in [`ISSUE_TEMPLATES.md`](ISSUE_TEMPLATES.md).
+
+## 🤝 Contributing
+
+Contributions are welcome — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates. Data changes only touch `data.js`, so they're easy to review.
+
+## 🔎 SEO
+
+Ships with unique title/description, RU+EN keywords, Open Graph & Twitter cards, canonical + hreflang, and `WebApplication` + `FAQPage` structured data so common questions surface directly in search.
+
+## 📄 License & credits
+
+Code — [MIT](LICENSE) © **Kirill Denisovich Meshcheryakov** ([kirmeschc.ru](https://kirmeschc.ru) · [GitHub](https://github.com/meschc) · [Telegram](https://t.me/kirillmeschc)).
+
+Non-commercial fan project. Marvel characters, names, logos and artwork are property of **Marvel / The Walt Disney Company**. Images are loaded from public Fandom wikis ([MCU Wiki](https://marvelcinematicuniverse.fandom.com), [Marvel Database](https://marvel.fandom.com), [Into the Spider-Verse Wiki](https://intothespiderverse.fandom.com)) under CC-BY-SA, for informational use.
+
+Built with [D3.js](https://d3js.org) and [Feather Icons](https://feathericons.com). Assembled and coded with the help of Claude (Claude Cowork by Anthropic).
+
+<div align="center">
+
+⭐ If you like it, star the repo — [**open the live map**](https://meschc.github.io/marvel-universe-map/)
+
+</div>
