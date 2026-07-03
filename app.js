@@ -1077,7 +1077,7 @@ function switchComicLayout(layout){
 function switchLang(lang){
   LANG = lang;
   store.set('lang', lang);
-  document.querySelectorAll('#lang-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-lang')===lang));
+  { const ls=document.getElementById('lang-select'); if(ls && ls.value!==lang) ls.value=lang; }
   refreshTexts();
   // stories & comics carry language-dependent band/axis labels, so rebuild them wholesale
   if (MODE==='stories') { buildStoryGraph(); return; }
@@ -1117,7 +1117,7 @@ function refreshStats(){
 }
 
 document.querySelectorAll('#mode-switch button').forEach(b=>b.addEventListener('click',()=>switchMode(b.getAttribute('data-mode'))));
-document.querySelectorAll('#lang-switch button').forEach(b=>b.addEventListener('click',()=>switchLang(b.getAttribute('data-lang'))));
+document.getElementById('lang-select').addEventListener('change', e=>switchLang(e.target.value));
 document.querySelectorAll('#story-layout-switch button').forEach(b=>b.addEventListener('click',()=>switchStoryLayout(b.getAttribute('data-slayout'))));
 document.querySelectorAll('#char-layout-switch button').forEach(b=>b.addEventListener('click',()=>switchCharLayout(b.getAttribute('data-clayout'))));
 document.querySelectorAll('#comic-layout-switch button').forEach(b=>b.addEventListener('click',()=>switchComicLayout(b.getAttribute('data-klayout'))));
@@ -1199,7 +1199,7 @@ if (bootHash) {
   else if (charById.has(bootHash)) bootMode = 'characters';
   else bootHash = null;
 }
-document.querySelectorAll('#lang-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-lang')===LANG));
+{ const ls=document.getElementById('lang-select'); if(ls) ls.value=LANG; }
 document.querySelectorAll('#char-layout-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-clayout')===CHAR_LAYOUT));
 document.querySelectorAll('#story-layout-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-slayout')===STORY_LAYOUT));
 document.querySelectorAll('#comic-layout-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-klayout')===COMIC_LAYOUT));

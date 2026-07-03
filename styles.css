@@ -101,7 +101,7 @@
     #search-wrap { flex:1 1 100%; order:4; }
     #story-layout-switch.show { display:flex; }
     /* filters button lives fixed at the bottom, above the sheet it opens, so it's always reachable to close it */
-    #filters-toggle { display:block; position:fixed; left:12px; bottom:12px; z-index:25;
+    #filters-toggle { display:inline-flex; align-items:center; gap:6px; position:fixed; left:12px; bottom:12px; z-index:25;
       background:var(--panel); border:1px solid var(--panel-border); color:var(--text-dim);
       border-radius:10px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.4); }
     #filters-toggle.active { background:var(--accent); color:#fff; }
@@ -123,7 +123,7 @@
 
 /* feather icons */
 .ic { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; vertical-align:-3px; display:inline-block; flex:0 0 auto; }
-#mode-switch button, #comic-layout-switch button, #story-layout-switch button, #char-layout-switch button, #filters-toggle, #credits-btn, #contact .contact-mail, .act-btn, #detail a.wiki { display:inline-flex; align-items:center; gap:6px; }
+#mode-switch button, #comic-layout-switch button, #story-layout-switch button, #char-layout-switch button, #credits-btn, #contact .contact-mail, .act-btn, #detail a.wiki { display:inline-flex; align-items:center; gap:6px; }
 #mode-switch button .ic, #filters-toggle .ic { width:14px; height:14px; }
 #detail-close .ic { width:15px; height:15px; vertical-align:middle; }
 #detail-close { display:flex; align-items:center; justify-content:center; }
@@ -135,3 +135,13 @@
 
 /* SEO content: доступно поисковикам и скринридерам, скрыто визуально */
 .seo-content { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+
+/* language dropdown (extensible: add more <option> in index.html) */
+#lang-select { background:var(--panel); color:var(--text); border:1px solid var(--panel-border); border-radius:10px;
+  padding:10px 30px 10px 14px; font-size:13px; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238890a4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 10px center; }
+#lang-select:hover { border-color:var(--accent); }
+#lang-select:focus { border-color:var(--accent); }
+#lang-select option { background:var(--panel); color:var(--text); }
+@media (max-width: 720px){ #lang-select { padding:8px 26px 8px 10px; font-size:12px; } }

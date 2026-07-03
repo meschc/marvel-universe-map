@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Карта Мультивселенной Marvel — интерактивный граф персонажей, фильмов и комиксов</title>
+<title>Marvel Multiverse Map — MCU timeline, watch order & character connections</title>
 <meta name="description" content="Хронология киновселенной Marvel и порядок просмотра фильмов и сериалов MCU, порядок чтения комиксов Marvel и связи между персонажами — на одной интерактивной карте: 360 героев, 139 фильмов и сериалов, 166 комиксов, 12 вселенных. Marvel timeline, MCU watch order and character connections map.">
 <meta name="keywords" content="хронология Marvel, хронология MCU, в каком порядке смотреть фильмы Marvel, порядок просмотра MCU, в каком порядке смотреть Марвел, связи персонажей Marvel, в каком порядке читать комиксы Marvel, карта Marvel, мультивселенная Marvel, таймлайн Marvel, Marvel timeline, MCU watch order, Marvel reading order, Marvel character connections, Мстители, Человек-паук, Люди Икс, Spider-Verse, Earth-616, Earth-828">
 <meta name="author" content="Кирилл Мещеряков">
@@ -17,7 +17,7 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Marvel Multiverse Map">
-<meta property="og:title" content="Карта Мультивселенной Marvel — интерактивный граф">
+<meta property="og:title" content="Marvel Multiverse Map — interactive character, movie & comic graph">
 <meta property="og:description" content="Хронология Marvel, порядок просмотра фильмов MCU, порядок чтения комиксов и связи персонажей — интерактивная карта: 360 героев, 139 фильмов, 166 комиксов, 12 вселенных.">
 <meta property="og:url" content="https://meschc.github.io/marvel-universe-map/">
 <meta property="og:image" content="https://meschc.github.io/marvel-universe-map/og-image.png">
@@ -27,7 +27,7 @@
 <meta property="og:locale:alternate" content="ru_RU">
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Карта Мультивселенной Marvel">
+<meta name="twitter:title" content="Marvel Multiverse Map">
 <meta name="twitter:description" content="Хронология MCU, порядок просмотра фильмов, порядок чтения комиксов и связи персонажей Marvel — интерактивная карта.">
 <meta name="twitter:image" content="https://meschc.github.io/marvel-universe-map/og-image.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23e23636'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%23fff' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
@@ -86,7 +86,7 @@
     <div id="mode-switch"><button data-mode="characters" class="active"></button><button data-mode="stories"></button><button data-mode="comics"></button></div>
     <div id="story-layout-switch"><button data-slayout="phase" class="active"></button><button data-slayout="chrono"></button></div>
     <div id="char-layout-switch"><button data-clayout="force" class="active"></button><button data-clayout="universe"></button></div><div id="comic-layout-switch"><button data-klayout="lines" class="active"></button><button data-klayout="chrono"></button></div>
-    <div id="lang-switch"><button data-lang="ru" class="active">RU</button><button data-lang="en">EN</button></div>
+    <div id="lang-wrap"><select id="lang-select" aria-label="Language / Язык"><option value="en">EN · English</option><option value="ru">RU · Русский</option></select></div>
     <div id="search-wrap"><svg class="ic search-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="search" autocomplete="off" role="searchbox" aria-label="Поиск по карте"><div id="search-results"></div></div>
     <button id="filters-toggle"></button>
   </div>
