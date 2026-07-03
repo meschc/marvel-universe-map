@@ -100,11 +100,6 @@
     #mode-switch button, #lang-switch button, #story-layout-switch button, #char-layout-switch button, #comic-layout-switch button, #filters-toggle { padding:8px 10px; font-size:12px; }
     #search-wrap { flex:1 1 100%; order:4; }
     #story-layout-switch.show { display:flex; }
-    /* filters button lives fixed at the bottom, above the sheet it opens, so it's always reachable to close it */
-    #filters-toggle { display:inline-flex; align-items:center; gap:6px; position:fixed; left:12px; bottom:12px; z-index:25;
-      background:var(--panel); border:1px solid var(--panel-border); color:var(--text-dim);
-      border-radius:10px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.4); }
-    #filters-toggle.active { background:var(--accent); color:#fff; }
 
     /* filters slide up from the bottom as a sheet instead of covering the whole screen */
     #filters { display:block; position:fixed; left:0; right:0; bottom:0; top:auto; width:100%;
@@ -147,19 +142,15 @@
 @media (max-width: 720px){ #lang-select { padding:8px 26px 8px 10px; font-size:12px; } }
 
 /* ===== mobile controls (hidden on desktop) ===== */
-#m-menu-btn, #m-top, #m-backdrop, .m-sheet, #m-filters-close { display:none; }
+#m-top, #m-backdrop, .m-sheet, #m-filters-close, #m-tabbar { display:none; }
+:root { --m-tabbar-h: 60px; }
 @media (max-width: 720px) {
   /* keep only the title in the top bar; move everything else into sheets */
   #topbar { pointer-events:none; }
   #mode-switch, #story-layout-switch, #char-layout-switch, #comic-layout-switch,
-  #lang-wrap, #search-wrap, #filters-toggle, #contact { display:none !important; }
+  #lang-wrap, #filters-toggle, #contact { display:none !important; }
+  #topbar #search-wrap { display:none !important; }
   #title-box { pointer-events:auto; }
-
-  /* bottom-left menu button */
-  #m-menu-btn { display:inline-flex; align-items:center; gap:6px; position:fixed; left:12px; bottom:12px; z-index:26;
-    background:var(--panel); border:1px solid var(--panel-border); color:var(--text); font-size:13px; font-weight:600;
-    padding:11px 16px; border-radius:12px; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.45); }
-  #m-menu-btn .ic { width:16px; height:16px; }
 
   /* top-right actions (search + credits) */
   #m-top { display:flex; gap:8px; position:fixed; top:10px; right:10px; z-index:26; }
@@ -173,10 +164,11 @@
     visibility:hidden; transition:opacity 0.2s; }
   #m-backdrop.show { opacity:1; visibility:visible; }
 
-  /* bottom sheets */
-  .m-sheet { display:block; position:fixed; left:0; right:0; bottom:0; width:100%; max-height:78vh; overflow:auto; z-index:30;
+  /* bottom sheets — sit above the persistent tab bar */
+  .m-sheet { display:block; position:fixed; left:0; right:0;
+    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); width:100%; max-height:70vh; overflow:auto; z-index:30;
     background:var(--panel); border-top:1px solid var(--panel-border); border-radius:18px 18px 0 0;
-    padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px)); transform:translateY(105%); transition:transform 0.28s ease;
+    padding:18px 16px 20px; transform:translateY(105%); transition:transform 0.28s ease;
     box-shadow:0 -6px 28px rgba(0,0,0,0.55); }
   .m-sheet.open { transform:translateY(0); }
   .m-sheet-title { font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); margin:0 0 14px; }
@@ -184,20 +176,29 @@
     top:12px; right:12px; width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border);
     color:var(--text); border-radius:50%; cursor:pointer; z-index:2; }
   .m-sheet-close .ic, #m-filters-close .ic { width:16px; height:16px; }
-  #m-filters-close { align-items:center; justify-content:center; position:fixed; top:calc(35vh + 8px); right:16px;
+  #m-filters-close { align-items:center; justify-content:center; position:fixed;
+    top:calc(30vh + 8px); right:16px;
     width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border); color:var(--text);
     border-radius:50%; cursor:pointer; z-index:32; }
 
-  /* controls relocated into the nav sheet */
-  #m-nav-body { display:flex; flex-direction:column; gap:10px; }
-  #m-nav-body #mode-switch { width:100%; }
-  #m-nav-body #mode-switch button { flex:1; justify-content:center; padding:12px 8px; font-size:14px; }
-  #m-nav-body #story-layout-switch, #m-nav-body #char-layout-switch, #m-nav-body #comic-layout-switch { width:100%; }
-  #m-nav-body #story-layout-switch button, #m-nav-body #char-layout-switch button, #m-nav-body #comic-layout-switch button { flex:1; justify-content:center; padding:11px 8px; }
-  #m-nav-body #lang-wrap #lang-select { width:100%; }
-  #m-filters-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px 8px;
-    background:#1c2131; border:1px solid var(--panel-border); color:var(--text); border-radius:12px; font-size:14px; cursor:pointer; }
-  #m-filters-btn:hover, #m-filters-btn.active { border-color:var(--accent); }
+  /* persistent bottom tab bar: characters / stories / comics / filters */
+  #m-tabbar { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:34;
+    background:var(--panel); border-top:1px solid var(--panel-border);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)); box-shadow:0 -2px 14px rgba(0,0,0,0.4); }
+  #m-tabbar button { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    background:none; border:none; color:var(--text-dim); font-size:10.5px; line-height:1.1; padding:7px 2px;
+    border-radius:10px; cursor:pointer; }
+  #m-tabbar button .ic { width:20px; height:20px; }
+  #m-tabbar button.active { color:var(--accent); }
+  #m-tabbar button.active .ic { stroke:var(--accent); }
+
+  /* mobile-only quick controls (layout + language) injected at the top of the filters sheet */
+  #filters .m-quick-lang select { width:100%; margin-bottom:12px; background:var(--panel); color:var(--text);
+    border:1px solid var(--panel-border); border-radius:10px; padding:9px 12px; font-size:13px; }
+  #filters .m-quick-row { display:flex; gap:8px; margin-bottom:14px; }
+  #filters .m-quick-row button { flex:1; background:#1c2131; border:1px solid var(--panel-border); color:var(--text-dim);
+    border-radius:10px; padding:9px 6px; font-size:12.5px; cursor:pointer; }
+  #filters .m-quick-row button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 
   /* search sheet holds the moved search input */
   #m-search-body #search-wrap { display:block; width:100%; }
@@ -206,8 +207,20 @@
   #m-search-body #search-results:empty { display:none; }
 
   /* filters as a bottom sheet with its own close button + backdrop */
-  #filters { z-index:30; padding-top:16px; }
+  #filters { z-index:30; padding-top:16px; bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)) !important; }
 
   /* detail as a bottom sheet, above backdrop */
-  #detail { z-index:31; }
+  #detail { z-index:31; bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)) !important; }
+
+  /* About sheet slides up from the bottom, same as the other sheets */
+  #credits-overlay { display:block; background:transparent; align-items:unset; justify-content:unset;
+    padding:0; pointer-events:none; }
+  #credits-overlay.show { display:block; background:rgba(6,8,14,0.55); pointer-events:auto; }
+  #credits-card { position:fixed; left:0; right:0;
+    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); top:auto; width:100%; max-width:100%;
+    max-height:65vh; margin:0; border-radius:18px 18px 0 0; padding:20px 16px 22px;
+    transform:translateY(105%); transition:transform 0.28s ease; }
+  #credits-overlay.show #credits-card { transform:translateY(0); }
+  #credits-card .cc-close { display:inline-flex; align-items:center; justify-content:center;
+    width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border); border-radius:50%; }
 }
