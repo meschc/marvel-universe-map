@@ -19,9 +19,9 @@
 
 ---
 
-## What is this
+## What I built
 
-**Marvel Multiverse Map** is a single-page, zero-dependency web app that lays out the whole Marvel universe as an explorable graph. It answers the questions fans actually ask:
+I built a single-page, zero-dependency web app that lays out the whole Marvel universe as an explorable graph. It answers the questions I actually wanted answered as a fan:
 
 - **In what order do I watch the movies and shows?** → the in-universe chronology view.
 - **In what order do I read the comics?** → 166 issues across 12 lines, by release year.
@@ -29,6 +29,8 @@
 - **How do the universes overlap?** → MCU, Earth-616, Earth-828, Spider-Verse, Sony, Fox, What If…? and more, colour-coded.
 
 <div align="center">
+
+<img src="preview-graph.png" alt="Marvel Multiverse Map — character graph" width="880">
 
 |  |  |
 |:--:|:--:|
@@ -49,41 +51,27 @@
 - **Mobile-first controls** — bottom menu, slide-up sheets, tap-to-dismiss.
 - **Keyboard shortcuts** — `Esc` clear · `/` search · `1` / `2` / `3` modes · `R` reset view.
 - **Deep links** — `…/#iron_man` opens a character straight away.
-- **Fully static** — no backend, no build. Open the file, done.
+- **Fully static** — no backend, no build.
 
 ## 🎬 The three modes
 
 **Characters.** A D3 force simulation of 360 heroes and 710 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
 
-**Stories.** 139 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how Sony, Fox and animation lines interleave. This is the watch-order view.
+**Stories.** 139 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how the Sony, Fox and animation lines interleave. This is the watch-order view.
 
 **Comics.** 166 key issues in 12 lines (Spider-Man, X-Men, Iron Man, Thor, Captain America, Avengers, Cosmic, Street-Level, plus movie preludes, adaptations, first appearances and classic events), viewable by line or on a shared release-year timeline.
-
-## 🚀 Run it
-
-It's a static site — no install, no build.
-
-```bash
-# just open it
-open index.html            # macOS
-# or serve locally
-python3 -m http.server 8000 # then visit http://localhost:8000
-```
-
-The single-file build `Marvel_Universe_Map_v6.html` (everything inlined) opens with a double-click anywhere.
 
 ## 📁 Project structure
 
 ```
-index.html    markup, SEO meta, structured data, script/style includes
+index.html    markup, meta, structured data, script/style includes
 styles.css    all styles and the dark theme
 data.js       the data (window.DATA): characters, stories, comics, links
 app.js        all logic — D3 graph, modes, search, filters, cards, mobile UI
-og-image.png  social preview (1200×630)
-robots.txt · sitemap.xml · .nojekyll   for search engines & GitHub Pages
+og-image.png  social preview (1200×630)  ·  preview-graph.png  README preview
 ```
 
-Data lives in `data.js` as one `DATA` object:
+I keep the data in `data.js` as one `DATA` object:
 
 ```js
 DATA.characters.nodes  // { id, name, name_ru, actor, group, universe, image, … }
@@ -92,21 +80,11 @@ DATA.stories.nodes     // { id, title, title_ru, type, phase, date, poster, char
 DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_in_chars[] }
 ```
 
-### Add a character
-
-1. Add an object to `DATA.characters.nodes` in `data.js`.
-2. Add at least one edge to `DATA.characters.edges`.
-3. Refresh — the graph recomputes itself.
-
-Prefer not to touch code? Open an **Issue** using the templates in [`ISSUE_TEMPLATES.md`](ISSUE_TEMPLATES.md).
+To add a character I drop an object into `DATA.characters.nodes`, add at least one edge to `DATA.characters.edges`, and refresh — the graph recomputes itself.
 
 ## 🤝 Contributing
 
-Contributions are welcome — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates. Data changes only touch `data.js`, so they're easy to review.
-
-## 🔎 SEO
-
-Ships with unique title/description, RU+EN keywords, Open Graph & Twitter cards, canonical + hreflang, and `WebApplication` + `FAQPage` structured data so common questions surface directly in search.
+I welcome contributions — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates in [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Data changes only touch `data.js`, so they're easy to review.
 
 ## 📄 License & credits
 
