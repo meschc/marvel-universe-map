@@ -67,9 +67,11 @@ function readSearchUrl(title){
 // Fandom/Wikia serves images at their full original resolution by default (often
 // multiple MB for posters). Ask its image service for a small pre-scaled thumbnail
 // instead -- this is the single biggest win for load time and CPU/memory usage.
+const IS_MOBILE = (window.matchMedia && window.matchMedia('(max-width:720px)').matches) || (window.innerWidth||9999) <= 720;
 function thumbUrl(url, widthPx){
   if (!url) return url;
   if (url.indexOf('/revision/latest') === -1) return url;
+  if (IS_MOBILE) widthPx = Math.min(widthPx, 72); // smaller images on phones = faster load
   return url.replace('/revision/latest', '/revision/latest/scale-to-width-down/'+widthPx);
 }
 
@@ -392,7 +394,7 @@ function buildCharGraph(){
       lazyTasks.push(()=>{
         const pid = 'pat_'+d.id;
         defs.append('pattern').attr('id',pid).attr('width',1).attr('height',1).attr('patternContentUnits','objectBoundingBox')
-          .append('image').attr('href', thumbUrl(d.image,90)).attr('width',1).attr('height',1).attr('preserveAspectRatio','xMidYMin slice');
+          .append('image').attr('href', thumbUrl(d.image,90)).attr('xlink:href', thumbUrl(d.image,90)).attr('width',1).attr('height',1).attr('preserveAspectRatio','xMidYMin slice');
         body.attr('fill', 'url(#'+pid+')');
       });
     }
@@ -411,6 +413,13 @@ function buildCharGraph(){
     ticked();
     fitViewToNodes(charNodes, dims()[0], dims()[1]);
     sim.alpha(0.03); // already pre-settled; keep it calm so the view doesn't drift
+  } else if (IS_MOBILE) {
+    // phones: pre-settle synchronously then stop the simulation so the CPU is free
+    // for image decoding and touch interaction (continuous force sim tanks mobile perf)
+    sim.alpha(1); for (let k=0;k<140;k++) sim.tick();
+    ticked();
+    fitViewToNodes(charNodes, dims()[0], dims()[1]);
+    sim.alpha(0).stop();
   }
 }
 
@@ -578,7 +587,7 @@ function buildStoryGraph(){
       const body = sel.append('rect').attr('x',-rw/2).attr('y',-rh/2).attr('width',rw).attr('height',rh).attr('rx',7).attr('ry',7).attr('fill', PHASE_COLORS[d.phase]||'#888');
       lazyTasksS.push(()=>{
         sel.insert('image', 'rect.ring')
-          .attr('href', thumbUrl(d.poster,110))
+          .attr('href', thumbUrl(d.poster,110)).attr('xlink:href', thumbUrl(d.poster,110))
           .attr('x',-rw/2).attr('y',-rh/2).attr('width',rw).attr('height',rh)
           .attr('preserveAspectRatio','xMidYMid slice')
           .attr('pointer-events','none')
@@ -704,7 +713,7 @@ function buildComicsGraph(){
       const body = sel.append('rect').attr('x',-26).attr('y',-34).attr('width',52).attr('height',68).attr('rx',6).attr('ry',6).attr('fill', (LINE_COLORS[d.line]||'#f2a900'));
       lazyTasksC.push(()=>{
         sel.insert('image', 'rect.ring')
-          .attr('href', thumbUrl(d.cover,100))
+          .attr('href', thumbUrl(d.cover,100)).attr('xlink:href', thumbUrl(d.cover,100))
           .attr('x',-26).attr('y',-34).attr('width',52).attr('height',68)
           .attr('preserveAspectRatio','xMidYMid slice')
           .attr('pointer-events','none')
@@ -1211,6 +1220,58 @@ if (bootHash) {
     else { const nd=comicById.get(bootHash); if(nd){ showComicDetail(nd); focusNode(nd); applySelection(nd.id); } }
   }, 300);
 }
+
+// ---------- v6: mobile UI (bottom-left menu, top-right search/credits, bottom sheets) ----------
+function setupMobileUI(){
+  if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return;
+  const backdrop = document.getElementById('m-backdrop');
+  const navSheet = document.getElementById('m-sheet-nav');
+  const searchSheet = document.getElementById('m-sheet-search');
+  const filtersEl2 = document.getElementById('filters');
+  const filtersClose = document.getElementById('m-filters-close');
+  if (!backdrop || !navSheet) return;
+
+  // relocate the desktop controls into the bottom sheets (keeps all their handlers)
+  const navBody = document.getElementById('m-nav-body');
+  navBody.appendChild(document.getElementById('mode-switch'));
+  const fbtn = document.createElement('button');
+  fbtn.id = 'm-filters-btn';
+  fbtn.innerHTML = ic('sliders') + UI().filters_btn;
+  fbtn.addEventListener('click', ()=>{ closeMobile(); openFiltersSheet(); });
+  navBody.appendChild(fbtn);
+  navBody.appendChild(document.getElementById('story-layout-switch'));
+  navBody.appendChild(document.getElementById('char-layout-switch'));
+  navBody.appendChild(document.getElementById('comic-layout-switch'));
+  navBody.appendChild(document.getElementById('lang-wrap'));
+  document.getElementById('m-search-body').appendChild(document.getElementById('search-wrap'));
+
+  function anyOpen(){ return navSheet.classList.contains('open') || searchSheet.classList.contains('open') || filtersEl2.classList.contains('mobile-open') || detailEl.style.display==='block' || creditsOverlay.classList.contains('show'); }
+  function showBackdrop(){ backdrop.classList.add('show'); }
+  function syncBackdrop(){ backdrop.classList.toggle('show', anyOpen()); }
+  function closeMobile(){
+    navSheet.classList.remove('open'); searchSheet.classList.remove('open');
+    filtersEl2.classList.remove('mobile-open'); filtersClose.style.display='none';
+    creditsOverlay.classList.remove('show');
+    if (detailEl.style.display==='block'){ detailEl.style.display='none'; clearSelection(); }
+    backdrop.classList.remove('show');
+  }
+  window.__closeMobileSheets = closeMobile;
+  function openSheet(el){ closeMobile(); el.classList.add('open'); showBackdrop(); }
+  function openFiltersSheet(){ closeMobile(); filtersEl2.classList.add('mobile-open'); filtersClose.style.display='inline-flex'; showBackdrop(); }
+
+  document.getElementById('m-menu-btn').addEventListener('click', ()=> openSheet(navSheet));
+  document.getElementById('m-search-btn').addEventListener('click', ()=>{ openSheet(searchSheet); setTimeout(()=>{ const s=document.getElementById('search'); if(s) s.focus(); }, 120); });
+  document.getElementById('m-credits-btn').addEventListener('click', ()=>{ closeMobile(); localizeCredits(); creditsOverlay.classList.add('show'); showBackdrop(); });
+  filtersClose.addEventListener('click', ()=>{ filtersEl2.classList.remove('mobile-open'); filtersClose.style.display='none'; syncBackdrop(); });
+  document.querySelectorAll('.m-sheet-close').forEach(b=> b.addEventListener('click', closeMobile));
+  backdrop.addEventListener('click', closeMobile);
+
+  // choosing a mode from the menu closes the sheet
+  document.getElementById('mode-switch').addEventListener('click', (e)=>{ if (e.target.closest('button')) closeMobile(); });
+  // choosing a search result closes the search sheet
+  document.getElementById('m-search-body').addEventListener('click', (e)=>{ if (e.target.closest('#search-results [data-id]')) setTimeout(closeMobile, 80); });
+}
+setupMobileUI();
 }
 
 function safeInit(){

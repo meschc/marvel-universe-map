@@ -1,6 +1,8 @@
 MIT License
 
-Copyright (c) 2026 Kirill
+Copyright (c) 2026 Мещеряков Кирилл Денисович (Kirill Denisovich Meshcheryakov)
+
+Contact: kirillmeschc@gmail.com · https://kirmeschc.ru · https://github.com/meschc · https://t.me/kirillmeschc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---
-Note: Marvel characters, names and artwork are property of Marvel /
-The Walt Disney Company. Images are loaded from public Fandom wikis
-(community content under CC-BY-SA) for informational, non-commercial use.
-This license covers the project code only.
+This license covers the project source code only. Marvel characters, names,
+logos and artwork are the property of Marvel / The Walt Disney Company.
+Images are loaded from public Fandom wikis (community content under CC-BY-SA)
+and used for informational, non-commercial purposes.

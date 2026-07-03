@@ -145,3 +145,69 @@
 #lang-select:focus { border-color:var(--accent); }
 #lang-select option { background:var(--panel); color:var(--text); }
 @media (max-width: 720px){ #lang-select { padding:8px 26px 8px 10px; font-size:12px; } }
+
+/* ===== mobile controls (hidden on desktop) ===== */
+#m-menu-btn, #m-top, #m-backdrop, .m-sheet, #m-filters-close { display:none; }
+@media (max-width: 720px) {
+  /* keep only the title in the top bar; move everything else into sheets */
+  #topbar { pointer-events:none; }
+  #mode-switch, #story-layout-switch, #char-layout-switch, #comic-layout-switch,
+  #lang-wrap, #search-wrap, #filters-toggle, #contact { display:none !important; }
+  #title-box { pointer-events:auto; }
+
+  /* bottom-left menu button */
+  #m-menu-btn { display:inline-flex; align-items:center; gap:6px; position:fixed; left:12px; bottom:12px; z-index:26;
+    background:var(--panel); border:1px solid var(--panel-border); color:var(--text); font-size:13px; font-weight:600;
+    padding:11px 16px; border-radius:12px; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.45); }
+  #m-menu-btn .ic { width:16px; height:16px; }
+
+  /* top-right actions (search + credits) */
+  #m-top { display:flex; gap:8px; position:fixed; top:10px; right:10px; z-index:26; }
+  #m-top button { display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px;
+    background:var(--panel); border:1px solid var(--panel-border); color:var(--text); border-radius:12px; cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,0.4); }
+  #m-top button .ic { width:18px; height:18px; }
+
+  /* shared backdrop */
+  #m-backdrop { display:block; position:fixed; inset:0; background:rgba(6,8,14,0.55); z-index:29; opacity:0;
+    visibility:hidden; transition:opacity 0.2s; }
+  #m-backdrop.show { opacity:1; visibility:visible; }
+
+  /* bottom sheets */
+  .m-sheet { display:block; position:fixed; left:0; right:0; bottom:0; width:100%; max-height:78vh; overflow:auto; z-index:30;
+    background:var(--panel); border-top:1px solid var(--panel-border); border-radius:18px 18px 0 0;
+    padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px)); transform:translateY(105%); transition:transform 0.28s ease;
+    box-shadow:0 -6px 28px rgba(0,0,0,0.55); }
+  .m-sheet.open { transform:translateY(0); }
+  .m-sheet-title { font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); margin:0 0 14px; }
+  .m-sheet-close { display:inline-flex; align-items:center; justify-content:center; position:absolute;
+    top:12px; right:12px; width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border);
+    color:var(--text); border-radius:50%; cursor:pointer; z-index:2; }
+  .m-sheet-close .ic, #m-filters-close .ic { width:16px; height:16px; }
+  #m-filters-close { align-items:center; justify-content:center; position:fixed; top:calc(35vh + 8px); right:16px;
+    width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border); color:var(--text);
+    border-radius:50%; cursor:pointer; z-index:32; }
+
+  /* controls relocated into the nav sheet */
+  #m-nav-body { display:flex; flex-direction:column; gap:10px; }
+  #m-nav-body #mode-switch { width:100%; }
+  #m-nav-body #mode-switch button { flex:1; justify-content:center; padding:12px 8px; font-size:14px; }
+  #m-nav-body #story-layout-switch, #m-nav-body #char-layout-switch, #m-nav-body #comic-layout-switch { width:100%; }
+  #m-nav-body #story-layout-switch button, #m-nav-body #char-layout-switch button, #m-nav-body #comic-layout-switch button { flex:1; justify-content:center; padding:11px 8px; }
+  #m-nav-body #lang-wrap #lang-select { width:100%; }
+  #m-filters-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px 8px;
+    background:#1c2131; border:1px solid var(--panel-border); color:var(--text); border-radius:12px; font-size:14px; cursor:pointer; }
+  #m-filters-btn:hover, #m-filters-btn.active { border-color:var(--accent); }
+
+  /* search sheet holds the moved search input */
+  #m-search-body #search-wrap { display:block; width:100%; }
+  #m-search-body #search { width:100%; font-size:16px; padding:13px 14px 13px 40px; }
+  #m-search-body #search-results { position:static; margin-top:8px; max-height:52vh; display:block; }
+  #m-search-body #search-results:empty { display:none; }
+
+  /* filters as a bottom sheet with its own close button + backdrop */
+  #filters { z-index:30; padding-top:16px; }
+
+  /* detail as a bottom sheet, above backdrop */
+  #detail { z-index:31; }
+}
