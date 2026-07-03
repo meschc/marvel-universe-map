@@ -8,19 +8,19 @@
 <meta name="keywords" content="хронология Marvel, хронология MCU, в каком порядке смотреть фильмы Marvel, порядок просмотра MCU, в каком порядке смотреть Марвел, связи персонажей Marvel, в каком порядке читать комиксы Marvel, карта Marvel, мультивселенная Marvel, таймлайн Marvel, Marvel timeline, MCU watch order, Marvel reading order, Marvel character connections, Мстители, Человек-паук, Люди Икс, Spider-Verse, Earth-616, Earth-828">
 <meta name="author" content="Кирилл Мещеряков">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://marvel.kirmeschc.ru/">
+<link rel="canonical" href="https://marvel.kirmesch.ru/">
 <meta name="theme-color" content="#0b0d14">
 <meta name="color-scheme" content="dark">
-<link rel="alternate" hreflang="ru" href="https://marvel.kirmeschc.ru/">
-<link rel="alternate" hreflang="en" href="https://marvel.kirmeschc.ru/">
-<link rel="alternate" hreflang="x-default" href="https://marvel.kirmeschc.ru/">
+<link rel="alternate" hreflang="ru" href="https://marvel.kirmesch.ru/">
+<link rel="alternate" hreflang="en" href="https://marvel.kirmesch.ru/">
+<link rel="alternate" hreflang="x-default" href="https://marvel.kirmesch.ru/">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Marvel Multiverse Map">
 <meta property="og:title" content="Marvel Multiverse Map — interactive character, movie & comic graph">
 <meta property="og:description" content="Хронология Marvel, порядок просмотра фильмов MCU, порядок чтения комиксов и связи персонажей — интерактивная карта: 360 героев, 139 фильмов, 166 комиксов, 12 вселенных.">
-<meta property="og:url" content="https://marvel.kirmeschc.ru/">
-<meta property="og:image" content="https://marvel.kirmeschc.ru/og-image.png">
+<meta property="og:url" content="https://marvel.kirmesch.ru/">
+<meta property="og:image" content="https://marvel.kirmesch.ru/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_US">
@@ -29,19 +29,19 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Marvel Multiverse Map">
 <meta name="twitter:description" content="Хронология MCU, порядок просмотра фильмов, порядок чтения комиксов и связи персонажей Marvel — интерактивная карта.">
-<meta name="twitter:image" content="https://marvel.kirmeschc.ru/og-image.png">
+<meta name="twitter:image" content="https://marvel.kirmesch.ru/og-image.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23e23636'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%23fff' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Карта Мультивселенной Marvel",
-  "url": "https://marvel.kirmeschc.ru/",
+  "url": "https://marvel.kirmesch.ru/",
   "applicationCategory": "EntertainmentApplication",
   "operatingSystem": "Web",
   "inLanguage": ["ru", "en"],
   "description": "Интерактивная карта связей между персонажами, фильмами, сериалами и комиксами Marvel.",
-  "author": { "@type": "Person", "name": "Кирилл Мещеряков", "url": "https://kirmeschc.ru" },
+  "author": { "@type": "Person", "name": "Кирилл Мещеряков", "url": "https://kirmesch.ru" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
 </script>
@@ -101,8 +101,8 @@
   <div id="contact"><button id="credits-btn" aria-label="О проекте"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>О проекте</button><a class="contact-mail" href="mailto:kirillmeschc@gmail.com"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>kirillmeschc@gmail.com</a></div>
   <div id="credits-overlay">
     <div id="credits-card">
-      <button class="cc-close" aria-label="Закрыть">✕</button>
-      <h2>Карта Мультивселенной Marvel</h2>
+      <button class="cc-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <h2 id="cr-h-title">Карта Мультивселенной Marvel</h2>
       <div class="sub" id="cr-tagline">Интерактивная карта связей персонажей, фильмов, сериалов и комиксов Marvel.</div>
       <div id="cr-body">
         <h4 id="cr-h-about">О проекте</h4>
@@ -110,7 +110,7 @@
         <h4 id="cr-h-author">Автор</h4>
         <div id="cr-author"><b>Кирилл Мещеряков</b> — идея, сбор и выверка данных, дизайн.</div>
         <div id="cr-links" style="margin-top:6px">
-          <a href="https://kirmeschc.ru" target="_blank" rel="noopener">kirmeschc.ru</a> ·
+          <a href="https://kirmesch.ru" target="_blank" rel="noopener">kirmesch.ru</a> ·
           <a href="https://github.com/meschc" target="_blank" rel="noopener">GitHub</a> ·
           <a href="https://t.me/kirillmeschc" target="_blank" rel="noopener">Telegram</a> ·
           <a href="mailto:kirillmeschc@gmail.com">Email</a>
@@ -126,15 +126,19 @@
     </div>
   </div>
   <!-- mobile controls (hidden on desktop) -->
-  <button id="m-menu-btn" aria-label="Меню / Menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg><span>Menu</span></button>
   <div id="m-top">
     <button id="m-search-btn" aria-label="Поиск / Search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
     <button id="m-credits-btn" aria-label="О проекте / About"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
   </div>
   <div id="m-backdrop"></div>
-  <div id="m-sheet-nav" class="m-sheet"><button class="m-sheet-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="m-sheet-title" id="m-nav-title">Меню</div><div id="m-nav-body"></div></div>
   <div id="m-sheet-search" class="m-sheet"><button class="m-sheet-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="m-sheet-title" id="m-search-title">Поиск</div><div id="m-search-body"></div></div>
   <button id="m-filters-close" aria-label="Закрыть фильтры"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <nav id="m-tabbar">
+    <button data-tab="characters" class="active"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span data-tab-label="characters">Персонажи</span></button>
+    <button data-tab="stories"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span data-tab-label="stories">Истории</span></button>
+    <button data-tab="comics"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span data-tab-label="comics">Комиксы</span></button>
+    <button data-tab="filters"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span data-tab-label="filters">Фильтры</span></button>
+  </nav>
 </div>
 
 <script src="data.js"></script>
