@@ -1424,6 +1424,10 @@ const MSheet = (function(){
     bodyEl.innerHTML = '';
   }
   function syncTabbar(){
+    // on desktop init() returns false before `tabbar` is ever assigned, but
+    // refreshTexts() unconditionally calls MSheet.syncTabbar() on every mode/lang
+    // switch — guard here so desktop doesn't throw on every refresh.
+    if (!tabbar) return;
     tabbar.querySelectorAll('[data-tab]').forEach(b=>{
       const t = b.getAttribute('data-tab');
       const on = (t==='filters') ? current==='filters' : (t===MODE && current!=='filters');
