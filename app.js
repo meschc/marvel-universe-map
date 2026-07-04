@@ -1004,7 +1004,15 @@ function renderFilters(){
     el.style.opacity = activeUniverses.has(el.getAttribute('data-uni'))?1:0.35;
     el.addEventListener('click',()=>{ const uk=el.getAttribute('data-uni');
       if(activeUniverses.has(uk)){activeUniverses.delete(uk); el.style.opacity=0.35;} else {activeUniverses.add(uk); el.style.opacity=1;}
-      updateVisibilityChar(); });
+      updateVisibilityChar();
+      // TEMPORARY diagnostic: proves whether the click handler itself fires at all on
+      // the real device — if this never appears, the tap isn't reaching the element
+      // (something else is intercepting/blocking it); if it DOES appear but the filter
+      // still looks unchanged, the bug is in rendering/opacity, not event delivery.
+      if (typeof MSheet !== 'undefined' && document.getElementById('m-diag')) {
+        document.getElementById('m-diag').textContent = 'CLICK REGISTERED on data-uni="'+uk+'" at ' + new Date().toISOString().slice(11,19);
+      }
+    });
   });
   const tu = document.getElementById('toggle-all-uni');
   if (tu) tu.addEventListener('click',()=>{
@@ -1470,6 +1478,38 @@ const MSheet = (function(){
     document.body.classList.add('m-sheet-open');
     syncTabbar();
   }
+  // TEMPORARY on-screen diagnostics for the mobile filters bug: reported as "still not
+  // opening" after two rounds of CSS/JS fixes that both looked correct and both tested
+  // fine on a desktop-resized viewport. Since we can't reproduce on the actual device,
+  // render the facts we need directly on screen so a screenshot from the phone tells us
+  // what's really happening — no remote debugging setup required. Remove once resolved.
+  function showDiag(label){
+    let el = document.getElementById('m-diag');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'm-diag';
+      el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;'+
+        'font:10px/1.4 monospace;padding:8px;max-height:40vh;overflow:auto;white-space:pre-wrap;pointer-events:none;';
+      document.body.appendChild(el);
+    }
+    const f = document.getElementById('filters');
+    const cs = f ? getComputedStyle(f) : null;
+    const sheetCs = sheetEl ? getComputedStyle(sheetEl) : null;
+    const rect = f ? f.getBoundingClientRect() : null;
+    el.textContent = [label,
+      'filters.parentElement.id = ' + (f && f.parentElement ? f.parentElement.id : 'null'),
+      'filters computed display = ' + (cs ? cs.display : 'n/a'),
+      'filters computed visibility = ' + (cs ? cs.visibility : 'n/a'),
+      'filters computed pointerEvents = ' + (cs ? cs.pointerEvents : 'n/a'),
+      'filters inline style.display = ' + (f ? f.style.display : 'n/a'),
+      'filters rect = ' + (rect ? JSON.stringify({w:rect.width,h:rect.height,top:rect.top}) : 'n/a'),
+      'filters children count = ' + (f ? f.children.length : 'n/a'),
+      'sheetEl.classList = ' + (sheetEl ? sheetEl.className : 'n/a'),
+      'sheet computed transform = ' + (sheetCs ? sheetCs.transform : 'n/a'),
+      'sheet computed visibility = ' + (sheetCs ? sheetCs.visibility : 'n/a'),
+      'MSheet.current = ' + current,
+    ].join('\n');
+  }
   function init(){
     if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return false;
     sheetEl = document.getElementById('m-sheet');
@@ -1485,7 +1525,8 @@ const MSheet = (function(){
       b.addEventListener('click', ()=>{
         const t = b.getAttribute('data-tab');
         if (t === 'filters') {
-          if (current==='filters') close(); else open('filters', { title:UI().filters_btn, contentEl:filtersEl2 });
+          if (current==='filters') { close(); showDiag('AFTER close()'); }
+          else { open('filters', { title:UI().filters_btn, contentEl:filtersEl2 }); showDiag('AFTER open(\'filters\')'); }
           return;
         }
         close();
