@@ -389,19 +389,24 @@ function buildCharGraph(){
        .attr('stroke', uColor).attr('stroke-width', 2.6);
     if (d.image) {
       lazyTasks.push(()=>{
-        // a clipped <image> (same technique used for story posters/comic covers) is far
-        // more reliably rendered across browsers than an SVG <pattern> with an <image>
-        // inside it — WebKit/iOS Safari in particular has long-standing bugs where
-        // pattern-filled images silently fail to paint, which is what caused character
-        // photos to not show up on mobile.
-        const cid = 'clip_'+d.id;
-        defs.append('clipPath').attr('id',cid).append('circle').attr('r', r);
-        sel.insert('image', 'circle.ring')
-          .attr('href', thumbUrl(d.image,90)).attr('xlink:href', thumbUrl(d.image,90))
+        // HTML <img> inside <foreignObject>, clipped with CSS border-radius, instead of an
+        // SVG <image> inside a <clipPath>. iOS Safari has long-standing bugs where SVG
+        // <image>/<pattern> elements silently fail to paint (especially when inserted
+        // asynchronously via requestIdleCallback/setTimeout, as these are here) — a plain
+        // HTML <img> does not hit that code path and reliably paints on real iPhones.
+        const fo = sel.insert('foreignObject', 'circle.ring')
           .attr('x', -r).attr('y', -r).attr('width', r*2).attr('height', r*2)
-          .attr('preserveAspectRatio','xMidYMid slice')
-          .attr('clip-path', 'url(#'+cid+')')
-          .attr('pointer-events','none');
+          .attr('pointer-events','none')
+          .style('overflow','visible');
+        fo.append('xhtml:img')
+          .attr('src', thumbUrl(d.image,90))
+          .attr('loading','lazy')
+          .attr('draggable','false')
+          .style('width', (r*2)+'px').style('height', (r*2)+'px')
+          .style('border-radius','50%')
+          .style('object-fit','cover')
+          .style('display','block')
+          .style('pointer-events','none');
       });
     }
   });
@@ -840,26 +845,12 @@ const filtersEl = document.getElementById('filters');
 function renderFilters(){
   const u = UI(); let h='';
   if (IS_MOBILE){
-    // the mobile tab bar has no room for the desktop topbar's layout-switch/language
-    // controls, so they're rebuilt here, at the top of the filters sheet, on every render
+    // the mobile tab bar has no room for the desktop topbar's language control,
+    // so it's rebuilt here, at the top of the filters sheet, on every render
+    // (the layout switch — force/universe, phase/chrono, lines/chrono — lives in
+    // its own bar above the main tab bar, see renderSublayout())
     h += `<div class="m-quick-lang"><select id="mf-lang" aria-label="Language / Язык">`
        + `<option value="en">EN · English</option><option value="ru">RU · Русский</option></select></div>`;
-    if (MODE==='characters'){
-      h += `<div class="m-quick-row">`
-         + `<button data-clayout2="force" class="${CHAR_LAYOUT==='force'?'active':''}">${u.layout_force}</button>`
-         + `<button data-clayout2="universe" class="${CHAR_LAYOUT==='universe'?'active':''}">${u.layout_universe}</button>`
-         + `</div>`;
-    } else if (MODE==='stories'){
-      h += `<div class="m-quick-row">`
-         + `<button data-slayout2="phase" class="${STORY_LAYOUT==='phase'?'active':''}">${u.layout_phase}</button>`
-         + `<button data-slayout2="chrono" class="${STORY_LAYOUT==='chrono'?'active':''}">${u.layout_chrono}</button>`
-         + `</div>`;
-    } else {
-      h += `<div class="m-quick-row">`
-         + `<button data-klayout2="lines" class="${COMIC_LAYOUT==='lines'?'active':''}">${u.layout_lines}</button>`
-         + `<button data-klayout2="chrono" class="${COMIC_LAYOUT==='chrono'?'active':''}">${u.layout_chrono}</button>`
-         + `</div>`;
-    }
   }
   if (MODE==='characters'){
     h += `<h4>${u.filters_edges}</h4>`;
@@ -884,9 +875,6 @@ function renderFilters(){
   if (IS_MOBILE){
     const mfLang = document.getElementById('mf-lang');
     if (mfLang) { mfLang.value = LANG; mfLang.addEventListener('change', e=>switchLang(e.target.value)); }
-    filtersEl.querySelectorAll('[data-clayout2]').forEach(b=>b.addEventListener('click', ()=>switchCharLayout(b.getAttribute('data-clayout2'))));
-    filtersEl.querySelectorAll('[data-slayout2]').forEach(b=>b.addEventListener('click', ()=>switchStoryLayout(b.getAttribute('data-slayout2'))));
-    filtersEl.querySelectorAll('[data-klayout2]').forEach(b=>b.addEventListener('click', ()=>switchComicLayout(b.getAttribute('data-klayout2'))));
   }
 
   filtersEl.querySelectorAll('[data-edge]').forEach(el=>{
@@ -1100,6 +1088,7 @@ function switchStoryLayout(layout){
   clearSelection();
   buildStoryGraph();
   document.getElementById('hint').textContent = UI().hint_stories + ' · ' + UI().hotkeys;
+  renderSublayout();
 }
 function switchCharLayout(layout){
   CHAR_LAYOUT = layout;
@@ -1109,6 +1098,7 @@ function switchCharLayout(layout){
   clearSelection();
   buildCharGraph();
   document.getElementById('hint').textContent = (CHAR_LAYOUT==='universe'?UI().hint_universe:UI().hint) + ' · ' + UI().hotkeys;
+  renderSublayout();
 }
 function switchComicLayout(layout){
   COMIC_LAYOUT = layout;
@@ -1118,6 +1108,7 @@ function switchComicLayout(layout){
   clearSelection();
   buildComicsGraph();
   document.getElementById('hint').textContent = UI().hint_comics + ' · ' + UI().hotkeys;
+  renderSublayout();
 }
 function switchLang(lang){
   LANG = lang;
@@ -1158,6 +1149,34 @@ function refreshTexts(){
   const tCo = document.querySelector('#m-tabbar [data-tab="comics"] [data-tab-label]'); if (tCo) tCo.textContent = u.m_tab_comics;
   const tFi = document.querySelector('#m-tabbar [data-tab="filters"] [data-tab-label]'); if (tFi) tFi.textContent = u.m_tab_filters;
   if (window.__syncTabbar) window.__syncTabbar();
+  renderSublayout();
+}
+
+// bar of two buttons sitting just above the main tab bar (mobile only, hidden on
+// desktop via CSS) — shows the layout switch for whichever mode is active, so it's
+// always one tap away instead of buried inside the filters sheet
+function renderSublayout(){
+  const el = document.getElementById('m-sublayout');
+  if (!el) return;
+  const u = UI();
+  let h = '';
+  if (MODE==='characters'){
+    h = `<button data-sl="force" class="${CHAR_LAYOUT==='force'?'active':''}">${u.layout_force}</button>`
+      + `<button data-sl="universe" class="${CHAR_LAYOUT==='universe'?'active':''}">${u.layout_universe}</button>`;
+  } else if (MODE==='stories'){
+    h = `<button data-sl="phase" class="${STORY_LAYOUT==='phase'?'active':''}">${u.layout_phase}</button>`
+      + `<button data-sl="chrono" class="${STORY_LAYOUT==='chrono'?'active':''}">${u.layout_chrono}</button>`;
+  } else {
+    h = `<button data-sl="lines" class="${COMIC_LAYOUT==='lines'?'active':''}">${u.layout_lines}</button>`
+      + `<button data-sl="chrono" class="${COMIC_LAYOUT==='chrono'?'active':''}">${u.layout_chrono}</button>`;
+  }
+  el.innerHTML = h;
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+    const v = b.getAttribute('data-sl');
+    if (MODE==='characters') switchCharLayout(v);
+    else if (MODE==='stories') switchStoryLayout(v);
+    else switchComicLayout(v);
+  }));
 }
 function refreshStats(){
   const u = UI();
@@ -1244,7 +1263,15 @@ document.addEventListener('keydown', (ev)=>{
 });
 
 // восстановление состояния и deep-link
-LANG = store.get('lang', 'en');
+// если язык ещё не сохранён в localStorage — определяем его по языку браузера/ОС пользователя
+function detectDefaultLang(){
+  try {
+    const langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || navigator.userLanguage || 'en'];
+    for (const l of langs) { if (l && l.toLowerCase().startsWith('ru')) return 'ru'; }
+  } catch(e){}
+  return 'en';
+}
+LANG = store.get('lang', null) || detectDefaultLang();
 CHAR_LAYOUT = store.get('clayout', 'force');
 STORY_LAYOUT = store.get('slayout', 'phase');
 COMIC_LAYOUT = store.get('klayout', 'lines');

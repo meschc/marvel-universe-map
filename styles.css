@@ -142,8 +142,8 @@
 @media (max-width: 720px){ #lang-select { padding:8px 26px 8px 10px; font-size:12px; } }
 
 /* ===== mobile controls (hidden on desktop) ===== */
-#m-top, #m-backdrop, .m-sheet, #m-filters-close, #m-tabbar { display:none; }
-:root { --m-tabbar-h: 60px; }
+#m-top, #m-backdrop, .m-sheet, #m-filters-close, #m-tabbar, #m-sublayout { display:none; }
+:root { --m-tabbar-h: 60px; --m-sublayout-h: 50px; --m-reserved-h: calc(var(--m-tabbar-h) + var(--m-sublayout-h)); }
 @media (max-width: 720px) {
   /* keep only the title in the top bar; move everything else into sheets */
   #topbar { pointer-events:none; }
@@ -164,13 +164,13 @@
     visibility:hidden; transition:opacity 0.2s; }
   #m-backdrop.show { opacity:1; visibility:visible; }
 
-  /* bottom sheets — sit above the persistent tab bar */
+  /* bottom sheets — sit above the persistent tab bar (and the layout-switch bar, when present) */
   .m-sheet { display:block; position:fixed; left:0; right:0;
-    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); width:100%; max-height:70vh; overflow:auto; z-index:30;
+    bottom:calc(var(--m-reserved-h) + env(safe-area-inset-bottom,0px)); width:100%; max-height:70vh; overflow:auto; z-index:30;
     background:var(--panel); border-top:1px solid var(--panel-border); border-radius:18px 18px 0 0;
-    padding:18px 16px 20px; transform:translateY(105%); transition:transform 0.28s ease;
-    box-shadow:0 -6px 28px rgba(0,0,0,0.55); }
-  .m-sheet.open { transform:translateY(0); }
+    padding:18px 16px 20px; transform:translateY(105%); transition:transform 0.28s ease, visibility 0.28s;
+    box-shadow:0 -6px 28px rgba(0,0,0,0.55); visibility:hidden; }
+  .m-sheet.open { transform:translateY(0); visibility:visible; }
   .m-sheet-title { font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); margin:0 0 14px; }
   .m-sheet-close { display:inline-flex; align-items:center; justify-content:center; position:absolute;
     top:12px; right:12px; width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border);
@@ -181,8 +181,9 @@
     width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border); color:var(--text);
     border-radius:50%; cursor:pointer; z-index:32; }
 
-  /* persistent bottom tab bar: characters / stories / comics / filters */
-  #m-tabbar { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:34;
+  /* persistent bottom tab bar: characters / stories / comics / filters —
+     highest z-index of anything in the app, always on top, always tappable */
+  #m-tabbar { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:9999;
     background:var(--panel); border-top:1px solid var(--panel-border);
     padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)); box-shadow:0 -2px 14px rgba(0,0,0,0.4); }
   #m-tabbar button { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
@@ -192,13 +193,19 @@
   #m-tabbar button.active { color:var(--accent); }
   #m-tabbar button.active .ic { stroke:var(--accent); }
 
-  /* mobile-only quick controls (layout + language) injected at the top of the filters sheet */
+  /* layout-switch bar (force/universe, phase/chrono, lines/chrono) — sits directly
+     above the main tab bar, always visible, one tap away, not buried in filters */
+  #m-sublayout { display:flex; gap:8px; position:fixed; left:0; right:0;
+    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); z-index:35;
+    background:var(--panel); border-top:1px solid var(--panel-border); padding:8px 10px; }
+  #m-sublayout:empty { display:none; }
+  #m-sublayout button { flex:1; background:#1c2131; border:1px solid var(--panel-border); color:var(--text-dim);
+    border-radius:10px; padding:9px 6px; font-size:12.5px; cursor:pointer; }
+  #m-sublayout button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* mobile-only quick control (language) injected at the top of the filters sheet */
   #filters .m-quick-lang select { width:100%; margin-bottom:12px; background:var(--panel); color:var(--text);
     border:1px solid var(--panel-border); border-radius:10px; padding:9px 12px; font-size:13px; }
-  #filters .m-quick-row { display:flex; gap:8px; margin-bottom:14px; }
-  #filters .m-quick-row button { flex:1; background:#1c2131; border:1px solid var(--panel-border); color:var(--text-dim);
-    border-radius:10px; padding:9px 6px; font-size:12.5px; cursor:pointer; }
-  #filters .m-quick-row button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 
   /* search sheet holds the moved search input */
   #m-search-body #search-wrap { display:block; width:100%; }
@@ -207,20 +214,23 @@
   #m-search-body #search-results:empty { display:none; }
 
   /* filters as a bottom sheet with its own close button + backdrop */
-  #filters { z-index:30; padding-top:16px; bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)) !important; }
+  #filters { z-index:30; padding-top:16px; bottom:calc(var(--m-reserved-h) + env(safe-area-inset-bottom,0px)) !important; }
 
   /* detail as a bottom sheet, above backdrop */
-  #detail { z-index:31; bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)) !important; }
+  #detail { z-index:31; bottom:calc(var(--m-reserved-h) + env(safe-area-inset-bottom,0px)) !important; }
 
-  /* About sheet slides up from the bottom, same as the other sheets */
+  /* About sheet slides up from the bottom, same as the other sheets.
+     visibility:hidden is a defensive pairing with transform:translateY(105%) — some mobile
+     WebKit versions were rendering a visible sliver of the offscreen sheet before any
+     interaction; forcing visibility:hidden until .show guarantees it can't paint at all. */
   #credits-overlay { display:block; background:transparent; align-items:unset; justify-content:unset;
-    padding:0; pointer-events:none; }
-  #credits-overlay.show { display:block; background:rgba(6,8,14,0.55); pointer-events:auto; }
+    padding:0; pointer-events:none; z-index:40; visibility:hidden; transition:visibility 0.28s; }
+  #credits-overlay.show { display:block; background:rgba(6,8,14,0.55); pointer-events:auto; visibility:visible; }
   #credits-card { position:fixed; left:0; right:0;
-    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); top:auto; width:100%; max-width:100%;
+    bottom:calc(var(--m-reserved-h) + env(safe-area-inset-bottom,0px)); top:auto; width:100%; max-width:100%;
     max-height:65vh; margin:0; border-radius:18px 18px 0 0; padding:20px 16px 22px;
-    transform:translateY(105%); transition:transform 0.28s ease; }
-  #credits-overlay.show #credits-card { transform:translateY(0); }
+    transform:translateY(105%); transition:transform 0.28s ease, visibility 0.28s; visibility:hidden; }
+  #credits-overlay.show #credits-card { transform:translateY(0); visibility:visible; }
   #credits-card .cc-close { display:inline-flex; align-items:center; justify-content:center;
     width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border); border-radius:50%; }
 }
