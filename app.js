@@ -1512,11 +1512,35 @@ function setupMobileUI(){
   // rather than patch every one to call MSheet.open, intercept at the single choke point:
   // showCharDetail/showStoryDetail/showComicDetail/finishPath all end by setting
   // detailBody's innerHTML and detailEl.style.display='block'. Observe that instead.
+  //
+  // IMPORTANT: MutationObserver callbacks run asynchronously (batched in a microtask),
+  // NOT synchronously inside the code that changed the attribute. An earlier version of
+  // this function tried to guard against re-entrancy with a boolean flag that was set
+  // back to false immediately after writing detailEl.style.display — but since the
+  // observer callback only fires later (as a microtask), the flag was always back to
+  // false by the time it ran, so it suppressed nothing. The actual sequence was:
+  //   1. showCharDetail() sets detailEl.style.display='block'
+  //   2. observer fires: display==='block' -> MSheet.open('detail', ...) -> then we set
+  //      detailEl.style.display='none' ourselves
+  //   3. that write queues ANOTHER mutation record
+  //   4. observer fires again: display==='none' AND MSheet.current==='detail' (we just
+  //      set it) -> MSheet.close() -> which also runs clearSelection(), which sets
+  //      detailEl.style.display='none' again
+  //   5. net effect: the sheet opened and immediately closed itself in the same tick,
+  //      so on a real device no card ever appeared to stay open.
+  // Fix: track the display value we last reacted to and only act when it actually
+  // changed from what we last saw, rather than reacting to every mutation record
+  // (including ones we caused ourselves by writing the same property back).
+  let lastSeen = detailEl.style.display;
   new MutationObserver(()=>{
-    if (detailEl.style.display === 'block' && MSheet.current !== 'detail') {
+    const now = detailEl.style.display;
+    if (now === lastSeen) return; // our own write during the previous reaction, or a no-op
+    lastSeen = now;
+    if (now === 'block' && MSheet.current !== 'detail') {
       MSheet.open('detail', { contentEl: document.getElementById('detail-body-wrap'), imgSrc: detailImg.style.display!=='none' ? detailImg.src : null });
+      lastSeen = 'none';
       detailEl.style.display = 'none'; // real #detail stays hidden; content now lives in the sheet
-    } else if (detailEl.style.display === 'none' && MSheet.current === 'detail') {
+    } else if (now === 'none' && MSheet.current === 'detail') {
       MSheet.close();
     }
   }).observe(detailEl, { attributes:true, attributeFilter:['style'] });
