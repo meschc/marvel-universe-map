@@ -1392,16 +1392,14 @@ if (bootHash) {
 document.querySelectorAll('#char-layout-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-clayout')===CHAR_LAYOUT));
 document.querySelectorAll('#story-layout-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-slayout')===STORY_LAYOUT));
 document.querySelectorAll('#comic-layout-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-klayout')===COMIC_LAYOUT));
-switchMode(bootMode);
-if (bootHash) {
-  setTimeout(()=>{
-    if (bootMode==='characters'){ const nd=charById.get(bootHash); if(nd){ showCharDetail(nd); focusNode(nd); applySelection(nd.id); } }
-    else if (bootMode==='stories'){ const nd=storyById.get(bootHash); if(nd){ showStoryDetail(nd); focusNode(nd); applySelection(nd.id); } }
-    else { const nd=comicById.get(bootHash); if(nd){ showComicDetail(nd); focusNode(nd); applySelection(nd.id); } }
-  }, 300);
-}
 
 // ---------- v6.5: mobile UI — single unified bottom sheet ----------
+// NOTE: this MUST be declared before switchMode(bootMode) below, since switchMode ->
+// refreshTexts() -> MSheet.syncTabbar() references it. A `const` declared further down
+// the same scope is in the temporal dead zone until its own line runs, so calling
+// switchMode() first (as this used to) threw "Cannot access 'MSheet' before initialization"
+// and broke the entire app on load — this ordering fix is the whole point of this block's
+// position here.
 // Previously search/filters/detail/about each had their own sheet element, each with its
 // own z-index and positioning rules that kept drifting out of sync (overlaps, gaps, stray
 // panels peeking above the tab bar). Replaced with ONE sheet (#m-sheet) whose body content
@@ -1520,6 +1518,15 @@ function setupMobileUI(){
   }).observe(detailEl, { attributes:true, attributeFilter:['style'] });
 }
 setupMobileUI();
+
+switchMode(bootMode);
+if (bootHash) {
+  setTimeout(()=>{
+    if (bootMode==='characters'){ const nd=charById.get(bootHash); if(nd){ showCharDetail(nd); focusNode(nd); applySelection(nd.id); } }
+    else if (bootMode==='stories'){ const nd=storyById.get(bootHash); if(nd){ showStoryDetail(nd); focusNode(nd); applySelection(nd.id); } }
+    else { const nd=comicById.get(bootHash); if(nd){ showComicDetail(nd); focusNode(nd); applySelection(nd.id); } }
+  }, 300);
+}
 }
 
 function safeInit(){
