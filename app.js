@@ -1414,23 +1414,36 @@ const MSheet = (function(){
   // completely unchanged — MSheet only ever relocates nodes, never rebuilds them.
   const homes = new Map(); // contentEl -> original parent, to restore on close
 
+  // properties we force inline when borrowing content into the sheet. #filters in
+  // particular carries desktop-only rules (position:absolute; top:74px; left:14px;
+  // width:230px; max-height:80vh; a mobile bottom-sheet transform; display:none) that
+  // must ALL be neutralised once it's living inside #m-sheet-body — otherwise the node
+  // is technically present (its 49 rows are in the DOM) but rendered somewhere off in a
+  // position:absolute / transformed box instead of flowing normally under the sheet's
+  // title, which is exactly the "sheet opens, title shows, body looks blank" symptom.
+  // Doing this inline (highest priority in the cascade, beats ANY stylesheet rule with
+  // or without !important) means it can't be defeated by rule ordering, specificity, or
+  // a stale/partly-deployed stylesheet — no second CSS rule has to win a cascade fight.
+  const BORROW_OVERRIDES = {
+    display: 'block',
+    position: 'static',
+    top: 'auto', left: 'auto', right: 'auto', bottom: 'auto',
+    width: 'auto', height: 'auto', 'max-width': 'none', 'max-height': 'none',
+    transform: 'none', 'z-index': 'auto',
+    background: 'none', border: 'none', 'box-shadow': 'none',
+    padding: '0', margin: '0', overflow: 'visible',
+    transition: 'none', visibility: 'visible', opacity: '1'
+  };
   function borrow(contentEl){
     if (!contentEl) return;
     homes.set(contentEl, contentEl.parentNode);
     bodyEl.appendChild(contentEl);
-    // #filters (and #detail/#credits-overlay, defensively) carry a stylesheet-level
-    // `display:none !important` so their desktop/legacy positioning never peeks through
-    // anywhere else on mobile. A same-specificity override rule in the stylesheet turned
-    // out not to be reliable enough in practice (still reportedly invisible after
-    // deploying it) — an inline style with !important always wins over ANY author
-    // stylesheet rule for that element, `!important` or not, per the CSS cascade, so set
-    // it directly here instead of trusting a second stylesheet rule to out-rank the first.
-    contentEl.style.setProperty('display', 'block', 'important');
+    for (const prop in BORROW_OVERRIDES) contentEl.style.setProperty(prop, BORROW_OVERRIDES[prop], 'important');
   }
   function giveBack(){
     homes.forEach((parent, el)=>{
       if (parent && el.parentNode===bodyEl) parent.appendChild(el);
-      el.style.removeProperty('display'); // undo the inline override from borrow()
+      for (const prop in BORROW_OVERRIDES) el.style.removeProperty(prop); // undo the inline overrides from borrow()
     });
     homes.clear();
     bodyEl.innerHTML = '';
@@ -1599,5 +1612,4 @@ function showBootError(){
   document.getElementById("app").innerHTML = "<div style=\"padding:40px;color:#fff;font-family:sans-serif;max-width:600px;line-height:1.6\">Не удалось загрузить библиотеку d3.js из интернета — карта не может отобразиться.<br><br>Проверьте подключение к интернету и обновите страницу. Если у вас включён блокировщик рекламы/скриптов — попробуйте временно отключить его для этой страницы или откройте файл в другом браузере.</div>";
 }
 bootApp();
-
 
