@@ -142,7 +142,7 @@
 @media (max-width: 720px){ #lang-select { padding:8px 26px 8px 10px; font-size:12px; } }
 
 /* ===== mobile controls (hidden on desktop) ===== */
-#m-top, #m-backdrop, .m-sheet, #m-filters-close, #m-tabbar, #m-sublayout { display:none; }
+#m-top, #m-backdrop, .m-sheet, #m-tabbar, #m-sublayout { display:none; }
 :root { --m-tabbar-h: 60px; --m-sublayout-h: 50px; --m-reserved-h: calc(var(--m-tabbar-h) + var(--m-sublayout-h)); }
 @media (max-width: 720px) {
   /* keep only the title in the top bar; move everything else into sheets */
@@ -175,11 +175,10 @@
   .m-sheet-close { display:inline-flex; align-items:center; justify-content:center; position:absolute;
     top:12px; right:12px; width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border);
     color:var(--text); border-radius:50%; cursor:pointer; z-index:2; }
-  .m-sheet-close .ic, #m-filters-close .ic { width:16px; height:16px; }
-  #m-filters-close { align-items:center; justify-content:center; position:fixed;
-    top:calc(30vh + 8px); right:16px;
-    width:32px; height:32px; background:#1c2131; border:1px solid var(--panel-border); color:var(--text);
-    border-radius:50%; cursor:pointer; z-index:32; }
+  .m-sheet-close .ic { width:16px; height:16px; }
+  /* #filters is already position:fixed (see below), so .m-sheet-close rendered inside it
+     (position:absolute) anchors correctly to its own top-right corner regardless of how
+     tall the sheet's content is — no more guessing the sheet's top edge in vh units. */
 
   /* persistent bottom tab bar: characters / stories / comics / filters —
      highest z-index of anything in the app, always on top, always tappable */
@@ -194,11 +193,18 @@
   #m-tabbar button.active .ic { stroke:var(--accent); }
 
   /* layout-switch bar (force/universe, phase/chrono, lines/chrono) — sits directly
-     above the main tab bar, always visible, one tap away, not buried in filters */
+     above the main tab bar, always visible, one tap away, not buried in filters.
+     z-index is deliberately BELOW the backdrop (29) and every sheet (30/31/40): when a
+     card (detail/filters/search/about) is open it must slide out from under this bar,
+     not float on top of it. */
   #m-sublayout { display:flex; gap:8px; position:fixed; left:0; right:0;
-    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); z-index:35;
-    background:var(--panel); border-top:1px solid var(--panel-border); padding:8px 10px; }
+    bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)); z-index:15;
+    background:transparent; padding:8px 10px 10px; pointer-events:none; }
+  #m-sublayout button { pointer-events:auto; }
   #m-sublayout:empty { display:none; }
+  /* extra safety: also fully hide it (not just cover it) whenever any sheet/card is open,
+     so it can't be tapped through a translucent backdrop edge either */
+  body.m-sheet-open #m-sublayout { display:none; }
   #m-sublayout button { flex:1; background:#1c2131; border:1px solid var(--panel-border); color:var(--text-dim);
     border-radius:10px; padding:9px 6px; font-size:12.5px; cursor:pointer; }
   #m-sublayout button.active { background:var(--accent); color:#fff; border-color:var(--accent); }

@@ -398,7 +398,7 @@ function buildCharGraph(){
           .attr('x', -r).attr('y', -r).attr('width', r*2).attr('height', r*2)
           .attr('pointer-events','none')
           .style('overflow','visible');
-        fo.append('xhtml:img')
+        const imgEl = fo.append('xhtml:img')
           .attr('src', thumbUrl(d.image,90))
           .attr('loading','lazy')
           .attr('draggable','false')
@@ -407,6 +407,19 @@ function buildCharGraph(){
           .style('object-fit','cover')
           .style('display','block')
           .style('pointer-events','none');
+        // if the thumbnail URL 404s, times out, or is blocked (flaky mobile connections
+        // hit this far more than desktop) — hide the broken-image icon and fall back to
+        // the plain colored circle underneath instead of showing a broken-image glyph.
+        // Also retry once with the full-resolution original URL, since Fandom's
+        // scale-to-width-down thumbnail endpoint occasionally 404s for some assets.
+        imgEl.node().addEventListener('error', function onErr(){
+          if (this.dataset.retried !== '1') {
+            this.dataset.retried = '1';
+            this.src = d.image;
+          } else {
+            fo.remove();
+          }
+        });
       });
     }
   });
@@ -845,6 +858,12 @@ const filtersEl = document.getElementById('filters');
 function renderFilters(){
   const u = UI(); let h='';
   if (IS_MOBILE){
+    // close button lives INSIDE #filters (position:absolute relative to the sheet itself),
+    // same pattern as .m-sheet-close and #detail-close — this way it always sits on the
+    // sheet's own top-right corner regardless of how tall the sheet's content is, instead
+    // of a separately fixed-position button trying to guess the sheet's top edge in vh.
+    h += `<button class="m-sheet-close m-filters-close-btn" aria-label="Закрыть фильтры">`
+       + ic('x') + `</button>`;
     // the mobile tab bar has no room for the desktop topbar's language control,
     // so it's rebuilt here, at the top of the filters sheet, on every render
     // (the layout switch — force/universe, phase/chrono, lines/chrono — lives in
@@ -875,6 +894,8 @@ function renderFilters(){
   if (IS_MOBILE){
     const mfLang = document.getElementById('mf-lang');
     if (mfLang) { mfLang.value = LANG; mfLang.addEventListener('change', e=>switchLang(e.target.value)); }
+    const mfClose = filtersEl.querySelector('.m-filters-close-btn');
+    if (mfClose) mfClose.addEventListener('click', ()=>{ if (window.__closeMobileSheets) window.__closeMobileSheets(); });
   }
 
   filtersEl.querySelectorAll('[data-edge]').forEach(el=>{
@@ -1303,7 +1324,6 @@ function setupMobileUI(){
   const backdrop = document.getElementById('m-backdrop');
   const searchSheet = document.getElementById('m-sheet-search');
   const filtersEl2 = document.getElementById('filters');
-  const filtersClose = document.getElementById('m-filters-close');
   const tabbar = document.getElementById('m-tabbar');
   if (!backdrop || !tabbar) return;
 
@@ -1312,7 +1332,10 @@ function setupMobileUI(){
 
   function anyOpen(){ return searchSheet.classList.contains('open') || filtersEl2.classList.contains('mobile-open') || detailEl.style.display==='block' || creditsOverlay.classList.contains('show'); }
   function showBackdrop(){ backdrop.classList.add('show'); }
-  function syncBackdrop(){ backdrop.classList.toggle('show', anyOpen()); }
+  // #m-sublayout must duck out of the way (via body.m-sheet-open, see CSS) whenever any
+  // card/sheet is showing — this keeps it from floating on top of detail/filters/search/about.
+  function syncBackdrop(){ const open = anyOpen(); backdrop.classList.toggle('show', open); document.body.classList.toggle('m-sheet-open', open); }
+  window.__syncMobileSheetState = syncBackdrop;
   function syncTabbar(){
     tabbar.querySelectorAll('[data-tab]').forEach(b=>{
       const t = b.getAttribute('data-tab');
@@ -1321,17 +1344,24 @@ function setupMobileUI(){
     });
   }
   window.__syncTabbar = syncTabbar;
+  // #detail's display is flipped from many call sites scattered across the file (node
+  // clicks, path results, Esc, detail-close button, etc.) — rather than patch every one
+  // of them individually, observe the attribute directly so body.m-sheet-open (and thus
+  // the #m-sublayout hide-behind-cards behaviour) always reflects reality.
+  new MutationObserver(syncBackdrop).observe(detailEl, { attributes:true, attributeFilter:['style'] });
+  new MutationObserver(syncBackdrop).observe(creditsOverlay, { attributes:true, attributeFilter:['class'] });
   function closeMobile(){
     searchSheet.classList.remove('open');
-    filtersEl2.classList.remove('mobile-open'); filtersClose.style.display='none';
+    filtersEl2.classList.remove('mobile-open');
     creditsOverlay.classList.remove('show');
     if (detailEl.style.display==='block'){ detailEl.style.display='none'; clearSelection(); }
     backdrop.classList.remove('show');
+    document.body.classList.remove('m-sheet-open');
     syncTabbar();
   }
   window.__closeMobileSheets = closeMobile;
-  function openSheet(el){ closeMobile(); el.classList.add('open'); showBackdrop(); }
-  function openFiltersSheet(){ closeMobile(); filtersEl2.classList.add('mobile-open'); filtersClose.style.display='inline-flex'; showBackdrop(); syncTabbar(); }
+  function openSheet(el){ closeMobile(); el.classList.add('open'); showBackdrop(); document.body.classList.add('m-sheet-open'); }
+  function openFiltersSheet(){ closeMobile(); filtersEl2.classList.add('mobile-open'); showBackdrop(); document.body.classList.add('m-sheet-open'); syncTabbar(); }
 
   tabbar.querySelectorAll('[data-tab]').forEach(b=>{
     b.addEventListener('click', ()=>{
@@ -1347,8 +1377,7 @@ function setupMobileUI(){
   });
 
   document.getElementById('m-search-btn').addEventListener('click', ()=>{ openSheet(searchSheet); setTimeout(()=>{ const s=document.getElementById('search'); if(s) s.focus(); }, 120); });
-  document.getElementById('m-credits-btn').addEventListener('click', ()=>{ closeMobile(); localizeCredits(); creditsOverlay.classList.add('show'); showBackdrop(); });
-  filtersClose.addEventListener('click', closeMobile);
+  document.getElementById('m-credits-btn').addEventListener('click', ()=>{ closeMobile(); localizeCredits(); creditsOverlay.classList.add('show'); showBackdrop(); document.body.classList.add('m-sheet-open'); });
   document.querySelectorAll('.m-sheet-close').forEach(b=> b.addEventListener('click', closeMobile));
   backdrop.addEventListener('click', closeMobile);
 
