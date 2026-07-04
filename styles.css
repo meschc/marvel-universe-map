@@ -200,14 +200,26 @@
   #m-backdrop.show { opacity:1; visibility:visible; }
 
   /* THE single bottom sheet — used for search, filters, detail and about. Only one
-     z-index, one position, one open/close transition to reason about. */
+     z-index, one position, one open/close transition to reason about.
+     iOS Safari bug: a `position:fixed` element with `overflow:auto` content that is
+     animated via `transform` sometimes never composites/paints its (freshly relocated)
+     content until the user starts a touch/scroll gesture inside it — the sheet's own
+     chrome (title, close button) paints fine because that's part of the initial paint,
+     but content appended a moment earlier via JS (MSheet.borrow()) can be stuck in an
+     unpainted layer until something forces a repaint. This matches exactly what was
+     reported from a real iPhone: sheet opens, title shows, body is blank until some
+     interaction (e.g. a scroll) "unlocks" the already-present content. `-webkit-overflow-
+     scrolling:touch` opts the scroll container into its own compositor layer up front
+     (instead of lazily promoting it), and `translateZ(0)`/`backface-visibility:hidden`
+     force that layer to exist immediately rather than waiting for a scroll gesture. */
   #m-sheet { display:block; position:fixed; left:0; right:0; bottom:0; width:100%;
-    max-height:75vh; overflow:auto; z-index:30;
+    max-height:75vh; overflow:auto; -webkit-overflow-scrolling:touch; z-index:30;
     background:var(--panel); border-top:1px solid var(--panel-border); border-radius:18px 18px 0 0;
     padding:18px 16px calc(20px + var(--m-reserved-h) + env(safe-area-inset-bottom,0px));
-    transform:translateY(105%); transition:transform 0.28s ease, visibility 0.28s;
+    transform:translateY(105%) translateZ(0); transition:transform 0.28s ease, visibility 0.28s;
+    -webkit-backface-visibility:hidden; backface-visibility:hidden;
     box-shadow:0 -6px 28px rgba(0,0,0,0.55); visibility:hidden; }
-  #m-sheet.open { transform:translateY(0); visibility:visible; }
+  #m-sheet.open { transform:translateY(0) translateZ(0); visibility:visible; }
   #m-sheet-img { width:calc(100% + 32px); margin:-18px -16px 14px; max-height:200px; object-fit:cover;
     object-position:top center; border-radius:18px 18px 0 0; display:block;
     background:linear-gradient(135deg,#2a1520,#12141c 60%,#0b0d14); }
