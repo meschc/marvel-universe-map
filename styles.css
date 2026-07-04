@@ -161,10 +161,31 @@
      BUT #filters itself (unlike #detail, whose CHILD #detail-body-wrap is what gets
      borrowed) is the exact node MSheet.borrow() relocates into #m-sheet-body — so this
      blanket rule was hiding it even once it lived inside the open sheet. Re-show it
-     (and #credits-overlay's #cr-body, in case future changes borrow the overlay itself)
-     specifically when it's actually sitting inside #m-sheet-body. */
+     specifically when it's actually sitting inside #m-sheet-body.
+     ROOT CAUSE (found via on-screen diagnostics on a real iPhone): fixing `display`
+     alone wasn't enough. The base (non-mobile, no media query) #filters rule earlier
+     in this file sets `position:absolute; top:74px; left:14px; width:230px;
+     max-height:80vh; ...` for its DESKTOP placement — and since that rule has no media
+     query, it stays active on mobile too. Once #filters got relocated inside
+     #m-sheet-body, that leftover `position:absolute` pulled it out of the sheet's
+     normal flow and positioned it relative to the nearest positioned ancestor instead
+     of sitting under the "ФИЛЬТРЫ" heading where the sheet body renders it — so the
+     sheet opened, the title showed, but the 50 filter rows were invisible (rendered
+     off in whatever box position:absolute resolved to, not blank/hidden, just
+     elsewhere on the page). Every override below neutralizes one of those desktop-only
+     absolute-positioning properties so #filters behaves like a normal block once it's
+     living inside the sheet. */
   #filters, #detail, #credits-overlay { display:none !important; }
-  #m-sheet-body > #filters { display:block !important; }
+  #m-sheet-body > #filters {
+    display:block !important;
+    position:static !important;
+    top:auto !important; left:auto !important;
+    width:auto !important; max-width:none !important;
+    max-height:none !important;
+    z-index:auto !important;
+    background:none !important; border:none !important;
+    padding:0 !important;
+  }
 
   /* top-right actions (search + credits) */
   #m-top { display:flex; gap:8px; position:fixed; top:10px; right:10px; z-index:26; }
