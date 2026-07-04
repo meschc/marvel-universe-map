@@ -1547,5 +1547,3 @@ function showBootError(){
   document.getElementById("app").innerHTML = "<div style=\"padding:40px;color:#fff;font-family:sans-serif;max-width:600px;line-height:1.6\">Не удалось загрузить библиотеку d3.js из интернета — карта не может отобразиться.<br><br>Проверьте подключение к интернету и обновите страницу. Если у вас включён блокировщик рекламы/скриптов — попробуйте временно отключить его для этой страницы или откройте файл в другом браузере.</div>";
 }
 bootApp();
-
-
