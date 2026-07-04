@@ -949,16 +949,11 @@ const filtersEl = document.getElementById('filters');
 function renderFilters(){
   const u = UI(); let h='';
   if (IS_MOBILE){
-    // close button lives INSIDE #filters (position:absolute relative to the sheet itself),
-    // same pattern as .m-sheet-close and #detail-close — this way it always sits on the
-    // sheet's own top-right corner regardless of how tall the sheet's content is, instead
-    // of a separately fixed-position button trying to guess the sheet's top edge in vh.
-    h += `<button class="m-sheet-close m-filters-close-btn" aria-label="Закрыть фильтры">`
-       + ic('x') + `</button>`;
     // the mobile tab bar has no room for the desktop topbar's language control,
-    // so it's rebuilt here, at the top of the filters sheet, on every render
+    // so it's rebuilt here, at the top of the filters content, on every render
     // (the layout switch — force/universe, phase/chrono, lines/chrono — lives in
-    // its own bar above the main tab bar, see renderSublayout())
+    // its own bar above the main tab bar, see renderSublayout()). The close button
+    // itself now lives once on #m-sheet (see MSheet), not duplicated here.
     h += `<div class="m-quick-lang"><select id="mf-lang" aria-label="Language / Язык">`
        + `<option value="en">EN · English</option><option value="ru">RU · Русский</option></select></div>`;
   }
@@ -985,8 +980,6 @@ function renderFilters(){
   if (IS_MOBILE){
     const mfLang = document.getElementById('mf-lang');
     if (mfLang) { mfLang.value = LANG; mfLang.addEventListener('change', e=>switchLang(e.target.value)); }
-    const mfClose = filtersEl.querySelector('.m-filters-close-btn');
-    if (mfClose) mfClose.addEventListener('click', ()=>{ if (window.__closeMobileSheets) window.__closeMobileSheets(); });
   }
 
   filtersEl.querySelectorAll('[data-edge]').forEach(el=>{
@@ -1254,13 +1247,12 @@ function refreshTexts(){
   document.getElementById('hint').textContent = (MODE==='characters' ? (CHAR_LAYOUT==='universe'?u.hint_universe:u.hint) : (MODE==='stories' ? u.hint_stories : u.hint_comics)) + ' · ' + u.hotkeys;
   refreshStats();
   renderFilters();
-  // mobile: tab bar labels + search sheet title (these have no desktop equivalent to piggy-back on)
-  const mst = document.getElementById('m-search-title'); if (mst) mst.textContent = u.m_search_title;
+  // mobile: tab bar labels (these have no desktop equivalent to piggy-back on)
   const tCh = document.querySelector('#m-tabbar [data-tab="characters"] [data-tab-label]'); if (tCh) tCh.textContent = u.m_tab_chars;
   const tSt = document.querySelector('#m-tabbar [data-tab="stories"] [data-tab-label]'); if (tSt) tSt.textContent = u.m_tab_stories;
   const tCo = document.querySelector('#m-tabbar [data-tab="comics"] [data-tab-label]'); if (tCo) tCo.textContent = u.m_tab_comics;
   const tFi = document.querySelector('#m-tabbar [data-tab="filters"] [data-tab-label]'); if (tFi) tFi.textContent = u.m_tab_filters;
-  if (window.__syncTabbar) window.__syncTabbar();
+  if (typeof MSheet !== 'undefined') MSheet.syncTabbar();
   renderSublayout();
 }
 
@@ -1350,11 +1342,11 @@ function localizeCredits(){
     document.getElementById('credits-btn').innerHTML = ic('info')+'О проекте';
   }
 }
+// desktop-only: #credits-overlay is display:none!important on mobile (About there goes
+// through MSheet.open('about', ...) instead, wired in setupMobileUI()).
 document.getElementById('credits-btn').addEventListener('click', ()=>{ localizeCredits(); creditsOverlay.classList.add('show'); });
 creditsOverlay.addEventListener('click', (ev)=>{
-  if (ev.target === creditsOverlay || ev.target.closest('.cc-close')) {
-    if (window.__closeMobileSheets) window.__closeMobileSheets(); else creditsOverlay.classList.remove('show');
-  }
+  if (ev.target === creditsOverlay || ev.target.closest('.cc-close')) creditsOverlay.classList.remove('show');
 });
 
 document.addEventListener('keydown', (ev)=>{
@@ -1409,73 +1401,123 @@ if (bootHash) {
   }, 300);
 }
 
-// ---------- v6: mobile UI (persistent bottom tab bar, top-right search/credits, bottom sheets) ----------
-function setupMobileUI(){
-  if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return;
-  const backdrop = document.getElementById('m-backdrop');
-  const searchSheet = document.getElementById('m-sheet-search');
-  const filtersEl2 = document.getElementById('filters');
-  const tabbar = document.getElementById('m-tabbar');
-  if (!backdrop || !tabbar) return;
+// ---------- v6.5: mobile UI — single unified bottom sheet ----------
+// Previously search/filters/detail/about each had their own sheet element, each with its
+// own z-index and positioning rules that kept drifting out of sync (overlaps, gaps, stray
+// panels peeking above the tab bar). Replaced with ONE sheet (#m-sheet) whose body content
+// is swapped depending on what's open — one place to open/close/position/animate.
+const MSheet = (function(){
+  let sheetEl, imgEl, titleEl, bodyEl, backdrop, tabbar, filtersEl2;
+  let current = null; // 'search' | 'filters' | 'detail' | 'about' | null
+  // each panel's real content lives in its desktop-only home element; we borrow it into
+  // the sheet body while open and give it back on close, so all existing IDs/handlers
+  // elsewhere in the file (search-wrap, filters rows, detail-body, credits) keep working
+  // completely unchanged — MSheet only ever relocates nodes, never rebuilds them.
+  const homes = new Map(); // contentEl -> original parent, to restore on close
 
-  // relocate the search box into its bottom sheet (keeps its existing handlers)
-  document.getElementById('m-search-body').appendChild(document.getElementById('search-wrap'));
-
-  function anyOpen(){ return searchSheet.classList.contains('open') || filtersEl2.classList.contains('mobile-open') || detailEl.style.display==='block' || creditsOverlay.classList.contains('show'); }
-  function showBackdrop(){ backdrop.classList.add('show'); }
-  // #m-sublayout must duck out of the way (via body.m-sheet-open, see CSS) whenever any
-  // card/sheet is showing — this keeps it from floating on top of detail/filters/search/about.
-  function syncBackdrop(){ const open = anyOpen(); backdrop.classList.toggle('show', open); document.body.classList.toggle('m-sheet-open', open); }
-  window.__syncMobileSheetState = syncBackdrop;
+  function borrow(contentEl){
+    if (!contentEl) return;
+    homes.set(contentEl, contentEl.parentNode);
+    bodyEl.appendChild(contentEl);
+  }
+  function giveBack(){
+    homes.forEach((parent, el)=>{ if (parent && el.parentNode===bodyEl) parent.appendChild(el); });
+    homes.clear();
+    bodyEl.innerHTML = '';
+  }
   function syncTabbar(){
     tabbar.querySelectorAll('[data-tab]').forEach(b=>{
       const t = b.getAttribute('data-tab');
-      const on = (t==='filters') ? filtersEl2.classList.contains('mobile-open') : (t===MODE && !filtersEl2.classList.contains('mobile-open'));
+      const on = (t==='filters') ? current==='filters' : (t===MODE && current!=='filters');
       b.classList.toggle('active', on);
     });
   }
-  window.__syncTabbar = syncTabbar;
-  // #detail's display is flipped from many call sites scattered across the file (node
-  // clicks, path results, Esc, detail-close button, etc.) — rather than patch every one
-  // of them individually, observe the attribute directly so body.m-sheet-open (and thus
-  // the #m-sublayout hide-behind-cards behaviour) always reflects reality.
-  new MutationObserver(syncBackdrop).observe(detailEl, { attributes:true, attributeFilter:['style'] });
-  new MutationObserver(syncBackdrop).observe(creditsOverlay, { attributes:true, attributeFilter:['class'] });
-  function closeMobile(){
-    searchSheet.classList.remove('open');
-    filtersEl2.classList.remove('mobile-open');
-    creditsOverlay.classList.remove('show');
-    if (detailEl.style.display==='block'){ detailEl.style.display='none'; clearSelection(); }
+  function close(){
+    if (!current) return;
+    sheetEl.classList.remove('open');
     backdrop.classList.remove('show');
     document.body.classList.remove('m-sheet-open');
+    if (current==='detail') clearSelection();
+    current = null;
+    giveBack();
+    imgEl.style.display = 'none'; imgEl.removeAttribute('src');
+    titleEl.textContent = '';
     syncTabbar();
   }
-  window.__closeMobileSheets = closeMobile;
-  function openSheet(el){ closeMobile(); el.classList.add('open'); showBackdrop(); document.body.classList.add('m-sheet-open'); }
-  function openFiltersSheet(){ closeMobile(); filtersEl2.classList.add('mobile-open'); showBackdrop(); document.body.classList.add('m-sheet-open'); syncTabbar(); }
+  // opts: { title, contentEl, imgSrc }
+  function open(name, opts){
+    giveBack();
+    current = name;
+    titleEl.textContent = (opts && opts.title) || '';
+    if (opts && opts.imgSrc) { imgEl.src = opts.imgSrc; imgEl.style.display = 'block'; }
+    else { imgEl.style.display = 'none'; imgEl.removeAttribute('src'); }
+    if (opts && opts.contentEl) borrow(opts.contentEl);
+    sheetEl.classList.add('open');
+    backdrop.classList.add('show');
+    document.body.classList.add('m-sheet-open');
+    syncTabbar();
+  }
+  function init(){
+    if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return false;
+    sheetEl = document.getElementById('m-sheet');
+    imgEl = document.getElementById('m-sheet-img');
+    titleEl = document.getElementById('m-sheet-title');
+    bodyEl = document.getElementById('m-sheet-body');
+    backdrop = document.getElementById('m-backdrop');
+    tabbar = document.getElementById('m-tabbar');
+    filtersEl2 = document.getElementById('filters');
+    if (!sheetEl || !backdrop || !tabbar) return false;
 
-  tabbar.querySelectorAll('[data-tab]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const t = b.getAttribute('data-tab');
-      if (t === 'filters') {
-        if (filtersEl2.classList.contains('mobile-open')) closeMobile();
-        else openFiltersSheet();
-        return;
-      }
-      closeMobile();
-      switchMode(t);
+    tabbar.querySelectorAll('[data-tab]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const t = b.getAttribute('data-tab');
+        if (t === 'filters') {
+          if (current==='filters') close(); else open('filters', { title:UI().filters_btn, contentEl:filtersEl2 });
+          return;
+        }
+        close();
+        switchMode(t);
+      });
     });
-  });
+    document.getElementById('m-search-btn').addEventListener('click', ()=>{
+      open('search', { title:UI().m_search_title, contentEl:document.getElementById('search-wrap') });
+      setTimeout(()=>{ const s=document.getElementById('search'); if(s) s.focus(); }, 120);
+    });
+    document.getElementById('m-credits-btn').addEventListener('click', ()=>{
+      localizeCredits();
+      open('about', { title:'', contentEl:document.getElementById('cr-body') });
+      // the About sheet also wants its big heading/tagline, which normally sit outside
+      // #cr-body in the desktop card — clone their text in as the sheet title/body header
+      const h = document.getElementById('cr-h-title'), tag = document.getElementById('cr-tagline');
+      if (h) bodyEl.insertAdjacentHTML('afterbegin', `<h2>${h.textContent}</h2>` + (tag? `<div class="sub" style="margin-bottom:14px">${tag.textContent}</div>` : ''));
+    });
+    document.querySelectorAll('.m-sheet-close').forEach(b=> b.addEventListener('click', close));
+    backdrop.addEventListener('click', close);
+    // note: #detail-close itself stays inside the (hidden-on-mobile) #detail element and
+    // never gets relocated into the sheet, so it needs no handler here — closing the
+    // detail sheet on mobile goes through the shared .m-sheet-close button instead.
+    // choosing a search result closes the search sheet
+    bodyEl.addEventListener('click', (e)=>{ if (current==='search' && e.target.closest('#search-results [data-id]')) setTimeout(close, 80); });
 
-  document.getElementById('m-search-btn').addEventListener('click', ()=>{ openSheet(searchSheet); setTimeout(()=>{ const s=document.getElementById('search'); if(s) s.focus(); }, 120); });
-  document.getElementById('m-credits-btn').addEventListener('click', ()=>{ closeMobile(); localizeCredits(); creditsOverlay.classList.add('show'); showBackdrop(); document.body.classList.add('m-sheet-open'); });
-  document.querySelectorAll('.m-sheet-close').forEach(b=> b.addEventListener('click', closeMobile));
-  backdrop.addEventListener('click', closeMobile);
-
-  // choosing a search result closes the search sheet
-  document.getElementById('m-search-body').addEventListener('click', (e)=>{ if (e.target.closest('#search-results [data-id]')) setTimeout(closeMobile, 80); });
-
-  syncTabbar();
+    syncTabbar();
+    return true;
+  }
+  return { init, open, close, get current(){ return current; }, syncTabbar:()=>syncTabbar() };
+})();
+function setupMobileUI(){
+  if (!MSheet.init()) return;
+  // detail cards are shown from many call sites (node clicks, path results, Esc, etc.) —
+  // rather than patch every one to call MSheet.open, intercept at the single choke point:
+  // showCharDetail/showStoryDetail/showComicDetail/finishPath all end by setting
+  // detailBody's innerHTML and detailEl.style.display='block'. Observe that instead.
+  new MutationObserver(()=>{
+    if (detailEl.style.display === 'block' && MSheet.current !== 'detail') {
+      MSheet.open('detail', { contentEl: document.getElementById('detail-body-wrap'), imgSrc: detailImg.style.display!=='none' ? detailImg.src : null });
+      detailEl.style.display = 'none'; // real #detail stays hidden; content now lives in the sheet
+    } else if (detailEl.style.display === 'none' && MSheet.current === 'detail') {
+      MSheet.close();
+    }
+  }).observe(detailEl, { attributes:true, attributeFilter:['style'] });
 }
 setupMobileUI();
 }

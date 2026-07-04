@@ -93,7 +93,7 @@
   <div id="filters"></div>
   <div id="detail">
     <button id="detail-close" aria-label="Закрыть карточку"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <img id="detail-img" alt="" style="display:none" onerror="this.removeAttribute('src')">
+    <img id="detail-img" alt="" style="display:none" onerror="this.style.display='none'; this.removeAttribute('src');">
     <div id="detail-body-wrap"><div id="detail-body"></div></div>
   </div>
   <div id="path-banner"></div>
@@ -131,7 +131,15 @@
     <button id="m-credits-btn" aria-label="О проекте / About"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
   </div>
   <div id="m-backdrop"></div>
-  <div id="m-sheet-search" class="m-sheet"><button class="m-sheet-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="m-sheet-title" id="m-search-title">Поиск</div><div id="m-search-body"></div></div>
+  <!-- single, unified bottom sheet used for search / filters / detail / about on mobile —
+       replaces four previously-separate sheet implementations that each had their own
+       z-index and positioning and kept drifting out of sync with one another. -->
+  <div id="m-sheet" class="m-sheet">
+    <button class="m-sheet-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <img id="m-sheet-img" alt="" style="display:none" onerror="this.style.display='none'; this.removeAttribute('src');">
+    <div class="m-sheet-title" id="m-sheet-title"></div>
+    <div id="m-sheet-body"></div>
+  </div>
   <div id="m-sublayout"></div>
   <nav id="m-tabbar">
     <button data-tab="characters" class="active"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span data-tab-label="characters">Персонажи</span></button>
