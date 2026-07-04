@@ -1,0 +1,1 @@
+window.DATA = JSON.parse(window.__DP.join(''));
