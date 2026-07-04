@@ -1466,6 +1466,17 @@ const MSheet = (function(){
     if (opts && opts.imgSrc) { imgEl.src = opts.imgSrc; imgEl.style.display = 'block'; }
     else { imgEl.style.display = 'none'; imgEl.removeAttribute('src'); }
     if (opts && opts.contentEl) borrow(opts.contentEl);
+    // Force a synchronous layout flush (reading offsetHeight forces the browser to
+    // apply the DOM mutations from borrow() right now) before starting the transform
+    // transition below. Without this, iOS Safari has been observed to open the sheet
+    // (title/close button visible, since those are part of the sheet's own markup) but
+    // leave the just-relocated content (#filters etc.) unpainted/uncomposited until the
+    // user touches/scrolls the sheet — reported live: sheet slides up, body looks empty,
+    // content "appears" only after a scroll gesture. Reading a layout property here
+    // forces layout to happen before the transform transition starts, instead of the
+    // browser potentially batching the DOM insert together with the transform and
+    // deferring the repaint of the new content to whenever it feels like compositing it.
+    void sheetEl.offsetHeight;
     sheetEl.classList.add('open');
     backdrop.classList.add('show');
     document.body.classList.add('m-sheet-open');
