@@ -75,6 +75,97 @@ function thumbUrl(url, widthPx){
   return url.replace('/revision/latest', '/revision/latest/scale-to-width-down/'+widthPx);
 }
 
+// ---------- v6.4: пропущенные фильмы/сериалы Fox-эры (рантайм-инъекция в DATA) ----------
+// User flagged: "The New Mutants" was missing; audit found several more Fox-era X-Men
+// titles absent from the dataset. Added here (not hand-edited into data.part*.js) so the
+// large chunked data files stay untouched — same pattern as injectComicLines() below.
+(function injectMissingStories(){
+  if (DATA.stories.nodes.some(s=>s.id==='story_the_new_mutants')) return; // уже добавлено
+  const WD = 'https://static.wikia.nocookie.net/marveldatabase/images/';
+  const charIds = new Set(DATA.characters.nodes.map(c=>c.id));
+
+  // -- новые персонажи (минимальный набор, чтобы у новых фильмов были связи) --
+  const NC = [
+    { id:'mirage_new_mutants', name:'Mirage', name_ru:'Мираж', real_name:'Danielle Moonstar', real_name_ru:'Даниэль Мунстар',
+      actor:'Blu Hunt', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
+      wiki_url:'https://marvel.fandom.com/wiki/Danielle_Moonstar_(Earth-10005)',
+      image: WD+'d/d2/New_Mutants_%28film%29_poster_002.jpg/revision/latest?cb=20200827214823' },
+    { id:'wolfsbane_new_mutants', name:'Wolfsbane', name_ru:'Волчица', real_name:'Rahne Sinclair', real_name_ru:'Рейн Синклер',
+      actor:'Maisie Williams', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
+      wiki_url:'https://marvel.fandom.com/wiki/Rahne_Sinclair_(Earth-10005)' },
+    { id:'cannonball_new_mutants', name:'Cannonball', name_ru:'Пушечное ядро', real_name:'Sam Guthrie', real_name_ru:'Сэм Гатри',
+      actor:'Charlie Heaton', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
+      wiki_url:'https://marvel.fandom.com/wiki/Sam_Guthrie_(Earth-10005)' },
+    { id:'magik_new_mutants', name:'Magik', name_ru:'Магия', real_name:'Illyana Rasputin', real_name_ru:'Иллиана Распутина',
+      actor:'Anya Taylor-Joy', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
+      wiki_url:'https://marvel.fandom.com/wiki/Illyana_Rasputin_(Earth-10005)' },
+    { id:'reed_richards_fox', name:'Mister Fantastic', name_ru:'Мистер Фантастик', real_name:'Reed Richards', real_name_ru:'Рид Ричардс',
+      actor:'Ioan Gruffudd', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
+      wiki_url:'https://marvel.fandom.com/wiki/Reed_Richards_(Earth-10005)' },
+    { id:'sue_storm_fox', name:'Invisible Woman', name_ru:'Женщина-невидимка', real_name:'Susan Storm', real_name_ru:'Сьюзан Шторм',
+      actor:'Jessica Alba', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
+      wiki_url:'https://marvel.fandom.com/wiki/Susan_Storm_(Earth-10005)' },
+    { id:'johnny_storm_fox', name:'Human Torch', name_ru:'Человек-факел', real_name:'Johnny Storm', real_name_ru:'Джонни Шторм',
+      actor:'Chris Evans', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
+      wiki_url:'https://marvel.fandom.com/wiki/Johnny_Storm_(Earth-10005)' },
+    { id:'ben_grimm_fox', name:'The Thing', name_ru:'Существо', real_name:'Ben Grimm', real_name_ru:'Бен Гримм',
+      actor:'Michael Chiklis', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
+      wiki_url:'https://marvel.fandom.com/wiki/Ben_Grimm_(Earth-10005)' },
+    { id:'legion_fox', name:'Legion', name_ru:'Легион', real_name:'David Haller', real_name_ru:'Дэвид Халлер',
+      actor:'Dan Stevens', universe:'Earth-10005', group:'x_men', affiliation:['X-Men (son of Professor X)'],
+      wiki_url:'https://marvel.fandom.com/wiki/David_Haller_(Earth-10005)' }
+  ];
+  NC.forEach(c=>{ if (!charIds.has(c.id)) { DATA.characters.nodes.push(c); charIds.add(c.id); } });
+
+  // родственная связь Legion — Professor X (уже есть в базе)
+  if (charIds.has('professor_x_fox')) DATA.characters.edges.push({source:'legion_fox', target:'professor_x_fox', type:'family', label:'Отец/сын'});
+  // New Mutants — командные связи друг с другом
+  const nmTeam = ['mirage_new_mutants','wolfsbane_new_mutants','cannonball_new_mutants','magik_new_mutants'];
+  for (let i=1;i<nmTeam.length;i++) DATA.characters.edges.push({source:nmTeam[0], target:nmTeam[i], type:'team', label:'New Mutants'});
+  // Fantastic Four (Fox) — командные связи друг с другом
+  const ffTeam = ['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'];
+  for (let i=1;i<ffTeam.length;i++) DATA.characters.edges.push({source:ffTeam[0], target:ffTeam[i], type:'team', label:'Fantastic Four'});
+
+  // -- новые фильмы/сериалы --
+  const storyIds = new Set(DATA.stories.nodes.map(s=>s.id));
+  const NS = [
+    { id:'story_x_men_origins_wolverine', title:'X-Men Origins: Wolverine', title_ru:'Люди Икс: Начало. Росомаха', type:'movie', phase:'xmen',
+      date:'2009-05-01', event_year:2009.33, event_date_ru:'2009', event_date_en:'2009', universe:'Earth-10005',
+      poster: WD+'0/0d/X-Men_Origins_Wolverine_poster.jpg/revision/latest?cb=20120224001523',
+      characters:['wolverine_fox','sabretooth_fox','deadpool_fox'] },
+    { id:'story_the_new_mutants', title:'The New Mutants', title_ru:'Новые мутанты', type:'movie', phase:'xmen',
+      date:'2020-08-28', event_year:2020.66, event_date_ru:'2020', event_date_en:'2020', universe:'Earth-10005',
+      poster: WD+'d/d2/New_Mutants_%28film%29_poster_002.jpg/revision/latest?cb=20200827214823',
+      characters:['mirage_new_mutants','wolfsbane_new_mutants','cannonball_new_mutants','magik_new_mutants'] },
+    { id:'story_legion_tv_series', title:'Legion (TV series)', title_ru:'Легион', type:'tv_series', phase:'xmen',
+      date:'2017-02-08', event_year:2017.11, event_date_ru:'2017–2019', event_date_en:'2017–2019', universe:'Earth-10005',
+      poster: WD+'8/85/Legion_%28TV_series%29_poster_001.jpg/revision/latest?cb=20170123000826',
+      characters:['legion_fox','professor_x_fox'] },
+    { id:'story_fantastic_four_2005', title:'Fantastic Four', title_ru:'Фантастическая четвёрка', type:'movie', phase:'xmen',
+      date:'2005-07-08', event_year:2005.52, event_date_ru:'2005', event_date_en:'2005', universe:'Earth-10005',
+      poster: WD+'b/b7/Fantastic_Four_%282005%29_poster.jpg/revision/latest?cb=20120224001200',
+      characters:['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'] },
+    { id:'story_fantastic_four_rise_of_the_silver_surfer', title:'Fantastic Four: Rise of the Silver Surfer', title_ru:'Фантастическая четвёрка: Вторжение Серебряного сёрфера', type:'movie', phase:'xmen',
+      date:'2007-06-15', event_year:2007.46, event_date_ru:'2007', event_date_en:'2007', universe:'Earth-10005',
+      poster: WD+'2/2b/Fantastic_Four_Rise_of_the_Silver_Surfer_poster.jpg/revision/latest?cb=20120224001344',
+      characters:['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'] }
+  ];
+  NS.forEach(s=>{
+    s.characters = (s.characters||[]).filter(cid=>charIds.has(cid));
+    s.char_count = s.characters.length;
+    if (!storyIds.has(s.id)) { DATA.stories.nodes.push(s); storyIds.add(s.id); }
+  });
+
+  // хронологические связи внутри Fox-линии (по дате выхода), чтобы новые тайтлы
+  // не остались изолированными узлами на timeline
+  const chronoPairs = [
+    ['story_x_men_origins_wolverine','story_x_men_first_class'],
+    ['story_the_wolverine','story_the_new_mutants'],
+    ['story_fantastic_four_2005','story_fantastic_four_rise_of_the_silver_surfer'],
+  ];
+  chronoPairs.forEach(([a,b])=>{ if (storyIds.has(a) && storyIds.has(b)) DATA.stories.edges.push({source:a, target:b, type:'chronology'}); });
+})();
+
 const charNodes = DATA.characters.nodes.map(d=>Object.assign({},d));
 const charLinks = DATA.characters.edges.map(d=>Object.assign({},d));
 const storyNodes = DATA.stories.nodes.map(d=>Object.assign({},d));
