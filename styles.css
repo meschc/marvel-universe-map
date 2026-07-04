@@ -262,9 +262,16 @@
   #m-sheet-body .m-quick-lang select { width:100%; margin-bottom:12px; background:var(--panel); color:var(--text);
     border:1px solid var(--panel-border); border-radius:10px; padding:9px 12px; font-size:13px; }
 
-  /* search content, once moved into #m-sheet-body */
-  #m-sheet-body #search-wrap { display:block; width:100%; }
+  /* search content, once moved into #m-sheet-body.
+     The magnifier .search-ic is position:absolute; top:50% inside #search-wrap. In the
+     sheet, #search-wrap also contains #search-results (a tall block that renders in-flow
+     here), so "50% of the wrap" is way below the input — the icon slid down under the
+     field. Pin the wrap as the positioning context AND anchor the icon to the input row
+     height (top:23px ≈ vertical centre of the 16px-text input with 13px padding) instead
+     of 50% of the whole wrap. */
+  #m-sheet-body #search-wrap { display:block; width:100%; position:relative; }
   #m-sheet-body #search { width:100%; font-size:16px; padding:13px 14px 13px 40px; }
+  #m-sheet-body #search-wrap .search-ic { top:23px; transform:none; left:13px; }
   #m-sheet-body #search-results { position:static; margin-top:8px; max-height:52vh; display:block; }
   #m-sheet-body #search-results:empty { display:none; }
 
