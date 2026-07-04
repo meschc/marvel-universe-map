@@ -1099,6 +1099,7 @@ function switchStoryLayout(layout){
   detailEl.style.display='none';
   clearSelection();
   buildStoryGraph();
+  document.getElementById('hint').textContent = UI().hint_stories + ' · ' + UI().hotkeys;
 }
 function switchCharLayout(layout){
   CHAR_LAYOUT = layout;
@@ -1107,6 +1108,7 @@ function switchCharLayout(layout){
   detailEl.style.display='none';
   clearSelection();
   buildCharGraph();
+  document.getElementById('hint').textContent = (CHAR_LAYOUT==='universe'?UI().hint_universe:UI().hint) + ' · ' + UI().hotkeys;
 }
 function switchComicLayout(layout){
   COMIC_LAYOUT = layout;
@@ -1115,6 +1117,7 @@ function switchComicLayout(layout){
   detailEl.style.display='none';
   clearSelection();
   buildComicsGraph();
+  document.getElementById('hint').textContent = UI().hint_comics + ' · ' + UI().hotkeys;
 }
 function switchLang(lang){
   LANG = lang;
@@ -1348,3 +1351,5 @@ function showBootError(){
   document.getElementById("app").innerHTML = "<div style=\"padding:40px;color:#fff;font-family:sans-serif;max-width:600px;line-height:1.6\">Не удалось загрузить библиотеку d3.js из интернета — карта не может отобразиться.<br><br>Проверьте подключение к интернету и обновите страницу. Если у вас включён блокировщик рекламы/скриптов — попробуйте временно отключить его для этой страницы или откройте файл в другом браузере.</div>";
 }
 bootApp();
+
+
