@@ -1417,9 +1417,20 @@ const MSheet = (function(){
     if (!contentEl) return;
     homes.set(contentEl, contentEl.parentNode);
     bodyEl.appendChild(contentEl);
+    // #filters (and #detail/#credits-overlay, defensively) carry a stylesheet-level
+    // `display:none !important` so their desktop/legacy positioning never peeks through
+    // anywhere else on mobile. A same-specificity override rule in the stylesheet turned
+    // out not to be reliable enough in practice (still reportedly invisible after
+    // deploying it) — an inline style with !important always wins over ANY author
+    // stylesheet rule for that element, `!important` or not, per the CSS cascade, so set
+    // it directly here instead of trusting a second stylesheet rule to out-rank the first.
+    contentEl.style.setProperty('display', 'block', 'important');
   }
   function giveBack(){
-    homes.forEach((parent, el)=>{ if (parent && el.parentNode===bodyEl) parent.appendChild(el); });
+    homes.forEach((parent, el)=>{
+      if (parent && el.parentNode===bodyEl) parent.appendChild(el);
+      el.style.removeProperty('display'); // undo the inline override from borrow()
+    });
     homes.clear();
     bodyEl.innerHTML = '';
   }
@@ -1575,3 +1586,4 @@ function showBootError(){
   document.getElementById("app").innerHTML = "<div style=\"padding:40px;color:#fff;font-family:sans-serif;max-width:600px;line-height:1.6\">Не удалось загрузить библиотеку d3.js из интернета — карта не может отобразиться.<br><br>Проверьте подключение к интернету и обновите страницу. Если у вас включён блокировщик рекламы/скриптов — попробуйте временно отключить его для этой страницы или откройте файл в другом браузере.</div>";
 }
 bootApp();
+
