@@ -1,6 +1,6 @@
-<div align="center">
+&lt;div align="center"&gt;
 
-<img src="og-image.png" alt="Marvel Multiverse Map" width="640">
+&lt;img src="og-image.png" alt="Marvel Multiverse Map" width="640"&gt;
 
 # 🕸 Marvel Multiverse Map
 
@@ -15,7 +15,7 @@
 
 🇷🇺 [Русская версия README](README.ru.md)
 
-</div>
+&lt;/div&gt;
 
 ---
 
@@ -28,17 +28,17 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 - **How is character A connected to character B?** → a force-directed graph with a shortest-path finder.
 - **How do the universes overlap?** → MCU, Earth-616, Earth-828, Spider-Verse, Sony, Fox, What If…? and more, colour-coded.
 
-<div align="center">
+&lt;div align="center"&gt;
 
-<img src="preview-graph.png" alt="Marvel Multiverse Map — character graph" width="880">
+&lt;img src="preview-graph.png" alt="Marvel Multiverse Map — character graph" width="880"&gt;
 
 |  |  |
 |:--:|:--:|
-| **360** characters | **710** connections |
-| **139** movies & series | **166** comics |
+| **369** characters | **717** connections |
+| **144** movies & series | **166** comics |
 | **12** universes | **RU / EN** |
 
-</div>
+&lt;/div&gt;
 
 ## ✨ Features
 
@@ -55,9 +55,9 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 
 ## 🎬 The three modes
 
-**Characters.** A D3 force simulation of 360 heroes and 710 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
+**Characters.** A D3 force simulation of 369 heroes and 717 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
 
-**Stories.** 139 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how the Sony, Fox and animation lines interleave. This is the watch-order view.
+**Stories.** 144 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how the Sony, Fox and animation lines interleave. This is the watch-order view.
 
 **Comics.** 166 key issues in 12 lines (Spider-Man, X-Men, Iron Man, Thor, Captain America, Avengers, Cosmic, Street-Level, plus movie preludes, adaptations, first appearances and classic events), viewable by line or on a shared release-year timeline.
 
@@ -94,8 +94,8 @@ Non-commercial fan project. Marvel characters, names, logos and artwork are prop
 
 Built with [D3.js](https://d3js.org) and [Feather Icons](https://feathericons.com). Assembled and coded with the help of Claude (Claude Cowork by Anthropic).
 
-<div align="center">
+&lt;div align="center"&gt;
 
 ⭐ If you like it, star the repo — [**open the live map**](https://marvel.kirmesch.ru/)
 
-</div>
+&lt;/div&gt;
