@@ -1442,7 +1442,12 @@ const MSheet = (function(){
   // a stale/partly-deployed stylesheet — no second CSS rule has to win a cascade fight.
   const BORROW_OVERRIDES = {
     display: 'block',
-    position: 'static',
+    // 'relative' (not 'static') so the borrowed node still establishes a positioning
+    // context for its own absolutely-positioned descendants — e.g. #search-wrap's
+    // .search-ic magnifier, which is position:absolute and MUST anchor to #search-wrap.
+    // With every offset below forced to 'auto', relative lays out identically to static
+    // (no visual shift for #filters/#detail/#cr-body), it only restores the anchor.
+    position: 'relative',
     top: 'auto', left: 'auto', right: 'auto', bottom: 'auto',
     width: 'auto', height: 'auto', 'max-width': 'none', 'max-height': 'none',
     transform: 'none', 'z-index': 'auto',
@@ -1632,4 +1637,5 @@ function showBootError(){
   document.getElementById("app").innerHTML = "<div style=\"padding:40px;color:#fff;font-family:sans-serif;max-width:600px;line-height:1.6\">Не удалось загрузить библиотеку d3.js из интернета — карта не может отобразиться.<br><br>Проверьте подключение к интернету и обновите страницу. Если у вас включён блокировщик рекламы/скриптов — попробуйте временно отключить его для этой страницы или откройте файл в другом браузере.</div>";
 }
 bootApp();
+
 

@@ -271,7 +271,7 @@
      of 50% of the whole wrap. */
   #m-sheet-body #search-wrap { display:block; width:100%; position:relative; }
   #m-sheet-body #search { width:100%; font-size:16px; padding:13px 14px 13px 40px; }
-  #m-sheet-body #search-wrap .search-ic { top:23px; transform:none; left:13px; }
+  #m-sheet-body #search-wrap .search-ic { top:16px; transform:none; left:13px; }
   #m-sheet-body #search-results { position:static; margin-top:8px; max-height:52vh; display:block; }
   #m-sheet-body #search-results:empty { display:none; }
 
