@@ -1,6 +1,6 @@
-&lt;div align="center"&gt;
+<div align="center">
 
-&lt;img src="og-image.png" alt="Marvel Multiverse Map" width="640"&gt;
+<img src="og-image.png" alt="Marvel Multiverse Map" width="640">
 
 # 🕸 Marvel Multiverse Map
 
@@ -15,7 +15,7 @@
 
 🇷🇺 [Русская версия README](README.ru.md)
 
-&lt;/div&gt;
+</div>
 
 ---
 
@@ -28,9 +28,9 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 - **How is character A connected to character B?** → a force-directed graph with a shortest-path finder.
 - **How do the universes overlap?** → MCU, Earth-616, Earth-828, Spider-Verse, Sony, Fox, What If…? and more, colour-coded.
 
-&lt;div align="center"&gt;
+<div align="center">
 
-&lt;img src="preview-graph.png" alt="Marvel Multiverse Map — character graph" width="880"&gt;
+<img src="preview-graph.png" alt="Marvel Multiverse Map — character graph" width="880">
 
 |  |  |
 |:--:|:--:|
@@ -38,7 +38,7 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 | **144** movies & series | **166** comics |
 | **12** universes | **RU / EN** |
 
-&lt;/div&gt;
+</div>
 
 ## ✨ Features
 
@@ -94,8 +94,8 @@ Non-commercial fan project. Marvel characters, names, logos and artwork are prop
 
 Built with [D3.js](https://d3js.org) and [Feather Icons](https://feathericons.com). Assembled and coded with the help of Claude (Claude Cowork by Anthropic).
 
-&lt;div align="center"&gt;
+<div align="center">
 
 ⭐ If you like it, star the repo — [**open the live map**](https://marvel.kirmesch.ru/)
 
-&lt;/div&gt;
+</div>
