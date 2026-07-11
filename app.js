@@ -392,7 +392,6 @@ function clearSelection(){
 }
 
 function charRadius(d){ return Math.max(6, Math.min(24, 5 + Math.sqrt(d.degree||1)*3.6)); }
-function storyRadius(d){ return Math.max(6, Math.min(26, 6 + Math.sqrt(d.char_count||1)*3)); }
 
 function clearGraph(){
   if (sim) sim.stop();
@@ -697,7 +696,7 @@ function buildStoryGraph(){
   linkSel = g.append('g').attr('class','links').selectAll('line').data(currentLinks).join('line')
     .attr('class','link')
     .attr('stroke', d=>EDGE_COLORS[d.type]||'#888')
-    .attr('stroke-width', d=> d.type==='chronology' ? 2 : Math.min(4, 0.6+d.weight*0.35))
+    .attr('stroke-width', d=> d.type==='chronology' ? 2 : Math.min(4, 0.6+(d.weight||1)*0.35))
     .attr('stroke-dasharray', d=> d.type==='chronology' ? null : '2,3');
 
   nodeSel = g.append('g').attr('class','nodes').selectAll('g.node').data(currentNodes).join('g').attr('class','node');
@@ -755,7 +754,6 @@ function fitViewToNodes(nodesArr, w, h){
   const ty = h/2 - scale*(minYb+maxYb)/2;
   svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(tx,ty).scale(scale));
 }
-function fitStoryView(w,h){ fitViewToNodes(storyNodes, w, h); }
 
 // ---------------- comics mode ----------------
 function buildComicsGraph(){
