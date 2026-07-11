@@ -33,7 +33,6 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 <img src="preview-graph.png" alt="Marvel Multiverse Map — character graph" width="880">
 
 |  |  |
-|:--:|:--:|
 | **369** characters | **717** connections |
 | **144** movies & series | **166** comics |
 | **12** universes | **RU / EN** |
