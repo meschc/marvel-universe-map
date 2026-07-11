@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="og-image.png" alt="Карта Мультивселенной Marvel" width="640">
+<img src="social-banner-ru.png" alt="Карта Мультивселенной Marvel" width="640">
 
 # 🕸 Карта Мультивселенной Marvel
 
