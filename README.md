@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="og-image.png" alt="Marvel Multiverse Map" width="640">
+<img src="social-banner-en.png" alt="Marvel Multiverse Map" width="640">
 
 # 🕸 Marvel Multiverse Map
 
