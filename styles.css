@@ -1,4 +1,10 @@
 :root { --bg:#0b0d14; --panel:#131722; --panel-border:#232838; --text:#e8eaf0; --text-dim:#8890a4; --accent:#e23636; }
+/* Motion tokens. Two curves only, so everything on the page decelerates the same way:
+   --ease-spring overshoots slightly (things that appear have a little weight and settle),
+   --ease-out just decelerates (things that move or fade). Durations stay short — the
+   graph is dense, so long animations read as lag rather than as polish. */
+:root { --ease-spring:cubic-bezier(.34,1.32,.5,1); --ease-out:cubic-bezier(.22,1,.36,1);
+  --dur-fast:0.14s; --dur:0.26s; --dur-slow:0.4s; }
   * { box-sizing:border-box; }
   html, body { margin:0; padding:0; width:100%; height:100%; background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; overflow:hidden; }
@@ -323,4 +329,97 @@
   /* about/credits content, once moved into #m-sheet-body */
   #m-sheet-body #cr-links a, #m-sheet-body #cr-data a { color:#7aa2ff; text-decoration:none; }
   #m-sheet-body #cr-links a:hover, #m-sheet-body #cr-data a:hover { text-decoration:underline; }
+}
+
+
+/* ===================== motion =====================
+   Everything below is presentation-only: no rule here changes layout or state, so the
+   reduced-motion block at the very end can switch all of it off safely. */
+
+@keyframes card-in   { from { opacity:0; transform:translateX(18px) scale(0.97); } to { opacity:1; transform:none; } }
+@keyframes body-in   { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes pop-in    { from { opacity:0; transform:translateY(-6px) scale(0.98); } to { opacity:1; transform:none; } }
+@keyframes fade-in   { from { opacity:0; } to { opacity:1; } }
+@keyframes zoom-in   { from { opacity:0; transform:scale(0.86); } to { opacity:1; transform:scale(1); } }
+@keyframes zoom-out  { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(0.94); } }
+@keyframes banner-in { from { opacity:0; transform:translateX(-50%) translateY(-10px); } to { opacity:1; transform:translateX(-50%); } }
+
+/* --- graph --- */
+/* Only opacity is transitioned: nodes are repositioned every simulation tick, so
+   animating transform/cx/cy here would fight the force layout and smear the graph. */
+.node, .link { transition:opacity var(--dur) var(--ease-out); }
+.node .ring { transition:stroke var(--dur-fast) linear, stroke-width var(--dur-fast) var(--ease-out); }
+.node:hover .ring { stroke-width:3px; }
+
+/* --- detail card --- */
+#detail { animation:card-in var(--dur-slow) var(--ease-spring); }
+#detail-body { animation:body-in var(--dur) var(--ease-out); }
+/* re-triggered from JS when the card stays open but shows a different node */
+#detail-body.swap { animation:body-in var(--dur) var(--ease-out); }
+#detail .rel-item { transition:background var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out); }
+#detail .rel-item:hover { transform:translateX(3px); }
+#detail .tag.link { transition:border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
+#detail-close, .cc-close, .m-sheet-close, #lightbox-close {
+  transition:background var(--dur-fast) linear, border-color var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out); }
+#detail-close:hover, .cc-close:hover, .m-sheet-close:hover, #lightbox-close:hover { transform:rotate(90deg); }
+
+/* --- buttons --- */
+#mode-switch button, #lang-switch button, #story-layout-switch button,
+#char-layout-switch button, #comic-layout-switch button, .act-btn, #credits-btn, #filters-toggle {
+  transition:background var(--dur-fast) linear, color var(--dur-fast) linear,
+             border-color var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out); }
+.act-btn:hover, #credits-btn:hover { transform:translateY(-1px); }
+#mode-switch button:active, #lang-switch button:active, .act-btn:active,
+#credits-btn:active, #filters-toggle:active, .img-zoom:active { transform:scale(0.94); }
+
+/* --- filters --- */
+#filters .row { transition:opacity var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
+#filters .row:hover { transform:translateX(2px); }
+#filters .sw { transition:transform var(--dur-fast) var(--ease-spring); }
+#filters .row:hover .sw { transform:scale(1.25); }
+
+/* --- search --- */
+#search { transition:border-color var(--dur-fast) linear, box-shadow var(--dur) var(--ease-out); }
+#search:focus { box-shadow:0 0 0 3px rgba(226,54,54,0.14); }
+#search-results { animation:pop-in var(--dur) var(--ease-out); }
+#search-results div { transition:background var(--dur-fast) linear, padding-left var(--dur-fast) var(--ease-out); }
+#search-results div:not(.cat):hover { padding-left:18px; }
+
+/* --- path banner & about card --- */
+#path-banner { animation:banner-in var(--dur-slow) var(--ease-spring); }
+#credits-overlay.show { animation:fade-in var(--dur) var(--ease-out); }
+#credits-overlay.show #credits-card { animation:zoom-in var(--dur-slow) var(--ease-spring); }
+
+/* --- image viewer --- */
+/* The picture scales up out of the card; the backdrop only fades, so the two motions
+   read as one object being lifted rather than as two panels appearing. */
+.img-zoom { transition:background var(--dur-fast) linear, border-color var(--dur-fast) linear,
+                       transform var(--dur-fast) var(--ease-spring), opacity var(--dur) var(--ease-out); }
+.img-zoom:hover { transform:scale(1.12); }
+#lightbox.show { animation:fade-in var(--dur) var(--ease-out); }
+#lightbox.show #lightbox-img { animation:zoom-in var(--dur-slow) var(--ease-spring); }
+/* .closing is added by JS one frame before display:none, so the exit is visible too */
+#lightbox.closing { animation:fade-in var(--dur) var(--ease-out) reverse; }
+#lightbox.closing #lightbox-img { animation:zoom-out var(--dur) var(--ease-out); }
+
+/* --- mobile sheet --- */
+@media (max-width: 720px) {
+  /* Bottom sheets deliberately use --ease-out, not the spring: an overshoot on a
+     bottom-anchored panel lifts it past its resting position and exposes the page
+     behind its lower edge. */
+  #m-sheet { transition:transform var(--dur-slow) var(--ease-out), visibility var(--dur-slow); }
+  #filters { transition:transform var(--dur-slow) var(--ease-out); }
+  /* #detail is not animated here: on mobile it is shown for a single frame and then
+     hidden again while its contents are moved into #m-sheet (see MSheet.open). */
+  #detail { animation:none; }
+  #m-tabbar button { transition:color var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out); }
+  #m-tabbar button:active { transform:scale(0.92); }
+}
+
+/* Users who ask the OS for less motion get none of it: state still changes instantly,
+   only the in-between frames go away. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:0.001ms !important; animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important; scroll-behavior:auto !important; }
 }

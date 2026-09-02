@@ -361,7 +361,7 @@ function finishPath(target){
   h += '<div style="color:var(--text-dim);font-size:11px;margin-top:8px">'+u.path_esc+'</div>';
   const endC = charById.get(path[path.length-1]);
   setDetailImage(endC && endC.image);
-  detailBody.innerHTML = h; detailEl.style.display='block';
+  renderDetail(h);
   detailBody.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>{
     const nd = charById.get(el.getAttribute('data-goto')); if(nd){ clearPath(); showCharDetail(nd); focusNode(nd); applySelection(nd.id); } }));
 }
@@ -917,7 +917,7 @@ function showComicDetail(d){
     }
   }
   h += `<div style="margin-top:12px"><a class="wiki" target="_blank" rel="noopener" href="${readSearchUrl(title)}">${ic('book')}${u.read_link}</a></div>`;
-  detailBody.innerHTML = h; detailEl.style.display='block';
+  renderDetail(h);
   detailBody.querySelectorAll('[data-goto-story2]').forEach(el=>el.addEventListener('click',()=>{
     const sn = storyById.get(el.getAttribute('data-goto-story2'));
     if (sn) { switchMode('stories'); setTimeout(()=>{ showStoryDetail(sn); focusNode(sn); applySelection(sn.id); }, 50); }
@@ -1089,17 +1089,29 @@ const Lightbox = (function(){
   if (!el || !img) return { open(){}, close(){}, get isOpen(){ return false; } };
   function open(src){
     if (!src) return;
+    clearTimeout(closeTimer);
+    el.classList.remove('closing'); // re-opening mid-exit must not inherit it
     img.src = src;
     el.classList.add('show');
   }
+  const CLOSE_MS = 260; // keep in sync with #lightbox.closing in styles.css
+  let closeTimer = null;
   function close(){
-    el.classList.remove('show');
-    img.removeAttribute('src');
+    if (!el.classList.contains('show')) return;
+    if (REDUCED_MOTION) { el.classList.remove('show'); img.removeAttribute('src'); return; }
+    // hold the element on screen for one animation before hiding it, otherwise
+    // display:none cuts the exit off on its first frame
+    el.classList.add('closing');
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(()=>{
+      el.classList.remove('show', 'closing');
+      img.removeAttribute('src');
+    }, CLOSE_MS);
   }
   // click anywhere on the backdrop (but not on the picture itself) closes
   el.addEventListener('click', (ev)=>{ if (ev.target !== img) close(); });
   img.addEventListener('error', close); // never leave an empty black screen up
-  return { open, close, get isOpen(){ return el.classList.contains('show'); } };
+  return { open, close, get isOpen(){ return el.classList.contains('show') && !el.classList.contains('closing'); } };
 })();
 
 // binds a magnifier button to the picture it belongs to
@@ -1127,6 +1139,23 @@ function setDetailImage(url){
   }
 }
 const detailBody = document.getElementById('detail-body');
+
+// Showing a card is two visually different events: the card appearing (CSS animates
+// #detail itself, which only fires when it goes from display:none to block) and the
+// card staying put while its contents are replaced -- clicking a related name, for
+// instance. The second one has no state change for CSS to hook onto, so re-trigger the
+// body animation by hand: remove the class, force a reflow so the browser registers the
+// removal, then add it back.
+function renderDetail(html){
+  const wasOpen = detailEl.style.display === 'block';
+  detailBody.innerHTML = html;
+  detailEl.style.display = 'block';
+  if (wasOpen && !REDUCED_MOTION) {
+    detailBody.classList.remove('swap');
+    void detailBody.offsetWidth; // forces the reflow that makes the re-add count
+    detailBody.classList.add('swap');
+  }
+}
 document.getElementById('detail-close').addEventListener('click', ()=>{ detailEl.style.display='none'; clearSelection(); });
 
 function showCharDetail(d){
@@ -1170,7 +1199,7 @@ function showCharDetail(d){
   }
   h += `<div><button class="act-btn" id="path-btn">${ic('navigation')}${u.path_btn}</button></div>`;
   h += `<div style="margin-top:10px"><a class="wiki" target="_blank" href="${d.wiki_url}">${u.wiki_link}</a></div>`;
-  detailBody.innerHTML = h; detailEl.style.display='block';
+  renderDetail(h);
   const pb = document.getElementById('path-btn');
   if (pb) pb.addEventListener('click', ()=>{ startPath(d.id); });
   detailBody.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>{
@@ -1197,7 +1226,7 @@ function showStoryDetail(d){
     const c = charById.get(cid); if(!c) continue;
     h += `<span class="tag link" data-goto-char="${cid}">${LANG==='ru'?c.name_ru:c.name}</span>`;
   }
-  detailBody.innerHTML = h; detailEl.style.display='block';
+  renderDetail(h);
   detailBody.querySelectorAll('[data-goto-char]').forEach(el=>el.addEventListener('click',()=>{
     const cn = charById.get(el.getAttribute('data-goto-char')); if(cn){ switchMode('characters'); setTimeout(()=>{ showCharDetail(cn); focusNode(cn); applySelection(cn.id); },50); } }));
 }
