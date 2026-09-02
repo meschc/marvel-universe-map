@@ -66,12 +66,13 @@
 ```
 index.html    разметка, мета, структурированные данные, подключение стилей и скриптов
 styles.css    все стили и тёмная тема
-data.js       данные (window.DATA): персонажи, истории, комиксы, связи
+data.part1-8.js  данные (window.DATA), разбитые на части
+data.loader.js   склеивает части в один объект при загрузке
 app.js        вся логика — D3-граф, режимы, поиск, фильтры, карточки, мобильный UI
-og-image.png  превью для соцсетей (1200×630)  ·  preview-graph.png  превью для README
+social-banner-en.png / social-banner-ru.png  превью для соцсетей (1200×630)  ·  preview-graph.png  превью для README
 ```
 
-Данные я держу в `data.js` одним объектом `DATA`:
+Данные я держу одним объектом `DATA` — он поставляется как `data.part1-8.js` и склеивается в `data.loader.js`:
 
 ```js
 DATA.characters.nodes  // { id, name, name_ru, actor, group, universe, image, … }
@@ -84,7 +85,7 @@ DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_
 
 ## 🤝 Вклад
 
-Я рад правкам — новые персонажи, связи, тайтлы и исправления. Откройте pull request или заведите issue по готовому шаблону в [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Изменения данных затрагивают только `data.js`, их легко ревьюить.
+Я рад правкам — новые персонажи, связи, тайтлы и исправления. Откройте pull request или заведите issue по готовому шаблону в [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Изменения данных затрагивают только `data.part*.js`, их легко ревьюить.
 
 ## 📄 Лицензия и авторство
 

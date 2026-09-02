@@ -66,12 +66,13 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 ```
 index.html    markup, meta, structured data, script/style includes
 styles.css    all styles and the dark theme
-data.js       the data (window.DATA): characters, stories, comics, links
+data.part1-8.js  the data (window.DATA), split into chunks
+data.loader.js   joins the chunks into one object at load time
 app.js        all logic — D3 graph, modes, search, filters, cards, mobile UI
-og-image.png  social preview (1200×630)  ·  preview-graph.png  README preview
+social-banner-en.png / social-banner-ru.png  social preview (1200×630)  ·  preview-graph.png  README preview
 ```
 
-I keep the data in `data.js` as one `DATA` object:
+I keep the data as one `DATA` object, shipped as `data.part1-8.js` and joined by `data.loader.js`:
 
 ```js
 DATA.characters.nodes  // { id, name, name_ru, actor, group, universe, image, … }
@@ -84,7 +85,7 @@ To add a character I drop an object into `DATA.characters.nodes`, add at least o
 
 ## 🤝 Contributing
 
-I welcome contributions — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates in [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Data changes only touch `data.js`, so they're easy to review.
+I welcome contributions — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates in [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Data changes only touch `data.part*.js`, so they're easy to review.
 
 ## 📄 License & credits
 
