@@ -46,7 +46,7 @@
 }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-  <link rel="stylesheet" href="styles.css?v=20260902">
+  <link rel="stylesheet" href="styles.css?v=20260902b">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -115,6 +115,7 @@ ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
   <div id="detail">
     <button id="detail-close" aria-label="Закрыть карточку"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <img id="detail-img" alt="" style="display:none" onerror="this.style.display='none'; this.removeAttribute('src');">
+    <button id="detail-img-zoom" class="img-zoom" style="display:none" aria-label="Посмотреть изображение целиком"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
     <div id="detail-body-wrap"><div id="detail-body"></div></div>
   </div>
   <div id="path-banner"></div>
@@ -158,8 +159,14 @@ ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
   <div id="m-sheet" class="m-sheet">
     <button class="m-sheet-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <img id="m-sheet-img" alt="" style="display:none" onerror="this.style.display='none'; this.removeAttribute('src');">
+    <button id="m-sheet-img-zoom" class="img-zoom" style="display:none" aria-label="Посмотреть изображение целиком"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
     <div class="m-sheet-title" id="m-sheet-title"></div>
     <div id="m-sheet-body"></div>
+  </div>
+  <!-- full-size image viewer, opened by the magnifier button on a card's picture -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Изображение">
+    <button id="lightbox-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <img id="lightbox-img" alt="">
   </div>
   <div id="m-sublayout"></div>
   <nav id="m-tabbar">
@@ -170,16 +177,16 @@ ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
   </nav>
 </div>
 
-<script src="data.part1.js?v=20260902"></script>
-<script src="data.part2.js?v=20260902"></script>
-<script src="data.part3.js?v=20260902"></script>
-<script src="data.part4.js?v=20260902"></script>
-<script src="data.part5.js?v=20260902"></script>
-<script src="data.part6.js?v=20260902"></script>
-<script src="data.part7.js?v=20260902"></script>
-<script src="data.part8.js?v=20260902"></script>
-<script src="data.loader.js?v=20260902"></script>
-<script src="app.js?v=20260902"></script>
+<script src="data.part1.js?v=20260902b"></script>
+<script src="data.part2.js?v=20260902b"></script>
+<script src="data.part3.js?v=20260902b"></script>
+<script src="data.part4.js?v=20260902b"></script>
+<script src="data.part5.js?v=20260902b"></script>
+<script src="data.part6.js?v=20260902b"></script>
+<script src="data.part7.js?v=20260902b"></script>
+<script src="data.part8.js?v=20260902b"></script>
+<script src="data.loader.js?v=20260902b"></script>
+<script src="app.js?v=20260902b"></script>
 
 </body>
 </html>

@@ -75,14 +75,20 @@ function readSearchUrl(title){
   return 'https://www.google.com/search?q=' + encodeURIComponent(title + ' comic read online');
 }
 
-// Fandom/Wikia serves images at their full original resolution by default (often
-// multiple MB for posters). Ask its image service for a small pre-scaled thumbnail
-// instead -- this is the single biggest win for load time and CPU/memory usage.
+// Images come in two flavours: self-hosted (images/<cat>/<id>.webp, 420px tall) with a
+// pre-built 160px-tall copy under images/thumbs/, and legacy Fandom/Wikia URLs, which
+// serve the full original resolution unless its image service is asked for a thumbnail.
+// Grids must never pull the full-size file -- that is the single biggest win for load
+// time and CPU/memory usage.
 const IS_MOBILE = (window.matchMedia && window.matchMedia('(max-width:720px)').matches) || (window.innerWidth||9999) <= 720;
+const THUMB_MAX_WIDTH = 200; // above this the full-size file is worth downloading
 function thumbUrl(url, widthPx){
   if (!url) return url;
-  if (url.indexOf('/revision/latest') === -1) return url;
   if (IS_MOBILE) widthPx = Math.min(widthPx, 72); // smaller images on phones = faster load
+  if (url.indexOf('images/') === 0) {
+    return widthPx <= THUMB_MAX_WIDTH ? url.replace('images/', 'images/thumbs/') : url;
+  }
+  if (url.indexOf('/revision/latest') === -1) return url;
   return url.replace('/revision/latest', '/revision/latest/scale-to-width-down/'+widthPx);
 }
 
@@ -99,8 +105,7 @@ function thumbUrl(url, widthPx){
   const NC = [
     { id:'mirage_new_mutants', name:'Mirage', name_ru:'Мираж', real_name:'Danielle Moonstar', real_name_ru:'Даниэль Мунстар',
       actor:'Blu Hunt', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
-      wiki_url:'https://marvel.fandom.com/wiki/Danielle_Moonstar_(Earth-10005)',
-      image: WD+'d/d2/New_Mutants_%28film%29_poster_002.jpg/revision/latest?cb=20200827214823' },
+      wiki_url:'https://marvel.fandom.com/wiki/Danielle_Moonstar_(Earth-10005)', },
     { id:'wolfsbane_new_mutants', name:'Wolfsbane', name_ru:'Волчица', real_name:'Rahne Sinclair', real_name_ru:'Рейн Синклер',
       actor:'Maisie Williams', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
       wiki_url:'https://marvel.fandom.com/wiki/Rahne_Sinclair_(Earth-10005)' },
@@ -142,23 +147,18 @@ function thumbUrl(url, widthPx){
   const NS = [
     { id:'story_x_men_origins_wolverine', title:'X-Men Origins: Wolverine', title_ru:'Люди Икс: Начало. Росомаха', type:'movie', phase:'xmen',
       date:'2009-05-01', event_year:2009.33, event_date_ru:'2009', event_date_en:'2009', universe:'Earth-10005',
-      poster: WD+'0/0d/X-Men_Origins_Wolverine_poster.jpg/revision/latest?cb=20120224001523',
       characters:['wolverine_fox','sabretooth_fox','deadpool_fox'] },
     { id:'story_the_new_mutants', title:'The New Mutants', title_ru:'Новые мутанты', type:'movie', phase:'xmen',
       date:'2020-08-28', event_year:2020.66, event_date_ru:'2020', event_date_en:'2020', universe:'Earth-10005',
-      poster: WD+'d/d2/New_Mutants_%28film%29_poster_002.jpg/revision/latest?cb=20200827214823',
       characters:['mirage_new_mutants','wolfsbane_new_mutants','cannonball_new_mutants','magik_new_mutants'] },
     { id:'story_legion_tv_series', title:'Legion (TV series)', title_ru:'Легион', type:'tv_series', phase:'xmen',
       date:'2017-02-08', event_year:2017.11, event_date_ru:'2017–2019', event_date_en:'2017–2019', universe:'Earth-10005',
-      poster: WD+'8/85/Legion_%28TV_series%29_poster_001.jpg/revision/latest?cb=20170123000826',
       characters:['legion_fox','professor_x_fox'] },
     { id:'story_fantastic_four_2005', title:'Fantastic Four', title_ru:'Фантастическая четвёрка', type:'movie', phase:'xmen',
       date:'2005-07-08', event_year:2005.52, event_date_ru:'2005', event_date_en:'2005', universe:'Earth-10005',
-      poster: WD+'b/b7/Fantastic_Four_%282005%29_poster.jpg/revision/latest?cb=20120224001200',
       characters:['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'] },
     { id:'story_fantastic_four_rise_of_the_silver_surfer', title:'Fantastic Four: Rise of the Silver Surfer', title_ru:'Фантастическая четвёрка: Вторжение Серебряного сёрфера', type:'movie', phase:'xmen',
       date:'2007-06-15', event_year:2007.46, event_date_ru:'2007', event_date_en:'2007', universe:'Earth-10005',
-      poster: WD+'2/2b/Fantastic_Four_Rise_of_the_Silver_Surfer_poster.jpg/revision/latest?cb=20120224001344',
       characters:['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'] }
   ];
   NS.forEach(s=>{
@@ -209,7 +209,8 @@ const storyLinksRaw = DATA.stories.edges.map(d=>Object.assign({},d));
   const charIds = new Set(DATA.characters.nodes.map(c=>c.id));
   const N = [];
   const K = (id,title,title_ru,line,date,cov,tie,chars)=>{
-    const d = {id:'comic_'+id, title, title_ru, line, date, cover: WD+cov};
+    // covers are self-hosted in images/comics/; `cov` keeps the original Fandom filename
+    const d = {id:'comic_'+id, title, title_ru, line, date, cover: 'images/comics/comic_'+id+'.webp'};
     if (tie && storyIds.has(tie)) d.tie_in = tie;
     if (chars){ const cc = chars.filter(x=>charIds.has(x)); if (cc.length) d.tie_in_chars = cc; }
     N.push(d);
@@ -359,7 +360,7 @@ function finishPath(target){
   }).join('');
   h += '<div style="color:var(--text-dim);font-size:11px;margin-top:8px">'+u.path_esc+'</div>';
   const endC = charById.get(path[path.length-1]);
-  if (endC && endC.image) { detailImg.src = thumbUrl(endC.image,340); detailImg.style.display='block'; } else { detailImg.style.display='none'; }
+  setDetailImage(endC && endC.image);
   detailBody.innerHTML = h; detailEl.style.display='block';
   detailBody.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>{
     const nd = charById.get(el.getAttribute('data-goto')); if(nd){ clearPath(); showCharDetail(nd); focusNode(nd); applySelection(nd.id); } }));
@@ -897,7 +898,7 @@ function updateVisibilityComics(){
 
 function showComicDetail(d){
   const u = UI();
-  if (d.cover) { detailImg.src = thumbUrl(d.cover,340); detailImg.style.display='block'; } else { detailImg.style.display = 'none'; }
+  setDetailImage(d.cover);
   const title = LANG==='ru'?d.title_ru:d.title;
   let h = `<h2>${title}</h2>`;
   h += `<div class="tag">${LINE_LABELS()[d.line]||d.line}</div>`;
@@ -1077,12 +1078,60 @@ function renderFilters(){
 // ---------------- detail panel ----------------
 const detailEl = document.getElementById('detail');
 const detailImg = document.getElementById('detail-img');
+const detailImgZoom = document.getElementById('detail-img-zoom');
+
+// Card pictures are cropped to a banner (object-fit:cover) and, on phones, downscaled
+// hard by thumbUrl(). The magnifier button next to each one opens the uncropped
+// original here, so `data-full` carries the untouched URL alongside the displayed src.
+const Lightbox = (function(){
+  const el = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  if (!el || !img) return { open(){}, close(){}, get isOpen(){ return false; } };
+  function open(src){
+    if (!src) return;
+    img.src = src;
+    el.classList.add('show');
+  }
+  function close(){
+    el.classList.remove('show');
+    img.removeAttribute('src');
+  }
+  // click anywhere on the backdrop (but not on the picture itself) closes
+  el.addEventListener('click', (ev)=>{ if (ev.target !== img) close(); });
+  img.addEventListener('error', close); // never leave an empty black screen up
+  return { open, close, get isOpen(){ return el.classList.contains('show'); } };
+})();
+
+// binds a magnifier button to the picture it belongs to
+function bindZoom(imgEl, btnEl){
+  if (!imgEl || !btnEl) return;
+  btnEl.addEventListener('click', ()=> Lightbox.open(imgEl.dataset.full || imgEl.src));
+  // the inline onerror on the <img> hides a broken picture — hide its button too
+  imgEl.addEventListener('error', ()=>{ btnEl.style.display = 'none'; });
+}
+bindZoom(detailImg, detailImgZoom);
+
+// single place where a detail card's picture is set, so the displayed thumbnail and the
+// full-size URL used by the zoom button never drift apart
+function setDetailImage(url){
+  if (url) {
+    detailImg.src = thumbUrl(url, 340);
+    detailImg.dataset.full = url;
+    detailImg.style.display = 'block';
+    detailImgZoom.style.display = 'inline-flex';
+  } else {
+    detailImg.style.display = 'none';
+    detailImg.removeAttribute('src');
+    delete detailImg.dataset.full;
+    detailImgZoom.style.display = 'none';
+  }
+}
 const detailBody = document.getElementById('detail-body');
 document.getElementById('detail-close').addEventListener('click', ()=>{ detailEl.style.display='none'; clearSelection(); });
 
 function showCharDetail(d){
   const u = UI();
-  if (d.image) { detailImg.src = thumbUrl(d.image,340); detailImg.style.display='block'; } else { detailImg.style.display='none'; }
+  setDetailImage(d.image);
   const name = LANG==='ru'?d.name_ru:d.name; const real = LANG==='ru'?d.real_name_ru:d.real_name;
   let h = `<h2>${name}</h2>`;
   if (real && real!==name && real!=='—') h += `<div class="real">${real}</div>`;
@@ -1132,7 +1181,7 @@ function showCharDetail(d){
 
 function showStoryDetail(d){
   const u = UI();
-  if (d.poster) { detailImg.src = thumbUrl(d.poster,340); detailImg.style.display='block'; } else { detailImg.style.display='none'; }
+  setDetailImage(d.poster);
   const title = LANG==='ru'?d.title_ru:d.title;
   let h = `<h2>${title}</h2>`;
   const typeLabel = d.type==='movie' ? u.type_movie : (d.type==='one_shot' ? u.type_one_shot : u.type_tv);
@@ -1385,6 +1434,7 @@ creditsOverlay.addEventListener('click', (ev)=>{
 document.addEventListener('keydown', (ev)=>{
   const tag = (ev.target && ev.target.tagName) || '';
   if (ev.key === 'Escape') {
+    if (Lightbox.isOpen) { Lightbox.close(); return; }
     if (creditsOverlay.classList.contains('show')) { creditsOverlay.classList.remove('show'); return; }
     resultsEl.style.display='none';
     if (pathMode || pathSet) { clearPath(); detailEl.style.display='none'; return; }
@@ -1438,7 +1488,7 @@ document.querySelectorAll('#comic-layout-switch button').forEach(b=>b.classList.
 // panels peeking above the tab bar). Replaced with ONE sheet (#m-sheet) whose body content
 // is swapped depending on what's open — one place to open/close/position/animate.
 const MSheet = (function(){
-  let sheetEl, imgEl, titleEl, bodyEl, backdrop, tabbar, filtersEl2;
+  let sheetEl, imgEl, zoomEl, titleEl, bodyEl, backdrop, tabbar, filtersEl2;
   let current = null; // 'search' | 'filters' | 'detail' | 'about' | null
   // each panel's real content lives in its desktop-only home element; we borrow it into
   // the sheet body while open and give it back on close, so all existing IDs/handlers
@@ -1505,16 +1555,23 @@ const MSheet = (function(){
     current = null;
     giveBack();
     imgEl.style.display = 'none'; imgEl.removeAttribute('src');
+    if (zoomEl) zoomEl.style.display = 'none';
     titleEl.textContent = '';
     syncTabbar();
   }
-  // opts: { title, contentEl, imgSrc }
+  // opts: { title, contentEl, imgSrc, imgFull }
   function open(name, opts){
     giveBack();
     current = name;
     titleEl.textContent = (opts && opts.title) || '';
-    if (opts && opts.imgSrc) { imgEl.src = opts.imgSrc; imgEl.style.display = 'block'; }
-    else { imgEl.style.display = 'none'; imgEl.removeAttribute('src'); }
+    if (opts && opts.imgSrc) {
+      imgEl.src = opts.imgSrc; imgEl.style.display = 'block';
+      imgEl.dataset.full = opts.imgFull || opts.imgSrc;
+      if (zoomEl) zoomEl.style.display = 'inline-flex';
+    } else {
+      imgEl.style.display = 'none'; imgEl.removeAttribute('src');
+      if (zoomEl) zoomEl.style.display = 'none';
+    }
     if (opts && opts.contentEl) borrow(opts.contentEl);
     // Force a synchronous layout flush (reading offsetHeight forces the browser to
     // apply the DOM mutations from borrow() right now) before starting the transform
@@ -1536,6 +1593,8 @@ const MSheet = (function(){
     if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return false;
     sheetEl = document.getElementById('m-sheet');
     imgEl = document.getElementById('m-sheet-img');
+    zoomEl = document.getElementById('m-sheet-img-zoom');
+    bindZoom(imgEl, zoomEl);
     titleEl = document.getElementById('m-sheet-title');
     bodyEl = document.getElementById('m-sheet-body');
     backdrop = document.getElementById('m-backdrop');
@@ -1615,7 +1674,9 @@ function setupMobileUI(){
     if (now === lastSeen) return; // our own write during the previous reaction, or a no-op
     lastSeen = now;
     if (now === 'block' && MSheet.current !== 'detail') {
-      MSheet.open('detail', { contentEl: document.getElementById('detail-body-wrap'), imgSrc: detailImg.style.display!=='none' ? detailImg.src : null });
+      const shown = detailImg.style.display !== 'none';
+      MSheet.open('detail', { contentEl: document.getElementById('detail-body-wrap'),
+        imgSrc: shown ? detailImg.src : null, imgFull: shown ? detailImg.dataset.full : null });
       lastSeen = 'none';
       detailEl.style.display = 'none'; // real #detail stays hidden; content now lives in the sheet
     } else if (now === 'none' && MSheet.current === 'detail') {
