@@ -34,7 +34,7 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 
 |  |  |
 |:--:|:--:|
-| **370** characters | **725** connections |
+| **370** characters | **790** connections |
 | **149** movies & series | **166** comics |
 | **12** universes | **RU / EN** |
 
@@ -55,7 +55,7 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 
 ## 🎬 The three modes
 
-**Characters.** A D3 force simulation of 370 heroes and 725 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
+**Characters.** A D3 force simulation of 370 heroes and 790 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
 
 **Stories.** 149 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how the Sony, Fox and animation lines interleave. This is the watch-order view.
 
