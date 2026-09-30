@@ -30,19 +30,28 @@ console.log('Computed counts:', { charCount, charEdgeCount, storyCount, comicCou
 const htmlPath = path.join(ROOT, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 
+// Russian nouns agree with the number (1 фильм, 2 фильма, 5 фильмов; 11–14 always take the
+// third form), so every Russian pattern matches any of the three forms and writes the right one.
+function ru(n, one, few, many) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+  return many;
+}
+const forms = (...f) => f.join('|');
 const replacements = [
-  [/\d+ героев/g, `${charCount} героев`],
-  [/\d+ персонажей/g, `${charCount} персонажей`],
+  [new RegExp(`\\d+ (?:${forms('героя', 'героев', 'герой')})(?![а-я])`, 'g'), `${charCount} ${ru(charCount, 'герой', 'героя', 'героев')}`],
+  [new RegExp(`\\d+ (?:${forms('персонажа', 'персонажей', 'персонаж')})(?![а-я])`, 'g'), `${charCount} ${ru(charCount, 'персонаж', 'персонажа', 'персонажей')}`],
   [/\d+ characters/g, `${charCount} characters`],
-  [/\d+ фильма и сериала/g, `${storyCount} фильма и сериала`],
-  [/\d+ фильма(?!\sи)/g, `${storyCount} фильма`],
+  [new RegExp(`\\d+ (?:${forms('фильма и сериала', 'фильмов и сериалов', 'фильм и сериал')})(?![а-я])`, 'g'), `${storyCount} ${ru(storyCount, 'фильм и сериал', 'фильма и сериала', 'фильмов и сериалов')}`],
+  [new RegExp(`\\d+ (?:${forms('фильма', 'фильмов', 'фильм')})(?![а-я]| и)`, 'g'), `${storyCount} ${ru(storyCount, 'фильм', 'фильма', 'фильмов')}`],
   [/\d+ movies and series/g, `${storyCount} movies and series`],
-  [/\d+ комиксов/g, `${comicCount} комиксов`],
-  [/\d+ выпусков/g, `${comicCount} выпусков`],
+  [new RegExp(`\\d+ (?:${forms('комикса', 'комиксов', 'комикс')})(?![а-я])`, 'g'), `${comicCount} ${ru(comicCount, 'комикс', 'комикса', 'комиксов')}`],
+  [new RegExp(`\\d+ (?:${forms('выпуска', 'выпусков', 'выпуск')})(?![а-я])`, 'g'), `${comicCount} ${ru(comicCount, 'выпуск', 'выпуска', 'выпусков')}`],
   [/\d+ comics/g, `${comicCount} comics`],
-  [/\d+ вселенных/g, `${universeCount} вселенных`],
+  [new RegExp(`\\d+ (?:${forms('вселенных', 'вселенные', 'вселенная')})(?![а-я])`, 'g'), `${universeCount} ${ru(universeCount, 'вселенная', 'вселенные', 'вселенных')}`],
   [/\d+ universes/g, `${universeCount} universes`],
-  [/граф из \d+ героев и \d+\+? связей/g, `граф из ${charCount} героев и ${edgeRounded}+ связей`],
+  [/граф из \d+ (?:героя|героев|герой) и \d+\+? связей/g, `граф из ${charCount} ${ru(charCount, 'героя', 'героев', 'героев')} и ${edgeRounded}+ связей`],
 ];
 let changedCount = 0;
 for (const [re, replacement] of replacements) {
