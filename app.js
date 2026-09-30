@@ -1,5 +1,5 @@
 const DATA = window.DATA;
-const LINE_COLORS = {"movie_preludes": "#5b8def", "adaptations": "#f2a900", "spider_series": "#ff5f52", "x_men_series": "#2979ff", "iron_man_series": "#ff8f00", "avengers_series": "#7e57c2", "first_appearances": "#3ecf8e", "classic_events": "#e23636"};
+const LINE_COLORS = {"movie_preludes": "#5b8def", "adaptations": "#f2a900", "spider_series": "#ff5f52", "x_men_series": "#2979ff", "iron_man_series": "#ff8f00", "thor_series": "#4fc3f7", "cap_series": "#42a5f5", "cosmic_series": "#ffca28", "avengers_series": "#7e57c2", "street_series": "#7e57c2", "first_appearances": "#3ecf8e", "classic_events": "#e23636"};
 const EDGE_COLORS = {"team": "#5b8def", "family": "#e879c7", "romantic": "#ff4d6d", "ally": "#3ecf8e", "enemy": "#ff8a3d", "variant": "#c084fc", "chronology": "#546279", "shared_characters": "#f2c14e"};
 const EDGE_LABELS_RU = {"team": "Команда/союз", "family": "Семья", "romantic": "Романтика", "ally": "Союзники", "enemy": "Враги", "variant": "Альт. вариант", "chronology": "Хронология", "shared_characters": "Общие персонажи"}; const EDGE_LABELS_EN = {"team": "Team/alliance", "family": "Family", "romantic": "Romantic", "ally": "Allies", "enemy": "Enemies", "variant": "Alt. variant", "chronology": "Chronology", "shared_characters": "Shared characters"};
 const GROUP_COLORS = {"avengers": "#e23636", "guardians_of_the_galaxy": "#f2a900", "wakanda_court": "#5a2d82", "asgard": "#4fc3f7", "pym_family_team": "#8bc34a", "captain_marvel_crew": "#ffca28", "spiderman_circle": "#d32f2f", "thunderbolts": "#607d8b", "ta_lo": "#26a69a", "eternals": "#c9a227", "tva": "#7e57c2", "shield_core": "#455a64", "doctor_strange_circle": "#26c6da", "cosmic": "#fbbf24", "multiverse_variants": "#c084fc", "villain": "#616161", "other": "#9e9e9e", "x_men": "#2979ff", "brotherhood": "#8e24aa", "fantastic_four": "#00acc1", "symbiote": "#607d8b", "spider_family": "#ef5350", "street_defenders": "#7b1fa2", "illuminati": "#8d6e63", "zombies": "#689f38", "spider_verse": "#ff3d7f"};
@@ -17,7 +17,7 @@ const MEDIA_LABELS_RU = {"movie": "Фильмы", "tv_series": "Сериалы",
 // (e.g. "battle_of_new_york") that were shown verbatim in BOTH languages. This lookup
 // gives every label a proper ru + en form; translateEdgeLabel() picks by LANG and
 // falls back to the raw string if a label is somehow not in the map.
-const EDGE_LABEL_TR = {"son":{"ru":"сын","en":"son"},"partner":{"ru":"напарник","en":"partner"},"daughter":{"ru":"дочь","en":"daughter"},"sister":{"ru":"сестра","en":"sister"},"brother":{"ru":"брат","en":"brother"},"aunt":{"ru":"тётя","en":"aunt"},"father":{"ru":"отец","en":"father"},"husband":{"ru":"муж","en":"husband"},"mother":{"ru":"мать","en":"mother"},"wife":{"ru":"жена","en":"wife"},"avengers":{"ru":"Мстители","en":"Avengers"},"guardians_of_the_galaxy":{"ru":"Стражи Галактики","en":"Guardians of the Galaxy"},"wakanda_court":{"ru":"Двор Ваканды","en":"Wakandan Court"},"doctor_strange_circle":{"ru":"Круг Доктора Стрэнджа","en":"Doctor Strange's Circle"},"asgard":{"ru":"Асгард","en":"Asgard"},"pym_family_team":{"ru":"Команда семьи Пим","en":"Pym Family Team"},"captain_marvel_crew":{"ru":"Команда Капитана Марвел","en":"Captain Marvel Crew"},"spiderman_circle":{"ru":"Круг Человека-паука","en":"Spider-Man's Circle"},"thunderbolts":{"ru":"Громовержцы","en":"Thunderbolts"},"ta_lo":{"ru":"Та Ло","en":"Ta Lo"},"eternals":{"ru":"Вечные","en":"Eternals"},"tva":{"ru":"АВВ (TVA)","en":"TVA"},"shield_core":{"ru":"Ядро Щ.И.Т.","en":"S.H.I.E.L.D. Core"},"mentor":{"ru":"наставник","en":"mentor"},"ally":{"ru":"союзник","en":"ally"},"best_friends":{"ru":"лучшие друзья","en":"best friends"},"partners":{"ru":"напарники","en":"partners"},"science_bros":{"ru":"научные братаны","en":"science bros"},"allies":{"ru":"союзники","en":"allies"},"mentorship":{"ru":"наставничество","en":"mentorship"},"teammates":{"ru":"товарищи по команде","en":"teammates"},"inspiration":{"ru":"вдохновение","en":"inspiration"},"love_interest":{"ru":"объект симпатии","en":"love interest"},"romantic":{"ru":"романтическая связь","en":"romantic"},"duel_of_long_beach":{"ru":"Дуэль в Лонг-Бич","en":"Duel of Long Beach"},"battle_at_stark_expo":{"ru":"Битва на Старк-Экспо","en":"Battle at Stark Expo"},"mandarin_attacks":{"ru":"Атаки Мандарина","en":"Mandarin Attacks"},"battle_of_titan":{"ru":"Битва на Титане","en":"Battle of Titan"},"ultron_offensive":{"ru":"Наступление Альтрона","en":"Ultron Offensive"},"wwii":{"ru":"Вторая мировая","en":"WWII"},"hydra_uprising":{"ru":"Восстание ГИДРЫ","en":"HYDRA Uprising"},"battle_of_earth":{"ru":"Битва за Землю","en":"Battle of Earth"},"asgard_ragnarok":{"ru":"Рагнарёк Асгарда","en":"Asgard Ragnarok"},"battle_of_greenwich":{"ru":"Битва в Гринвиче","en":"Battle of Greenwich"},"battle_of_wakanda":{"ru":"Битва за Ваканду","en":"Battle of Wakanda"},"frost_giant_invasion":{"ru":"Вторжение ледяных великанов","en":"Frost Giant Invasion"},"frost_giant_war":{"ru":"Война с ледяными великанами","en":"Frost Giant War"},"wakandan_civil_war":{"ru":"Гражданская война в Ваканде","en":"Wakandan Civil War"},"atlantean_wakandan_war":{"ru":"Война Атлантиды и Ваканды","en":"Atlantean-Wakandan War"},"staten_island_ferry_incident":{"ru":"Инцидент на пароме Стейтен-Айленда","en":"Staten Island Ferry Incident"},"london_attack":{"ru":"Атака на Лондон","en":"London Attack"},"multiverse_battle":{"ru":"Битва мультивселенной","en":"Multiverse Battle"},"hong_kong_battle":{"ru":"Битва в Гонконге","en":"Hong Kong Battle"},"kree_skrull_war":{"ru":"Война Кри и Скруллов","en":"Kree-Skrull War"},"quantum_realm_war":{"ru":"Война в квантовом мире","en":"Quantum Realm War"},"battle_of_xandar":{"ru":"Битва за Ксандар","en":"Battle of Xandar"},"battle_of_ego_planet":{"ru":"Битва на планете Эго","en":"Battle of Ego's Planet"},"complicated_family":{"ru":"сложная семья","en":"complicated family"},"ten_rings_conflict":{"ru":"Конфликт Десяти колец","en":"Ten Rings Conflict"},"hells_kitchen_war":{"ru":"Война в Адской кухне","en":"Hell's Kitchen War"},"new_york_politics":{"ru":"Политика Нью-Йорка","en":"New York Politics"},"disciples_of_ammit":{"ru":"Ученики Аммит","en":"Disciples of Ammit"},"witches_road":{"ru":"Дорога Ведьм","en":"Witches' Road"},"civil_war":{"ru":"Гражданская война","en":"Civil War"},"niece":{"ru":"племянница","en":"niece"},"creator_experiment":{"ru":"эксперимент создателя","en":"Creator's Experiment"},"battle_of_orgocorp":{"ru":"Битва в ОргоКорп","en":"Battle of OrgoCorp"},"wakanda_liaison":{"ru":"связной Ваканды","en":"Wakanda Liaison"},"sokovia_frame_up":{"ru":"Подстава в Соковии","en":"Sokovia Frame-Up"},"cousin":{"ru":"двоюродный брат/сестра","en":"cousin"},"wakanda_forever":{"ru":"Ваканда навсегда","en":"Wakanda Forever"},"judgement_of_earth":{"ru":"Суд над Землёй","en":"Judgement of Earth"},"variant":{"ru":"вариант","en":"variant"},"guardians_of_the_multiverse":{"ru":"Стражи мультивселенной","en":"Guardians of the Multiverse"},"tried_to_kill_him":{"ru":"пытался его убить","en":"tried to kill him"},"battle_of_sokovia":{"ru":"Битва за Соковию","en":"Battle of Sokovia"},"battle_of_new_york":{"ru":"Битва за Нью-Йорк","en":"Battle of New York"},"мультивселенная":{"ru":"мультивселенная","en":"multiverse"},"треугольник":{"ru":"треугольник","en":"love triangle"},"сын":{"ru":"сын","en":"son"},"идейные противники":{"ru":"идейные противники","en":"ideological opponents"},"брак":{"ru":"брак","en":"marriage"},"брат/сестра":{"ru":"брат/сестра","en":"sibling"},"герольд":{"ru":"герольд","en":"herald"},"приёмная дочь":{"ru":"приёмная дочь","en":"adopted daughter"},"бывшая":{"ru":"бывшая","en":"ex-partner"},"наставник":{"ru":"наставник","en":"mentor"},"потомок симбиота":{"ru":"потомок симбиота","en":"symbiote offspring"},"друзья-враги":{"ru":"друзья-враги","en":"frenemies"},"чувства":{"ru":"чувства","en":"feelings"},"лучший друг":{"ru":"лучший друг","en":"best friend"},"отец":{"ru":"отец","en":"father"},"работодатель":{"ru":"работодатель","en":"employer"},"Иллюминаты":{"ru":"Иллюминаты","en":"Illuminati"},"заражение":{"ru":"заражение","en":"infection"},"наблюдает":{"ru":"наблюдает","en":"observes"},"угроза мультивселенной":{"ru":"угроза мультивселенной","en":"multiverse threat"},"приёмный отец":{"ru":"приёмный отец","en":"adoptive father"},"высшая иерархия":{"ru":"высшая иерархия","en":"higher hierarchy"},"творец и творение":{"ru":"творец и творение","en":"creator and creation"},"дуальность порядка и хаоса":{"ru":"дуальность порядка и хаоса","en":"duality of order and chaos"},"аспекты пространства-времени":{"ru":"аспекты пространства-времени","en":"aspects of spacetime"},"конец сущего":{"ru":"конец сущего","en":"the end of all things"},"одержимость":{"ru":"одержимость","en":"obsession"},"носитель Феникса":{"ru":"носитель Феникса","en":"Phoenix host"},"равновесие вселенной":{"ru":"равновесие вселенной","en":"balance of the universe"},"космический баланс":{"ru":"космический баланс","en":"cosmic balance"},"воля свыше":{"ru":"воля свыше","en":"higher will"},"племянник":{"ru":"племянник","en":"nephew"},"супруги":{"ru":"супруги","en":"spouses"},"братья":{"ru":"братья","en":"brothers"},"взаимная симпатия":{"ru":"взаимная симпатия","en":"mutual attraction"},"команда Spider-Verse":{"ru":"команда Spider-Verse","en":"Spider-Verse team"},"Общество Пауков":{"ru":"Общество Пауков","en":"Spider-Society"},"наставница":{"ru":"наставница","en":"mentor"},"близкий друг":{"ru":"близкий друг","en":"close friend"},"друзья":{"ru":"друзья","en":"friends"},"помог сбежать":{"ru":"помог сбежать","en":"helped him escape"},"объявил аномалией":{"ru":"объявил аномалией","en":"declared him an anomaly"},"заклятый враг":{"ru":"заклятый враг","en":"arch-enemy"},"убил Питера его мира":{"ru":"убил Питера его мира","en":"killed his world's Peter"},"коллайдер Alchemax":{"ru":"коллайдер Alchemax","en":"Alchemax collider"},"нанял Бродягу":{"ru":"нанял Бродягу","en":"hired the Prowler"},"учёная Alchemax":{"ru":"учёная Alchemax","en":"Alchemax scientist"},"охотилась за ним":{"ru":"охотилась за ним","en":"hunted him"},"столкновение на Мумбаттане":{"ru":"столкновение на Мумбаттане","en":"clash in Mumbattan"},"Земля-42":{"ru":"Земля-42","en":"Earth-42"},"Бродяга Земли-42":{"ru":"Бродяга Земли-42","en":"Prowler of Earth-42"},"нуарная Земля-90214":{"ru":"нуарная Земля-90214","en":"noir Earth-90214"},"мультяшная Земля-8311":{"ru":"мультяшная Земля-8311","en":"cartoon Earth-8311"},"Фантастическая четвёрка":{"ru":"Фантастическая четвёрка","en":"Fantastic Four"},"сестра и брат":{"ru":"сестра и брат","en":"sister and brother"},"робот-ассистент":{"ru":"робот-ассистент","en":"robot assistant"},"нянька":{"ru":"нянька","en":"nanny"},"вестница":{"ru":"вестница","en":"herald"},"он выучил её язык":{"ru":"он выучил её язык","en":"he learned her language"},"пожиратель миров":{"ru":"пожиратель миров","en":"devourer of worlds"},"жаждет его силы":{"ru":"жаждет его силы","en":"craves his power"},"остановила его":{"ru":"остановила его","en":"stopped him"},"бывший противник":{"ru":"бывший противник","en":"former adversary"},"договор с Подземьей":{"ru":"договор с Подземьей","en":"pact with Subterranea"},"охотится за силой":{"ru":"охотится за силой","en":"hunts for power"},"Мстители против Дума":{"ru":"Мстители против Дума","en":"Avengers vs. Doom"},"Судный день":{"ru":"Судный день","en":"Doomsday"},"Новые Мстители":{"ru":"Новые Мстители","en":"New Avengers"},"проект «Часовой»":{"ru":"проект «Часовой»","en":"Sentry Project"},"Громовержцы":{"ru":"Громовержцы","en":"Thunderbolts"},"Красная комната":{"ru":"Красная комната","en":"Red Room"},"подчинялась отцу":{"ru":"подчинялась отцу","en":"obeyed her father"},"винит в катастрофе":{"ru":"винит в катастрофе","en":"blames him for the disaster"},"охота за частицами":{"ru":"охота за частицами","en":"hunt for particles"},"первый большой враг":{"ru":"первый большой враг","en":"first major enemy"},"спарринг-партнёр":{"ru":"спарринг-партнёр","en":"sparring partner"},"подзащитный":{"ru":"подзащитный","en":"client"},"одержим его кровью":{"ru":"одержим его кровью","en":"obsessed with his blood"},"шантажировал Росса":{"ru":"шантажировал Росса","en":"blackmailed Ross"},"Дивный новый мир":{"ru":"Дивный новый мир","en":"Brave New World"},"бывший коллега":{"ru":"бывший коллега","en":"former colleague"},"сделка с дьяволом":{"ru":"сделка с дьяволом","en":"deal with the devil"},"источник силы":{"ru":"источник силы","en":"source of power"},"втянул в криминал":{"ru":"втянул в криминал","en":"drew him into crime"},"коллеги-актёры":{"ru":"коллеги-актёры","en":"fellow actors"},"пленник-артист":{"ru":"пленник-артист","en":"captive performer"},"сыграл «Мандарина»":{"ru":"сыграл «Мандарина»","en":"played 'the Mandarin'"},"подзащитный Мэрдока":{"ru":"подзащитный Мэрдока","en":"Murdock's client"},"система Фиска":{"ru":"система Фиска","en":"Fisk's system"},"серийный убийца":{"ru":"серийный убийца","en":"serial killer"},"стрелял в Фиска":{"ru":"стрелял в Фиска","en":"shot Fisk"},"убийца Фогги":{"ru":"убийца Фогги","en":"Foggy's killer"},"казнил Айялу":{"ru":"казнил Айялу","en":"executed Ayala"},"названый дядя":{"ru":"названый дядя","en":"uncle figure"},"охотилась на Ронина":{"ru":"охотилась на Ронина","en":"hunted Ronin"},"схватка в прошлом":{"ru":"схватка в прошлом","en":"a past clash"},"спорный союзник":{"ru":"спорный союзник","en":"uneasy ally"},"война с Фиском":{"ru":"война с Фиском","en":"war with Fisk"},"доверенное лицо":{"ru":"доверенное лицо","en":"confidant"},"сложные отношения":{"ru":"сложные отношения","en":"complicated relationship"},"Защитники":{"ru":"Защитники","en":"Defenders"},"Герои по найму":{"ru":"Герои по найму","en":"Heroes for Hire"},"лучший друг и партнёр":{"ru":"лучший друг и партнёр","en":"best friend and partner"},"давняя любовь":{"ru":"давняя любовь","en":"long-time love"},"Nelson & Murdock":{"ru":"Nelson & Murdock","en":"Nelson & Murdock"},"криминальный Нью-Йорк":{"ru":"криминальный Нью-Йорк","en":"criminal New York"},"новый Сокол":{"ru":"новый Сокол","en":"the new Falcon"},"наставник-суперсолдат":{"ru":"наставник-суперсолдат","en":"super-soldier mentor"},"знакомы с Кореи":{"ru":"знакомы с Кореи","en":"acquainted since Korea"},"глава «Серпента»":{"ru":"глава «Серпента»","en":"leader of the Serpent Society"},"советница Росса":{"ru":"советница Росса","en":"Ross's advisor"},"неохотная союзница":{"ru":"неохотная союзница","en":"reluctant ally"},"позвала в Тёмное измерение":{"ru":"позвала в Тёмное измерение","en":"summoned him to the Dark Dimension"},"послан Зевсом":{"ru":"послан Зевсом","en":"sent by Zeus"},"старый друг Тед":{"ru":"старый друг Тед","en":"old friend Ted"},"шабаш Дороги Ведьм":{"ru":"шабаш Дороги Ведьм","en":"Witches' Road coven"},"жаждет мести":{"ru":"жаждет мести","en":"craves revenge"},"сокамерники":{"ru":"сокамерники","en":"cellmates"},"отряд из Пустоты":{"ru":"отряд из Пустоты","en":"squad from the Void"},"Мстители":{"ru":"Мстители","en":"Avengers"},"напарники":{"ru":"напарники","en":"partners"},"были женаты":{"ru":"были женаты","en":"were married"},"«дочь» (классика)":{"ru":"«дочь» (классика)","en":"'daughter' (classic)"},"создание Альтрона":{"ru":"создание Альтрона","en":"Ultron's creation"},"создатель":{"ru":"создатель","en":"creator"},"основатели Мстителей":{"ru":"основатели Мстителей","en":"founding Avengers"},"напарник и преемник":{"ru":"напарник и преемник","en":"partner and successor"},"война со Мстителями":{"ru":"война со Мстителями","en":"war with the Avengers"},"потомок Ричардсов":{"ru":"потомок Ричардсов","en":"Richards descendant"},"Пустота против Халка":{"ru":"Пустота против Халка","en":"the Void vs. Hulk"},"соперник и друг":{"ru":"соперник и друг","en":"rival and friend"},"кумир и наставница":{"ru":"кумир и наставница","en":"idol and mentor"},"юные герои":{"ru":"юные герои","en":"young heroes"},"кузина":{"ru":"кузина","en":"cousin"},"Щ.И.Т.":{"ru":"Щ.И.Т.","en":"S.H.I.E.L.D."},"безответная страсть":{"ru":"безответная страсть","en":"unrequited passion"},"соперник и Иллюминат":{"ru":"соперник и Иллюминат","en":"rival and Illuminati member"},"Захватчики":{"ru":"Захватчики","en":"Invaders"},"защитники города":{"ru":"защитники города","en":"protectors of the city"},"цель Карателя":{"ru":"цель Карателя","en":"the Punisher's target"},"криминальный король":{"ru":"криминальный король","en":"crime lord"},"убил Электру":{"ru":"убил Электру","en":"killed Elektra"},"ночные мстители":{"ru":"ночные мстители","en":"nighttime vigilantes"},"Зловещая шестёрка":{"ru":"Зловещая шестёрка","en":"Sinister Six"},"трагический враг":{"ru":"трагический враг","en":"tragic foe"},"Тёмное измерение":{"ru":"Тёмное измерение","en":"Dark Dimension"},"советник героев":{"ru":"советник героев","en":"advisor to heroes"},"владыка ада":{"ru":"владыка ада","en":"lord of hell"},"One More Day":{"ru":"One More Day","en":"One More Day"},"сделки с Думом":{"ru":"сделки с Думом","en":"dealings with Doom"},"приёмный брат":{"ru":"приёмный брат","en":"adoptive brother"},"дочь (мифы)":{"ru":"дочь (мифы)","en":"daughter (myth)"},"богиня смерти":{"ru":"богиня смерти","en":"goddess of death"},"соперники за души":{"ru":"соперники за души","en":"rivals for souls"},"Человек-паук 2099":{"ru":"Человек-паук 2099","en":"Spider-Man 2099"},"союзники Сэма":{"ru":"союзники Сэма","en":"Sam's allies"},"ночная нечисть":{"ru":"ночная нечисть","en":"creatures of the night"},"мозговые волны Саймона (комиксы)":{"ru":"мозговые волны Саймона (комиксы)","en":"Simon's brainwaves (comics)"},"домашний робот":{"ru":"домашний робот","en":"household robot"},"подземные твари":{"ru":"подземные твари","en":"subterranean creatures"},"попутчик в Та Ло":{"ru":"попутчик в Та Ло","en":"companion in Ta Lo"},"эпоха страха в Адской кухне":{"ru":"эпоха страха в Адской кухне","en":"reign of fear in Hell's Kitchen"},"угрожал в тюрьме":{"ru":"угрожал в тюрьме","en":"threatened him in prison"},"разбит Тором на глазах Зевса":{"ru":"разбит Тором на глазах Зевса","en":"defeated by Thor before Zeus"},"союзницы Стрэнджа":{"ru":"союзницы Стрэнджа","en":"Strange's allies"},"боевой побратим":{"ru":"боевой побратим","en":"battle brother"},"сцена после титров «Морбиуса»":{"ru":"сцена после титров «Морбиуса»","en":"Morbius post-credits scene"},"одна вселенная":{"ru":"одна вселенная","en":"same universe"}};
+const EDGE_LABEL_TR = {"son":{"ru":"сын","en":"son"},"partner":{"ru":"напарник","en":"partner"},"daughter":{"ru":"дочь","en":"daughter"},"sister":{"ru":"сестра","en":"sister"},"brother":{"ru":"брат","en":"brother"},"aunt":{"ru":"тётя","en":"aunt"},"father":{"ru":"отец","en":"father"},"husband":{"ru":"муж","en":"husband"},"mother":{"ru":"мать","en":"mother"},"wife":{"ru":"жена","en":"wife"},"avengers":{"ru":"Мстители","en":"Avengers"},"guardians_of_the_galaxy":{"ru":"Стражи Галактики","en":"Guardians of the Galaxy"},"wakanda_court":{"ru":"Двор Ваканды","en":"Wakandan Court"},"doctor_strange_circle":{"ru":"Круг Доктора Стрэнджа","en":"Doctor Strange's Circle"},"asgard":{"ru":"Асгард","en":"Asgard"},"pym_family_team":{"ru":"Команда семьи Пим","en":"Pym Family Team"},"captain_marvel_crew":{"ru":"Команда Капитана Марвел","en":"Captain Marvel Crew"},"spiderman_circle":{"ru":"Круг Человека-паука","en":"Spider-Man's Circle"},"thunderbolts":{"ru":"Громовержцы","en":"Thunderbolts"},"ta_lo":{"ru":"Та Ло","en":"Ta Lo"},"eternals":{"ru":"Вечные","en":"Eternals"},"tva":{"ru":"АВВ (TVA)","en":"TVA"},"shield_core":{"ru":"Ядро Щ.И.Т.","en":"S.H.I.E.L.D. Core"},"mentor":{"ru":"наставник","en":"mentor"},"ally":{"ru":"союзник","en":"ally"},"best_friends":{"ru":"лучшие друзья","en":"best friends"},"partners":{"ru":"напарники","en":"partners"},"science_bros":{"ru":"научные братаны","en":"science bros"},"allies":{"ru":"союзники","en":"allies"},"mentorship":{"ru":"наставничество","en":"mentorship"},"teammates":{"ru":"товарищи по команде","en":"teammates"},"inspiration":{"ru":"вдохновение","en":"inspiration"},"love_interest":{"ru":"объект симпатии","en":"love interest"},"romantic":{"ru":"романтическая связь","en":"romantic"},"duel_of_long_beach":{"ru":"Дуэль в Лонг-Бич","en":"Duel of Long Beach"},"battle_at_stark_expo":{"ru":"Битва на Старк-Экспо","en":"Battle at Stark Expo"},"mandarin_attacks":{"ru":"Атаки Мандарина","en":"Mandarin Attacks"},"battle_of_titan":{"ru":"Битва на Титане","en":"Battle of Titan"},"ultron_offensive":{"ru":"Наступление Альтрона","en":"Ultron Offensive"},"wwii":{"ru":"Вторая мировая","en":"WWII"},"hydra_uprising":{"ru":"Восстание ГИДРЫ","en":"HYDRA Uprising"},"battle_of_earth":{"ru":"Битва за Землю","en":"Battle of Earth"},"asgard_ragnarok":{"ru":"Рагнарёк Асгарда","en":"Asgard Ragnarok"},"battle_of_greenwich":{"ru":"Битва в Гринвиче","en":"Battle of Greenwich"},"battle_of_wakanda":{"ru":"Битва за Ваканду","en":"Battle of Wakanda"},"frost_giant_invasion":{"ru":"Вторжение ледяных великанов","en":"Frost Giant Invasion"},"frost_giant_war":{"ru":"Война с ледяными великанами","en":"Frost Giant War"},"wakandan_civil_war":{"ru":"Гражданская война в Ваканде","en":"Wakandan Civil War"},"atlantean_wakandan_war":{"ru":"Война Атлантиды и Ваканды","en":"Atlantean-Wakandan War"},"staten_island_ferry_incident":{"ru":"Инцидент на пароме Стейтен-Айленда","en":"Staten Island Ferry Incident"},"london_attack":{"ru":"Атака на Лондон","en":"London Attack"},"multiverse_battle":{"ru":"Битва мультивселенной","en":"Multiverse Battle"},"hong_kong_battle":{"ru":"Битва в Гонконге","en":"Hong Kong Battle"},"kree_skrull_war":{"ru":"Война Кри и Скруллов","en":"Kree-Skrull War"},"quantum_realm_war":{"ru":"Война в квантовом мире","en":"Quantum Realm War"},"battle_of_xandar":{"ru":"Битва за Ксандар","en":"Battle of Xandar"},"battle_of_ego_planet":{"ru":"Битва на планете Эго","en":"Battle of Ego's Planet"},"complicated_family":{"ru":"сложная семья","en":"complicated family"},"ten_rings_conflict":{"ru":"Конфликт Десяти колец","en":"Ten Rings Conflict"},"hells_kitchen_war":{"ru":"Война в Адской кухне","en":"Hell's Kitchen War"},"new_york_politics":{"ru":"Политика Нью-Йорка","en":"New York Politics"},"disciples_of_ammit":{"ru":"Ученики Аммит","en":"Disciples of Ammit"},"witches_road":{"ru":"Дорога Ведьм","en":"Witches' Road"},"civil_war":{"ru":"Гражданская война","en":"Civil War"},"niece":{"ru":"племянница","en":"niece"},"creator_experiment":{"ru":"эксперимент создателя","en":"Creator's Experiment"},"battle_of_orgocorp":{"ru":"Битва в ОргоКорп","en":"Battle of OrgoCorp"},"wakanda_liaison":{"ru":"связной Ваканды","en":"Wakanda Liaison"},"sokovia_frame_up":{"ru":"Подстава в Соковии","en":"Sokovia Frame-Up"},"cousin":{"ru":"двоюродный брат/сестра","en":"cousin"},"wakanda_forever":{"ru":"Ваканда навсегда","en":"Wakanda Forever"},"judgement_of_earth":{"ru":"Суд над Землёй","en":"Judgement of Earth"},"variant":{"ru":"вариант","en":"variant"},"guardians_of_the_multiverse":{"ru":"Стражи мультивселенной","en":"Guardians of the Multiverse"},"tried_to_kill_him":{"ru":"пытался его убить","en":"tried to kill him"},"battle_of_sokovia":{"ru":"Битва за Соковию","en":"Battle of Sokovia"},"battle_of_new_york":{"ru":"Битва за Нью-Йорк","en":"Battle of New York"},"мультивселенная":{"ru":"мультивселенная","en":"multiverse"},"треугольник":{"ru":"треугольник","en":"love triangle"},"сын":{"ru":"сын","en":"son"},"идейные противники":{"ru":"идейные противники","en":"ideological opponents"},"брак":{"ru":"брак","en":"marriage"},"брат/сестра":{"ru":"брат/сестра","en":"sibling"},"герольд":{"ru":"герольд","en":"herald"},"приёмная дочь":{"ru":"приёмная дочь","en":"adopted daughter"},"бывшая":{"ru":"бывшая","en":"ex-partner"},"наставник":{"ru":"наставник","en":"mentor"},"потомок симбиота":{"ru":"потомок симбиота","en":"symbiote offspring"},"друзья-враги":{"ru":"друзья-враги","en":"frenemies"},"чувства":{"ru":"чувства","en":"feelings"},"лучший друг":{"ru":"лучший друг","en":"best friend"},"отец":{"ru":"отец","en":"father"},"работодатель":{"ru":"работодатель","en":"employer"},"Иллюминаты":{"ru":"Иллюминаты","en":"Illuminati"},"заражение":{"ru":"заражение","en":"infection"},"наблюдает":{"ru":"наблюдает","en":"observes"},"угроза мультивселенной":{"ru":"угроза мультивселенной","en":"multiverse threat"},"приёмный отец":{"ru":"приёмный отец","en":"adoptive father"},"высшая иерархия":{"ru":"высшая иерархия","en":"higher hierarchy"},"творец и творение":{"ru":"творец и творение","en":"creator and creation"},"дуальность порядка и хаоса":{"ru":"дуальность порядка и хаоса","en":"duality of order and chaos"},"аспекты пространства-времени":{"ru":"аспекты пространства-времени","en":"aspects of spacetime"},"конец сущего":{"ru":"конец сущего","en":"the end of all things"},"одержимость":{"ru":"одержимость","en":"obsession"},"носитель Феникса":{"ru":"носитель Феникса","en":"Phoenix host"},"равновесие вселенной":{"ru":"равновесие вселенной","en":"balance of the universe"},"космический баланс":{"ru":"космический баланс","en":"cosmic balance"},"воля свыше":{"ru":"воля свыше","en":"higher will"},"племянник":{"ru":"племянник","en":"nephew"},"супруги":{"ru":"супруги","en":"spouses"},"братья":{"ru":"братья","en":"brothers"},"взаимная симпатия":{"ru":"взаимная симпатия","en":"mutual attraction"},"команда Spider-Verse":{"ru":"команда Spider-Verse","en":"Spider-Verse team"},"Общество Пауков":{"ru":"Общество Пауков","en":"Spider-Society"},"наставница":{"ru":"наставница","en":"mentor"},"близкий друг":{"ru":"близкий друг","en":"close friend"},"друзья":{"ru":"друзья","en":"friends"},"помог сбежать":{"ru":"помог сбежать","en":"helped him escape"},"объявил аномалией":{"ru":"объявил аномалией","en":"declared him an anomaly"},"заклятый враг":{"ru":"заклятый враг","en":"arch-enemy"},"убил Питера его мира":{"ru":"убил Питера его мира","en":"killed his world's Peter"},"коллайдер Alchemax":{"ru":"коллайдер Alchemax","en":"Alchemax collider"},"нанял Бродягу":{"ru":"нанял Бродягу","en":"hired the Prowler"},"учёная Alchemax":{"ru":"учёная Alchemax","en":"Alchemax scientist"},"охотилась за ним":{"ru":"охотилась за ним","en":"hunted him"},"столкновение на Мумбаттане":{"ru":"столкновение на Мумбаттане","en":"clash in Mumbattan"},"Земля-42":{"ru":"Земля-42","en":"Earth-42"},"Бродяга Земли-42":{"ru":"Бродяга Земли-42","en":"Prowler of Earth-42"},"нуарная Земля-90214":{"ru":"нуарная Земля-90214","en":"noir Earth-90214"},"мультяшная Земля-8311":{"ru":"мультяшная Земля-8311","en":"cartoon Earth-8311"},"Фантастическая четвёрка":{"ru":"Фантастическая четвёрка","en":"Fantastic Four"},"сестра и брат":{"ru":"сестра и брат","en":"sister and brother"},"робот-ассистент":{"ru":"робот-ассистент","en":"robot assistant"},"нянька":{"ru":"нянька","en":"nanny"},"вестница":{"ru":"вестница","en":"herald"},"он выучил её язык":{"ru":"он выучил её язык","en":"he learned her language"},"пожиратель миров":{"ru":"пожиратель миров","en":"devourer of worlds"},"жаждет его силы":{"ru":"жаждет его силы","en":"craves his power"},"остановила его":{"ru":"остановила его","en":"stopped him"},"бывший противник":{"ru":"бывший противник","en":"former adversary"},"договор с Подземьей":{"ru":"договор с Подземьей","en":"pact with Subterranea"},"охотится за силой":{"ru":"охотится за силой","en":"hunts for power"},"Мстители против Дума":{"ru":"Мстители против Дума","en":"Avengers vs. Doom"},"Судный день":{"ru":"Судный день","en":"Doomsday"},"Новые Мстители":{"ru":"Новые Мстители","en":"New Avengers"},"проект «Часовой»":{"ru":"проект «Часовой»","en":"Sentry Project"},"Громовержцы":{"ru":"Громовержцы","en":"Thunderbolts"},"Красная комната":{"ru":"Красная комната","en":"Red Room"},"подчинялась отцу":{"ru":"подчинялась отцу","en":"obeyed her father"},"винит в катастрофе":{"ru":"винит в катастрофе","en":"blames him for the disaster"},"охота за частицами":{"ru":"охота за частицами","en":"hunt for particles"},"первый большой враг":{"ru":"первый большой враг","en":"first major enemy"},"спарринг-партнёр":{"ru":"спарринг-партнёр","en":"sparring partner"},"подзащитный":{"ru":"подзащитный","en":"client"},"одержим его кровью":{"ru":"одержим его кровью","en":"obsessed with his blood"},"шантажировал Росса":{"ru":"шантажировал Росса","en":"blackmailed Ross"},"Дивный новый мир":{"ru":"Дивный новый мир","en":"Brave New World"},"бывший коллега":{"ru":"бывший коллега","en":"former colleague"},"сделка с дьяволом":{"ru":"сделка с дьяволом","en":"deal with the devil"},"источник силы":{"ru":"источник силы","en":"source of power"},"втянул в криминал":{"ru":"втянул в криминал","en":"drew him into crime"},"коллеги-актёры":{"ru":"коллеги-актёры","en":"fellow actors"},"пленник-артист":{"ru":"пленник-артист","en":"captive performer"},"сыграл «Мандарина»":{"ru":"сыграл «Мандарина»","en":"played 'the Mandarin'"},"подзащитный Мэрдока":{"ru":"подзащитный Мэрдока","en":"Murdock's client"},"система Фиска":{"ru":"система Фиска","en":"Fisk's system"},"серийный убийца":{"ru":"серийный убийца","en":"serial killer"},"стрелял в Фиска":{"ru":"стрелял в Фиска","en":"shot Fisk"},"убийца Фогги":{"ru":"убийца Фогги","en":"Foggy's killer"},"казнил Айялу":{"ru":"казнил Айялу","en":"executed Ayala"},"названый дядя":{"ru":"названый дядя","en":"uncle figure"},"охотилась на Ронина":{"ru":"охотилась на Ронина","en":"hunted Ronin"},"схватка в прошлом":{"ru":"схватка в прошлом","en":"a past clash"},"спорный союзник":{"ru":"спорный союзник","en":"uneasy ally"},"война с Фиском":{"ru":"война с Фиском","en":"war with Fisk"},"доверенное лицо":{"ru":"доверенное лицо","en":"confidant"},"сложные отношения":{"ru":"сложные отношения","en":"complicated relationship"},"Защитники":{"ru":"Защитники","en":"Defenders"},"Герои по найму":{"ru":"Герои по найму","en":"Heroes for Hire"},"лучший друг и партнёр":{"ru":"лучший друг и партнёр","en":"best friend and partner"},"давняя любовь":{"ru":"давняя любовь","en":"long-time love"},"Nelson & Murdock":{"ru":"Nelson & Murdock","en":"Nelson & Murdock"},"криминальный Нью-Йорк":{"ru":"криминальный Нью-Йорк","en":"criminal New York"},"новый Сокол":{"ru":"новый Сокол","en":"the new Falcon"},"наставник-суперсолдат":{"ru":"наставник-суперсолдат","en":"super-soldier mentor"},"знакомы с Кореи":{"ru":"знакомы с Кореи","en":"acquainted since Korea"},"глава «Серпента»":{"ru":"глава «Серпента»","en":"leader of the Serpent Society"},"советница Росса":{"ru":"советница Росса","en":"Ross's advisor"},"неохотная союзница":{"ru":"неохотная союзница","en":"reluctant ally"},"позвала в Тёмное измерение":{"ru":"позвала в Тёмное измерение","en":"summoned him to the Dark Dimension"},"послан Зевсом":{"ru":"послан Зевсом","en":"sent by Zeus"},"старый друг Тед":{"ru":"старый друг Тед","en":"old friend Ted"},"шабаш Дороги Ведьм":{"ru":"шабаш Дороги Ведьм","en":"Witches' Road coven"},"жаждет мести":{"ru":"жаждет мести","en":"craves revenge"},"сокамерники":{"ru":"сокамерники","en":"cellmates"},"отряд из Пустоты":{"ru":"отряд из Пустоты","en":"squad from the Void"},"Мстители":{"ru":"Мстители","en":"Avengers"},"напарники":{"ru":"напарники","en":"partners"},"были женаты":{"ru":"были женаты","en":"were married"},"«дочь» (классика)":{"ru":"«дочь» (классика)","en":"'daughter' (classic)"},"создание Альтрона":{"ru":"создание Альтрона","en":"Ultron's creation"},"создатель":{"ru":"создатель","en":"creator"},"основатели Мстителей":{"ru":"основатели Мстителей","en":"founding Avengers"},"напарник и преемник":{"ru":"напарник и преемник","en":"partner and successor"},"война со Мстителями":{"ru":"война со Мстителями","en":"war with the Avengers"},"потомок Ричардсов":{"ru":"потомок Ричардсов","en":"Richards descendant"},"Пустота против Халка":{"ru":"Пустота против Халка","en":"the Void vs. Hulk"},"соперник и друг":{"ru":"соперник и друг","en":"rival and friend"},"кумир и наставница":{"ru":"кумир и наставница","en":"idol and mentor"},"юные герои":{"ru":"юные герои","en":"young heroes"},"кузина":{"ru":"кузина","en":"cousin"},"Щ.И.Т.":{"ru":"Щ.И.Т.","en":"S.H.I.E.L.D."},"безответная страсть":{"ru":"безответная страсть","en":"unrequited passion"},"соперник и Иллюминат":{"ru":"соперник и Иллюминат","en":"rival and Illuminati member"},"Захватчики":{"ru":"Захватчики","en":"Invaders"},"защитники города":{"ru":"защитники города","en":"protectors of the city"},"цель Карателя":{"ru":"цель Карателя","en":"the Punisher's target"},"криминальный король":{"ru":"криминальный король","en":"crime lord"},"убил Электру":{"ru":"убил Электру","en":"killed Elektra"},"ночные мстители":{"ru":"ночные мстители","en":"nighttime vigilantes"},"Зловещая шестёрка":{"ru":"Зловещая шестёрка","en":"Sinister Six"},"трагический враг":{"ru":"трагический враг","en":"tragic foe"},"Тёмное измерение":{"ru":"Тёмное измерение","en":"Dark Dimension"},"советник героев":{"ru":"советник героев","en":"advisor to heroes"},"владыка ада":{"ru":"владыка ада","en":"lord of hell"},"One More Day":{"ru":"One More Day","en":"One More Day"},"сделки с Думом":{"ru":"сделки с Думом","en":"dealings with Doom"},"приёмный брат":{"ru":"приёмный брат","en":"adoptive brother"},"дочь (мифы)":{"ru":"дочь (мифы)","en":"daughter (myth)"},"богиня смерти":{"ru":"богиня смерти","en":"goddess of death"},"соперники за души":{"ru":"соперники за души","en":"rivals for souls"},"Человек-паук 2099":{"ru":"Человек-паук 2099","en":"Spider-Man 2099"},"союзники Сэма":{"ru":"союзники Сэма","en":"Sam's allies"},"ночная нечисть":{"ru":"ночная нечисть","en":"creatures of the night"},"мозговые волны Саймона (комиксы)":{"ru":"мозговые волны Саймона (комиксы)","en":"Simon's brainwaves (comics)"},"домашний робот":{"ru":"домашний робот","en":"household robot"},"подземные твари":{"ru":"подземные твари","en":"subterranean creatures"},"попутчик в Та Ло":{"ru":"попутчик в Та Ло","en":"companion in Ta Lo"},"эпоха страха в Адской кухне":{"ru":"эпоха страха в Адской кухне","en":"reign of fear in Hell's Kitchen"},"угрожал в тюрьме":{"ru":"угрожал в тюрьме","en":"threatened him in prison"},"разбит Тором на глазах Зевса":{"ru":"разбит Тором на глазах Зевса","en":"defeated by Thor before Zeus"},"союзницы Стрэнджа":{"ru":"союзницы Стрэнджа","en":"Strange's allies"},"боевой побратим":{"ru":"боевой побратим","en":"battle brother"},"сцена после титров «Морбиуса»":{"ru":"сцена после титров «Морбиуса»","en":"Morbius post-credits scene"},"одна вселенная":{"ru":"одна вселенная","en":"same universe"},"ученики Ксавьера (комиксы)":{"ru":"ученики Ксавьера (комиксы)","en":"Xavier's students (comics)"},"сестра и брат (комиксы)":{"ru":"сестра и брат (комиксы)","en":"sister and brother (comics)"},"сцена после титров «Вечных»":{"ru":"сцена после титров «Вечных»","en":"Eternals mid-credits scene"}};
 // NOTE: takes `lang` as an argument on purpose — this function sits at module top level,
 // but LANG is a `let` scoped INSIDE initApp(), so referencing LANG here directly throws
 // a ReferenceError at call time (which broke character detail cards). The caller passes
@@ -92,188 +92,28 @@ function thumbUrl(url, widthPx){
   return url.replace('/revision/latest', '/revision/latest/scale-to-width-down/'+widthPx);
 }
 
-// ---------- v6.4: пропущенные фильмы/сериалы Fox-эры (рантайм-инъекция в DATA) ----------
-// User flagged: "The New Mutants" was missing; audit found several more Fox-era X-Men
-// titles absent from the dataset. Added here (not hand-edited into data.part*.js) so the
-// large chunked data files stay untouched — same pattern as injectComicLines() below.
-(function injectMissingStories(){
-  if (DATA.stories.nodes.some(s=>s.id==='story_the_new_mutants')) return; // уже добавлено
-  const WD = 'https://static.wikia.nocookie.net/marveldatabase/images/';
-  const charIds = new Set(DATA.characters.nodes.map(c=>c.id));
-
-  // -- новые персонажи (минимальный набор, чтобы у новых фильмов были связи) --
-  const NC = [
-    { id:'mirage_new_mutants', name:'Mirage', name_ru:'Мираж', real_name:'Danielle Moonstar', real_name_ru:'Даниэль Мунстар',
-      actor:'Blu Hunt', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
-      wiki_url:'https://marvel.fandom.com/wiki/Danielle_Moonstar_(Earth-10005)', },
-    { id:'wolfsbane_new_mutants', name:'Wolfsbane', name_ru:'Волчица', real_name:'Rahne Sinclair', real_name_ru:'Рейн Синклер',
-      actor:'Maisie Williams', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
-      wiki_url:'https://marvel.fandom.com/wiki/Rahne_Sinclair_(Earth-10005)' },
-    { id:'cannonball_new_mutants', name:'Cannonball', name_ru:'Пушечное ядро', real_name:'Sam Guthrie', real_name_ru:'Сэм Гатри',
-      actor:'Charlie Heaton', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
-      wiki_url:'https://marvel.fandom.com/wiki/Sam_Guthrie_(Earth-10005)' },
-    { id:'magik_new_mutants', name:'Magik', name_ru:'Магия', real_name:'Illyana Rasputin', real_name_ru:'Иллиана Распутина',
-      actor:'Anya Taylor-Joy', universe:'Earth-10005', group:'x_men', affiliation:['New Mutants'],
-      wiki_url:'https://marvel.fandom.com/wiki/Illyana_Rasputin_(Earth-10005)' },
-    { id:'reed_richards_fox', name:'Mister Fantastic', name_ru:'Мистер Фантастик', real_name:'Reed Richards', real_name_ru:'Рид Ричардс',
-      actor:'Ioan Gruffudd', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
-      wiki_url:'https://marvel.fandom.com/wiki/Reed_Richards_(Earth-10005)' },
-    { id:'sue_storm_fox', name:'Invisible Woman', name_ru:'Женщина-невидимка', real_name:'Susan Storm', real_name_ru:'Сьюзан Шторм',
-      actor:'Jessica Alba', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
-      wiki_url:'https://marvel.fandom.com/wiki/Susan_Storm_(Earth-10005)' },
-    { id:'johnny_storm_fox', name:'Human Torch', name_ru:'Человек-факел', real_name:'Johnny Storm', real_name_ru:'Джонни Шторм',
-      actor:'Chris Evans', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
-      wiki_url:'https://marvel.fandom.com/wiki/Johnny_Storm_(Earth-10005)' },
-    { id:'ben_grimm_fox', name:'The Thing', name_ru:'Существо', real_name:'Ben Grimm', real_name_ru:'Бен Гримм',
-      actor:'Michael Chiklis', universe:'Earth-10005', group:'fantastic_four', affiliation:['Fantastic Four'],
-      wiki_url:'https://marvel.fandom.com/wiki/Ben_Grimm_(Earth-10005)' },
-    { id:'legion_fox', name:'Legion', name_ru:'Легион', real_name:'David Haller', real_name_ru:'Дэвид Халлер',
-      actor:'Dan Stevens', universe:'Earth-10005', group:'x_men', affiliation:['X-Men (son of Professor X)'],
-      wiki_url:'https://marvel.fandom.com/wiki/David_Haller_(Earth-10005)' }
-  ];
-  NC.forEach(c=>{ if (!charIds.has(c.id)) { DATA.characters.nodes.push(c); charIds.add(c.id); } });
-
-  // родственная связь Legion — Professor X (уже есть в базе)
-  if (charIds.has('professor_x_fox')) DATA.characters.edges.push({source:'legion_fox', target:'professor_x_fox', type:'family', label:'Отец/сын'});
-  // New Mutants — командные связи друг с другом
-  const nmTeam = ['mirage_new_mutants','wolfsbane_new_mutants','cannonball_new_mutants','magik_new_mutants'];
-  for (let i=1;i<nmTeam.length;i++) DATA.characters.edges.push({source:nmTeam[0], target:nmTeam[i], type:'team', label:'New Mutants'});
-  // Fantastic Four (Fox) — командные связи друг с другом
-  const ffTeam = ['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'];
-  for (let i=1;i<ffTeam.length;i++) DATA.characters.edges.push({source:ffTeam[0], target:ffTeam[i], type:'team', label:'Fantastic Four'});
-
-  // -- новые фильмы/сериалы --
-  const storyIds = new Set(DATA.stories.nodes.map(s=>s.id));
-  const NS = [
-    { id:'story_x_men_origins_wolverine', title:'X-Men Origins: Wolverine', title_ru:'Люди Икс: Начало. Росомаха', type:'movie', phase:'xmen',
-      date:'2009-05-01', event_year:2009.33, event_date_ru:'2009', event_date_en:'2009', universe:'Earth-10005',
-      characters:['wolverine_fox','sabretooth_fox','deadpool_fox'] },
-    { id:'story_the_new_mutants', title:'The New Mutants', title_ru:'Новые мутанты', type:'movie', phase:'xmen',
-      date:'2020-08-28', event_year:2020.66, event_date_ru:'2020', event_date_en:'2020', universe:'Earth-10005',
-      characters:['mirage_new_mutants','wolfsbane_new_mutants','cannonball_new_mutants','magik_new_mutants'] },
-    { id:'story_legion_tv_series', title:'Legion (TV series)', title_ru:'Легион', type:'tv_series', phase:'xmen',
-      date:'2017-02-08', event_year:2017.11, event_date_ru:'2017–2019', event_date_en:'2017–2019', universe:'Earth-10005',
-      characters:['legion_fox','professor_x_fox'] },
-    { id:'story_fantastic_four_2005', title:'Fantastic Four', title_ru:'Фантастическая четвёрка', type:'movie', phase:'xmen',
-      date:'2005-07-08', event_year:2005.52, event_date_ru:'2005', event_date_en:'2005', universe:'Earth-10005',
-      characters:['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'] },
-    { id:'story_fantastic_four_rise_of_the_silver_surfer', title:'Fantastic Four: Rise of the Silver Surfer', title_ru:'Фантастическая четвёрка: Вторжение Серебряного сёрфера', type:'movie', phase:'xmen',
-      date:'2007-06-15', event_year:2007.46, event_date_ru:'2007', event_date_en:'2007', universe:'Earth-10005',
-      characters:['reed_richards_fox','sue_storm_fox','johnny_storm_fox','ben_grimm_fox'] }
-  ];
-  NS.forEach(s=>{
-    s.characters = (s.characters||[]).filter(cid=>charIds.has(cid));
-    s.char_count = s.characters.length;
-    if (!storyIds.has(s.id)) { DATA.stories.nodes.push(s); storyIds.add(s.id); }
-  });
-
-  // хронологические связи внутри Fox-линии (по дате выхода), чтобы новые тайтлы
-  // не остались изолированными узлами на timeline
-  const chronoPairs = [
-    ['story_x_men_origins_wolverine','story_x_men_first_class'],
-    ['story_the_wolverine','story_the_new_mutants'],
-    ['story_fantastic_four_2005','story_fantastic_four_rise_of_the_silver_surfer'],
-  ];
-  chronoPairs.forEach(([a,b])=>{ if (storyIds.has(a) && storyIds.has(b)) DATA.stories.edges.push({source:a, target:b, type:'chronology'}); });
-})();
-
-// ---------- v6.6: Phase 7 + доп. Netflix-сериал (рантайм-инъекция в DATA) ----------
-(function injectPhase7Stories(){
-  if (DATA.stories.nodes.some(s=>s.id==='story_x_men_2028')) return; // уже добавлено
-  const storyIds = new Set(DATA.stories.nodes.map(s=>s.id));
-  const charIds = new Set(DATA.characters.nodes.map(c=>c.id));
-  const NS = [
-    {"id":"story_the_punisher_one_last_kill","title":"The Punisher: One Last Kill","title_ru":"Каратель: Последнее убийство","type":"tv_series","date":"2026-05-12","phase":"6","characters":["punisher","karen_page"],"char_count":2,"poster":"images/stories/story_the_punisher_one_last_kill.webp","event_year":2026.5,"event_date_ru":"2026","event_date_en":"2026","universe":"Earth-199999"},
-    {"id":"story_x_men_2028","title":"X-Men","title_ru":"Люди Икс","type":"movie","date":"2028-05-05","phase":"7","characters":[],"char_count":0,"event_year":2028.5,"event_date_ru":"TBA (ожидается)","event_date_en":"TBA (upcoming)","universe":"Earth-199999"},
-    {"id":"story_ghost_rider_2028","title":"Ghost Rider","title_ru":"Призрачный гонщик","type":"movie","date":"2028-07-28","phase":"7","characters":[],"char_count":0,"poster":"images/stories/story_ghost_rider_2028.webp","event_year":2028.7,"event_date_ru":"TBA (ожидается)","event_date_en":"TBA (upcoming)","universe":"Earth-199999"},
-    {"id":"story_black_panther_iii","title":"Black Panther III","title_ru":"Чёрная пантера 3","type":"movie","date":"2028-12-15","phase":"7","characters":["black_panther","m_baku"],"char_count":2,"poster":"images/stories/story_black_panther_iii.webp","event_year":2028.95,"event_date_ru":"TBA (ожидается)","event_date_en":"TBA (upcoming)","universe":"Earth-199999"}
-  ];
-  NS.forEach(s=>{
-    s.characters = (s.characters||[]).filter(cid=>charIds.has(cid));
-    s.char_count = s.characters.length;
-    if (!storyIds.has(s.id)) { DATA.stories.nodes.push(s); storyIds.add(s.id); }
-  });
-})();
-
+// Fox-era titles (v6.4), extra comic lines (v6.3) and Phase 7 (v6.6) used to be patched into
+// DATA here at runtime; they now live in data.part*.js like everything else (scripts/data-io.js).
 const charNodes = DATA.characters.nodes.map(d=>Object.assign({},d));
 const charLinks = DATA.characters.edges.map(d=>Object.assign({},d));
 const storyNodes = DATA.stories.nodes.map(d=>Object.assign({},d));
 const storyLinksRaw = DATA.stories.edges.map(d=>Object.assign({},d));
-
-// ---------- v6.3: дополнительные линейки комиксов (рантайм-инъекция в DATA) ----------
-(function injectComicLines(){
-  if (!DATA.comics || !DATA.comics.nodes) return;
-  if (DATA.comics.nodes.some(c=>c.line==='thor_series')) return; // уже добавлено
-  const WD = 'https://static.wikia.nocookie.net/marveldatabase/images/';
-  const storyIds = new Set(DATA.stories.nodes.map(s=>s.id));
-  const charIds = new Set(DATA.characters.nodes.map(c=>c.id));
-  const N = [];
-  const K = (id,title,title_ru,line,date,cov,tie,chars)=>{
-    // covers are self-hosted in images/comics/; `cov` keeps the original Fandom filename
-    const d = {id:'comic_'+id, title, title_ru, line, date, cover: 'images/comics/comic_'+id+'.webp'};
-    if (tie && storyIds.has(tie)) d.tie_in = tie;
-    if (chars){ const cc = chars.filter(x=>charIds.has(x)); if (cc.length) d.tie_in_chars = cc; }
-    N.push(d);
-  };
-  // Тор
-  K('thor_vol1','The Mighty Thor Vol. 1 (1966–1996)','Могучий Тор. Том 1 (1966–1996)','thor_series','1966-03-01','d/d0/Thor_Vol_1_126.jpg/revision/latest?cb=20180417030149','story_thor_film',['thor_616','loki_616','odin_616']);
-  K('thor_surtur','The Surtur Saga (Thor #337+)','Сага о Суртуре (Тор #337+)','thor_series','1983-11-01','f/f0/Thor_Vol_1_337.jpg/revision/latest?cb=20180817004509',null,['thor_616','beta_ray_bill_616']);
-  K('thor_vol2','Thor Vol. 2 (1998–2004)','Тор. Том 2 (1998–2004)','thor_series','1998-07-01','5/53/Thor_Vol_2_1.jpg/revision/latest?cb=20220314225802',null,['thor_616']);
-  K('thor_jms','Thor Vol. 3 (2007–2011)','Тор. Том 3 (2007–2011)','thor_series','2007-07-01','d/d1/Thor_Vol_3_1.jpg/revision/latest?cb=20181231052808',null,['thor_616','loki_616']);
-  K('thor_god_of_thunder','Thor: God of Thunder (2012–2014)','Тор: Бог грома (2012–2014)','thor_series','2012-11-01','0/09/Thor_Vol_4_1.jpg/revision/latest?cb=20140904233645','story_thor_ragnarok',['thor_616','hela_616']);
-  K('thor_jane','The Mighty Thor — Джейн Фостер (2015–2018)','Могучий Тор — Джейн Фостер (2015–2018)','thor_series','2015-11-01','4/4d/Mighty_Thor_Vol_2_1.jpg/revision/latest?cb=20151120082528','story_thor_love_and_thunder',['thor_616']);
-  K('thor_vol5','Thor Vol. 5 (2018–2019)','Тор. Том 5 (2018–2019)','thor_series','2018-06-01','4/45/Thor_Vol_5_1.jpg/revision/latest?cb=20180607232028',null,['thor_616']);
-  // Капитан Америка
-  K('cap_comics1','Captain America Comics (1941–1950)','Капитан Америка (1941–1950)','cap_series','1941-03-01','9/9f/Captain_America_Comics_Vol_1_1.jpg/revision/latest?cb=20180404011756','story_captain_america_the_first_avenger',['cap_616','winter_soldier_616','red_skull_616']);
-  K('cap_silver','Captain America Vol. 1 (1968–1996)','Капитан Америка. Том 1 (1968–1996)','cap_series','1968-04-01','1/10/Captain_America_Vol_1_100.jpg/revision/latest?cb=20171226055846',null,['cap_616','falcon_616']);
-  K('cap_falcon_series','Falcon (1983)','Сокол (1983)','cap_series','1983-11-01','4/47/Falcon_Vol_1_1.jpg/revision/latest?cb=20220711203123',null,['falcon_616']);
-  K('cap_brubaker','Captain America Vol. 5 (2004–2011)','Капитан Америка. Том 5 (2004–2011)','cap_series','2004-11-01','9/9d/Captain_America_Vol_5_1.jpg/revision/latest?cb=20181116202236','story_captain_america_the_winter_soldier',['cap_616','winter_soldier_616']);
-  K('cap_winter_soldier','Winter Soldier (2012–2013)','Зимний солдат (2012–2013)','cap_series','2012-02-01','d/db/Winter_Soldier_Vol_1_1.jpg/revision/latest?cb=20210404052449',null,['winter_soldier_616','black_widow_616']);
-  K('cap_vol7','Captain America Vol. 7 (2012–2014)','Капитан Америка. Том 7 (2012–2014)','cap_series','2012-11-01','5/52/Captain_America_Vol_7_1.jpg/revision/latest?cb=20120810183429',null,['cap_616']);
-  K('cap_sam_wilson','Captain America: Sam Wilson (2015–2017)','Капитан Америка: Сэм Уилсон (2015–2017)','cap_series','2015-10-01','f/fa/Captain_America_Sam_Wilson_Vol_1_1.jpg/revision/latest?cb=20151008145839','story_the_falcon_and_the_winter_soldier',['falcon_616']);
-  K('cap_usa','The United States of Captain America (2021)','Соединённые Штаты Капитана Америки (2021)','cap_series','2021-06-01','1/10/United_States_of_Captain_America_Vol_1_1.jpg/revision/latest?cb=20210628034843','story_captain_america_brave_new_world',['cap_616','falcon_616','isaiah_bradley']);
-  // Космос
-  K('cosmic_silver_surfer','Silver Surfer (1968)','Серебряный Сёрфер (1968)','cosmic_series','1968-08-01','d/d2/Silver_Surfer_Vol_1_1.jpg/revision/latest?cb=20200111221042','story_the_fantastic_four_first_steps',['silver_surfer_616','galactus_616']);
-  K('cosmic_warlock','Warlock (1972–1976)','Адам Уорлок (1972–1976)','cosmic_series','1972-08-01','9/99/Warlock_Vol_1_1.jpg/revision/latest?cb=20180301045054',null,['adam_warlock_616','thanos_616']);
-  K('cosmic_captain_marvel','Captain Marvel (1968–1979)','Капитан Марвел (1968–1979)','cosmic_series','1968-05-01','9/92/Captain_Marvel_Vol_1_1.jpg/revision/latest?cb=20190505061649',null,['carol_616']);
-  K('cosmic_nova','Nova (1976–1979)','Нова (1976–1979)','cosmic_series','1976-09-01','6/6a/Nova_Vol_1_1.jpg/revision/latest?cb=20180430022949',null,['nova_616']);
-  K('cosmic_gotg2008','Guardians of the Galaxy (2008–2010)','Стражи Галактики (2008–2010)','cosmic_series','2008-05-01','7/70/Guardians_of_the_Galaxy_Vol_1_1.jpg/revision/latest?cb=20241217105554','story_guardians_of_the_galaxy_film',['star_lord','gamora','drax_the_destroyer','rocket_raccoon','groot']);
-  K('cosmic_eternals','Eternals (1976–1978)','Вечные (1976–1978)','cosmic_series','1976-07-01','1/13/Eternals_Vol_1_1.jpg/revision/latest?cb=20160430071246','story_eternals_film',['ikaris','sersi','thena']);
-  K('cosmic_ms_marvel','Ms. Marvel (2006–2010)','Мисс Марвел (2006–2010)','cosmic_series','2006-03-01','1/1c/Ms._Marvel_Vol_2_1.jpg/revision/latest?cb=20251207220325',null,['carol_616']);
-  K('cosmic_captain_marvel2012','Captain Marvel — Кэрол Дэнверс (2012–2013)','Капитан Марвел — Кэрол Дэнверс (2012–2013)','cosmic_series','2012-07-01','e/e5/Captain_Marvel_Vol_7_1.jpg/revision/latest?cb=20120713051932','story_captain_marvel_film',['carol_616','ms_marvel_616']);
-  // Улицы Нью-Йорка
-  K('street_daredevil','Daredevil Vol. 1 (1964–1998)','Сорвиголова. Том 1 (1964–1998)','street_series','1964-04-01','7/7c/Daredevil_Vol_1_1.jpg/revision/latest?cb=20251207203058',null,['daredevil_616','elektra_616','kingpin_616']);
-  K('street_moon_knight','Moon Knight (1980–1984)','Лунный рыцарь (1980–1984)','street_series','1980-11-01','9/97/Moon_Knight_Vol_1_1.jpg/revision/latest?cb=20180418010757','story_moon_knight_tv_series',['moon_knight_616']);
-  K('street_elektra_assassin','Elektra: Assassin (1986–1987)','Электра: Убийца (1986–1987)','street_series','1986-08-01','9/9a/Elektra_Assassin_Vol_1_1.jpg/revision/latest?cb=20200512224443',null,['elektra_616','daredevil_616']);
-  K('street_punisher','The Punisher Vol. 2 (1987–1995)','Каратель. Том 2 (1987–1995)','street_series','1987-07-01','f/f6/Punisher_Vol_2_1.jpg/revision/latest?cb=20250812233451','story_the_punisher_s1',['punisher_616','kingpin_616']);
-  K('street_power_man_iron_fist','Power Man and Iron Fist (1978–1986)','Люк Кейдж и Железный кулак (1978–1986)','street_series','1978-04-01','1/13/Power_Man_and_Iron_Fist_Vol_1_50.jpg/revision/latest?cb=20260102112846','story_luke_cage_tv_series_s1',['luke_cage_616','iron_fist_616']);
-  K('street_alias','Alias — Джессика Джонс (2001–2004)','Alias — Джессика Джонс (2001–2004)','street_series','2001-11-01','e/ed/Alias_Vol_1_1.jpg/revision/latest?cb=20160422193727','story_jessica_jones_tv_series_s1',['jessica_jones_616','luke_cage_616']);
-  K('street_immortal_iron_fist','The Immortal Iron Fist (2006–2009)','Бессмертный Железный кулак (2006–2009)','street_series','2006-11-01','3/3a/Immortal_Iron_Fist_Vol_1_1.jpg/revision/latest?cb=20250823211406','story_iron_fist_tv_series_s1',['iron_fist_616']);
-  K('street_blade','Blade (1998–2006)','Блэйд (1998–2006)','street_series','1998-01-01','f/f2/Blade_Vol_4_1.jpg/revision/latest?cb=20100720203922',null,['blade_616']);
-  K('street_defenders','The Defenders (2017)','Защитники (2017)','street_series','2017-06-01','e/e9/Defenders_Vol_1_1.jpg/revision/latest?cb=20260305101514','story_the_defenders',['daredevil_616','luke_cage_616','iron_fist_616','jessica_jones_616']);
-  // порядок колонок и подписи линеек
-  const oldRu = Object.assign({}, DATA.comics.line_labels_ru), oldEn = Object.assign({}, DATA.comics.line_labels_en);
-  const ORDER = ['movie_preludes','adaptations','spider_series','x_men_series','iron_man_series','thor_series','cap_series','cosmic_series','avengers_series','street_series','first_appearances','classic_events'];
-  const RU = {thor_series:'Тор: серии', cap_series:'Капитан Америка: серии', cosmic_series:'Космос: серии', street_series:'Защитники улиц: серии'};
-  const EN = {thor_series:'Thor Series', cap_series:'Captain America Series', cosmic_series:'Cosmic Series', street_series:'Street-Level Series'};
-  const ru = DATA.comics.line_labels_ru, en = DATA.comics.line_labels_en;
-  for (const k in ru) delete ru[k]; for (const k in en) delete en[k];
-  ORDER.forEach(k=>{ ru[k] = RU[k] || oldRu[k] || k; en[k] = EN[k] || oldEn[k] || k; });
-  // добавить узлы и хронологические рёбра новых линеек
-  DATA.comics.nodes.push.apply(DATA.comics.nodes, N);
-  ['thor_series','cap_series','cosmic_series','street_series'].forEach(line=>{
-    const items = DATA.comics.nodes.filter(c=>c.line===line).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
-    for (let i=1;i<items.length;i++) DATA.comics.edges.push({source:items[i-1].id, target:items[i].id, type:'sequence'});
-  });
-  // цвета новых линеек
-  if (typeof LINE_COLORS !== 'undefined') Object.assign(LINE_COLORS, {thor_series:'#4fc3f7', cap_series:'#42a5f5', cosmic_series:'#ffca28', street_series:'#7e57c2'});
-})();
 
 const comicNodes = ((DATA.comics && DATA.comics.nodes) || []).map(d=>Object.assign({},d));
 const comicLinksRaw = ((DATA.comics && DATA.comics.edges) || []).map(d=>Object.assign({},d));
 
 const charById = new Map(charNodes.map(d=>[d.id,d]));
 const storyById = new Map(storyNodes.map(d=>[d.id,d]));
+// Appearance lists name whole shows ("Agents of S.H.I.E.L.D.", "Luke Cage (TV series)") or
+// "… Season 2", while stories are stored per season (…_s1, …_s2) — resolve both forms.
+function resolveStoryId(title){
+  const sid = 'story_' + title.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+  if (storyById.has(sid)) return sid;
+  const season = sid.replace(/_season_(\d+)$/, '_s$1');
+  if (storyById.has(season)) return season;
+  if (storyById.has(sid + '_s1')) return sid + '_s1';
+  return null;
+}
 const comicById = new Map(comicNodes.map(d=>[d.id,d]));
 let activeComicLines = new Set(Object.keys(LINE_LABELS_RU));
 
@@ -287,7 +127,8 @@ let activeStoryTypes = new Set(['movie','tv_series','one_shot']);
 
 const svg = d3.select('#graph');
 const g = svg.append('g');
-const zoomBehavior = d3.zoom().scaleExtent([0.1,5]).on('zoom', ev => { g.attr('transform', ev.transform); svg.classed('far', ev.transform.k < 0.4); });
+// far = labels hidden; lod = (phones only, see styles.css) avatars hidden while zoomed out
+const zoomBehavior = d3.zoom().scaleExtent([0.1,5]).on('zoom', ev => { g.attr('transform', ev.transform); svg.classed('far', ev.transform.k < 0.4).classed('lod', ev.transform.k < 0.6); });
 svg.call(zoomBehavior);
 svg.on('click', ()=>{ clearSelection(); });
 function dims(){ return [window.innerWidth, window.innerHeight]; }
@@ -310,6 +151,9 @@ function startPath(fromId){
   pathBanner.textContent = UI().path_banner + ' · ' + UI().path_esc;
   pathBanner.style.display = 'block';
   detailEl.style.display = 'none';
+  // phones: the card lives in the bottom sheet, which stayed open over the graph and the
+  // search button — there was no way to pick the second character without closing it first
+  try { if (MSheet.current) MSheet.close(); } catch (e) {}
 }
 function clearPath(){
   pathMode = null; pathSet = null; pathEdgeSet = null;
@@ -444,6 +288,16 @@ function computeClusterCenters(){
   centers._fallback = [cx, cy, 200];
   return centers;
 }
+// Precomputed node positions from layout.js (scripts/build-layout.js), stored around (0,0).
+// Returns false — and the caller falls back to simulating in the browser — when the file
+// is missing or doesn't cover every character (e.g. data changed, layout not rebuilt).
+function placeFromLayout(mode){
+  const pos = window.LAYOUT && window.LAYOUT[mode];
+  if (!pos || !currentNodes.every(n=>pos[n.id])) return false;
+  const [w,h] = dims();
+  currentNodes.forEach(n=>{ const p = pos[n.id]; n.x = w/2 + p[0]; n.y = h/2 + p[1]; n.vx = 0; n.vy = 0; });
+  return true;
+}
 function buildCharGraph(){
   clearGraph();
   selectedId = null; selectedConnected = null;
@@ -454,7 +308,8 @@ function buildCharGraph(){
     // group nodes into per-universe regions; weaken cross-universe (variant) links so
     // separate universes keep to their own clusters, and give nodes room (strong
     // collision + repulsion) so they spread out inside a cluster instead of squishing.
-    currentNodes.forEach(nd=>{ const c=clusterCenters[nd.universe]||clusterCenters._fallback;
+    const precomputed = placeFromLayout('universe');
+    if (!precomputed) currentNodes.forEach(nd=>{ const c=clusterCenters[nd.universe]||clusterCenters._fallback;
       nd.x = c[0] + (Math.random()-0.5)*c[2]*1.2; nd.y = c[1] + (Math.random()-0.5)*c[2]*1.2; });
     sim.force('link', d3.forceLink(currentLinks).id(d=>d.id).distance(64).strength(l=> l.type==='variant'?0.008:0.12))
        .force('charge', d3.forceManyBody().strength(-260))
@@ -462,7 +317,8 @@ function buildCharGraph(){
        .force('y', d3.forceY(d=> (clusterCenters[d.universe]||clusterCenters._fallback)[1]).strength(0.16))
        .force('collision', d3.forceCollide().radius(d=>charRadius(d)+14).strength(0.95));
     // pre-settle so the initial view is already spread out, not a moving blob
-    sim.alpha(1); for (let k=0;k<200;k++) sim.tick();
+    // (only when layout.js is missing or stale — normally the positions are precomputed)
+    if (!precomputed) { sim.alpha(1); for (let k=0;k<200;k++) sim.tick(); }
   } else {
     // MCU (and every other universe) gets noticeably more breathing room here: this is
     // the default view, so tightly-packed clusters were the most visible complaint.
@@ -553,11 +409,13 @@ function buildCharGraph(){
   if (CHAR_LAYOUT === 'universe') {
     ticked();
     fitViewToNodes(charNodes, dims()[0], dims()[1]);
-    sim.alpha(0.03); // already pre-settled; keep it calm so the view doesn't drift
+    // already settled; keep it calm so the view doesn't drift (phones: stop it outright)
+    if (IS_MOBILE) sim.alpha(0).stop(); else sim.alpha(0.03);
   } else if (IS_MOBILE) {
-    // phones: pre-settle synchronously then stop the simulation so the CPU is free
-    // for image decoding and touch interaction (continuous force sim tanks mobile perf)
-    sim.alpha(1); for (let k=0;k<140;k++) sim.tick();
+    // phones: no live simulation — it tanks mobile perf. Nodes go straight to their
+    // precomputed positions; only if layout.js is missing/stale do we pay for the old
+    // synchronous pre-settle (~1.2 s of frozen main thread on a mid-range phone).
+    if (!placeFromLayout('force')) { sim.alpha(1); for (let k=0;k<140;k++) sim.tick(); }
     ticked();
     fitViewToNodes(charNodes, dims()[0], dims()[1]);
     sim.alpha(0).stop();
@@ -1127,7 +985,9 @@ bindZoom(detailImg, detailImgZoom);
 // full-size URL used by the zoom button never drift apart
 function setDetailImage(url){
   if (url) {
-    detailImg.src = thumbUrl(url, 340);
+    // cards are ~390px wide on phones, where thumbUrl() caps images to the 160px-tall
+    // thumbnail and the picture came out blurry; the full self-hosted file is ~25 KB
+    detailImg.src = url.indexOf('images/') === 0 ? url : thumbUrl(url, 340);
     detailImg.dataset.full = url;
     detailImg.style.display = 'block';
     detailImgZoom.style.display = 'inline-flex';
@@ -1173,13 +1033,17 @@ function showCharDetail(d){
   for (const k of ['movie','tv_series']) {
     const list = app[k]||[];
     if (!list.length) continue;
-    h += `<div style="margin-bottom:6px"><div style="color:var(--text-dim);font-size:10.5px;margin-bottom:3px">${MEDIA_LABELS()[k]} (${list.length})</div>`;
-    h += list.map(t=>{
-      const sid = 'story_' + t.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+    const seenS = new Set();
+    const tags = list.map(t=>{
+      const sid = resolveStoryId(t);
+      if (!sid) return `<span class="tag">${t}</span>`;
+      if (seenS.has(sid)) return ''; // "Show" and "Show Season 1" both resolve to _s1
+      seenS.add(sid);
       const sn = storyById.get(sid);
-      if (sn) return `<span class="tag link" data-goto-story="${sid}">${LANG==='ru'?sn.title_ru:sn.title}</span>`;
-      return `<span class="tag">${t}</span>`;
-    }).join('');
+      return `<span class="tag link" data-goto-story="${sid}">${LANG==='ru'?sn.title_ru:sn.title}</span>`;
+    }).filter(Boolean);
+    h += `<div style="margin-bottom:6px"><div style="color:var(--text-dim);font-size:10.5px;margin-bottom:3px">${MEDIA_LABELS()[k]} (${tags.length})</div>`;
+    h += tags.join('');
     h += `</div>`;
   }
   for (const k of ['game','comic']) {
@@ -1412,13 +1276,29 @@ document.getElementById('filters-toggle').addEventListener('click', ()=>{
   document.getElementById('filters-toggle').classList.toggle('active', filtersEl.classList.contains('mobile-open'));
 });
 
-let resizeTimer = null;
+// Phones fire 'resize' for things that don't change the layout at all: the on-screen keyboard
+// in in-app browsers (Telegram, VK), the address bar collapsing. That used to restart the
+// force simulation (seconds of jank, the graph drifting) or rebuild the timeline and drop the
+// selection. Now only a width change (rotation, desktop window resize) does anything, and it
+// re-fits the view while keeping whatever the user had selected.
+let resizeTimer = null, lastResizeW = window.innerWidth;
 window.addEventListener('resize', ()=>{
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(()=>{
-    if (MODE==='characters') { if (CHAR_LAYOUT==='universe') { buildCharGraph(); } else if (sim) { sim.force('center', d3.forceCenter(dims()[0]/2, dims()[1]/2)); sim.alpha(0.3).restart(); } }
-    else if (MODE==='stories') { buildStoryGraph(); }
-    else { buildComicsGraph(); }
+    const w = window.innerWidth;
+    if (w === lastResizeW) return;
+    lastResizeW = w;
+    const keep = selectedId;
+    if (MODE==='characters') {
+      // desktop force graph: the simulation is live anyway, just move its centre
+      if (!IS_MOBILE && CHAR_LAYOUT==='force' && sim) { sim.force('center', d3.forceCenter(dims()[0]/2, dims()[1]/2)); sim.alpha(0.3).restart(); return; }
+      const nd = keep && charById.get(keep);
+      if (nd) focusNode(nd); else fitViewToNodes(charNodes, dims()[0], dims()[1]);
+      return;
+    }
+    if (MODE==='stories') buildStoryGraph(); else buildComicsGraph();
+    const nd = keep && (MODE==='stories' ? storyById : comicById).get(keep);
+    if (nd) { applySelection(nd.id); focusNode(nd); }
   }, 250);
 });
 

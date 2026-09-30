@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Marvel Multiverse Map — MCU timeline, watch order & character connections</title>
-<meta name="description" content="Хронология киновселенной Marvel и порядок просмотра фильмов и сериалов MCU, порядок чтения комиксов Marvel и связи между персонажами — на одной интерактивной карте: 369 героев, 144 фильма и сериала, 166 комиксов, 12 вселенных. Marvel timeline, MCU watch order and character connections map.">
+<meta name="description" content="Хронология киновселенной Marvel и порядок просмотра фильмов и сериалов MCU, порядок чтения комиксов Marvel и связи между персонажами — на одной интерактивной карте: 370 героев, 149 фильмов и сериалов, 166 комиксов, 12 вселенных. Marvel timeline, MCU watch order and character connections map.">
 <meta name="keywords" content="хронология Marvel, хронология MCU, в каком порядке смотреть фильмы Marvel, порядок просмотра MCU, в каком порядке смотреть Марвел, связи персонажей Marvel, в каком порядке читать комиксы Marvel, карта Marvel, мультивселенная Marvel, таймлайн Marvel, Marvel timeline, MCU watch order, Marvel reading order, Marvel character connections, Мстители, Человек-паук, Люди Икс, Spider-Verse, Earth-616, Earth-828">
 <meta name="author" content="Кирилл Мещеряков">
 <meta name="robots" content="index, follow">
@@ -18,7 +18,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Marvel Multiverse Map">
 <meta property="og:title" content="Marvel Multiverse Map — interactive character, movie & comic graph">
-<meta property="og:description" content="Хронология Marvel, порядок просмотра фильмов MCU, порядок чтения комиксов и связи персонажей — интерактивная карта: 369 героев, 144 фильма, 166 комиксов, 12 вселенных.">
+<meta property="og:description" content="Хронология Marvel, порядок просмотра фильмов MCU, порядок чтения комиксов и связи персонажей — интерактивная карта: 370 героев, 149 фильмов, 166 комиксов, 12 вселенных.">
 <meta property="og:url" content="https://marvel.kirmesch.ru/">
 <meta property="og:image" content="https://marvel.kirmesch.ru/social-banner-en.png">
 <meta property="og:image:width" content="1200">
@@ -45,39 +45,40 @@
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-  <link rel="stylesheet" href="styles.css?v=20260902c">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<!-- every script is deferred: they still run in document order (d3 → data → layout → app),
+     but no longer block the first paint of the page -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <link rel="stylesheet" href="styles.css?v=20260930a">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     {"@type":"Question","name":"В каком порядке смотреть фильмы и сериалы Marvel (MCU)?","acceptedAnswer":{"@type":"Answer","text":"На карте есть режим «Истории» с двумя раскладками: по фазам MCU и по внутренней хронологии событий. Хронологический вид показывает фильмы и сериалы в порядке событий во вселенной, а не по дате выхода — это и есть порядок просмотра."}},
-    {"@type":"Question","name":"Как устроена хронология киновселенной Marvel?","acceptedAnswer":{"@type":"Answer","text":"Карта раскладывает 144 фильма и сериала по оси времени: горизонтальные полосы — вселенные (MCU, Sony, Fox, анимация), внутри — годы событий. Видно, что за чем следует и как пересекаются линии."}},
+    {"@type":"Question","name":"Как устроена хронология киновселенной Marvel?","acceptedAnswer":{"@type":"Answer","text":"Карта раскладывает 149 фильмов и сериалов по оси времени: горизонтальные полосы — вселенные (MCU, Sony, Fox, анимация), внутри — годы событий. Видно, что за чем следует и как пересекаются линии."}},
     {"@type":"Question","name":"В каком порядке читать комиксы Marvel?","acceptedAnswer":{"@type":"Answer","text":"Режим «Комиксы» показывает 166 выпусков в 12 линейках (серии Человека-паука, Людей Икс, Мстителей и др.) и раскладку «По хронологии» — по годам выхода, от первых появлений до классических событий."}},
-    {"@type":"Question","name":"Как связаны персонажи Marvel между собой?","acceptedAnswer":{"@type":"Answer","text":"Режим «Персонажи» — это граф из 369 героев и 710+ связей: команды, семья, романтические отношения, союзники, враги и альтернативные версии. Есть поиск кратчайшего пути между любыми двумя персонажами."}},
+    {"@type":"Question","name":"Как связаны персонажи Marvel между собой?","acceptedAnswer":{"@type":"Answer","text":"Режим «Персонажи» — это граф из 370 героев и 720+ связей: команды, семья, романтические отношения, союзники, враги и альтернативные версии. Есть поиск кратчайшего пути между любыми двумя персонажами."}},
     {"@type":"Question","name":"Что такое мультивселенная Marvel и какие вселенные есть?","acceptedAnswer":{"@type":"Answer","text":"На карте 12 вселенных: MCU (Земля-199999), комиксная Земля-616, Земля-828 («Первые шаги»), Spider-Verse, вселенные Sony и Fox, What If…? и космические сущности. Каждая выделена своим цветом."}}
   ]
 }
 </script>
-<!-- Microsoft Clarity: анонимная веб-аналитика (тепловые карты, записи сессий) -->
-<script type="text/javascript">
-(function(c,l,a,r,i,t,y){
-c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-})(window, document, "clarity", "script", "xkqw7xtn85");
-</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-(function(m,e,t,r,i,k,a){
-m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-m[i].l=1*new Date();
-for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110599531', 'ym');
-
-ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+<!-- Analytics: Microsoft Clarity (heatmaps, session recordings) + Yandex.Metrika.
+     The queue stubs are set up immediately — nothing is lost and Metrika keeps the real
+     page-start time — but the tag scripts themselves load only after the page has finished
+     loading and the browser is idle: on a mid-range phone they cost ~1.3 s of main thread,
+     which used to compete with the map's own start-up. -->
+<script>
+(function (w, d) {
+  w.clarity = w.clarity || function () { (w.clarity.q = w.clarity.q || []).push(arguments); };
+  w.ym = w.ym || function () { (w.ym.a = w.ym.a || []).push(arguments); };
+  w.ym.l = 1 * new Date();
+  w.ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: d.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+  function add(src) { var s = d.createElement('script'); s.async = true; s.src = src; d.head.appendChild(s); }
+  function load() { add('https://www.clarity.ms/tag/xkqw7xtn85'); add('https://mc.yandex.ru/metrika/tag.js?id=110599531'); }
+  function later() { (w.requestIdleCallback || function (f) { setTimeout(f, 1); })(load, { timeout: 3000 }); }
+  if (d.readyState === 'complete') later(); else w.addEventListener('load', later);
+})(window, document);
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/110599531" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -85,7 +86,7 @@ ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
 <body>
 <section class="seo-content" aria-hidden="false">
   <h1>Карта Мультивселенной Marvel: хронология, порядок просмотра фильмов и связи персонажей</h1>
-  <p>Интерактивная карта вселенных Marvel собирает в одном месте <strong>хронологию киновселенной Marvel (MCU)</strong>, удобный способ понять, <strong>в каком порядке смотреть фильмы и сериалы</strong>, <strong>в каком порядке читать комиксы Marvel</strong>, и наглядный граф <strong>связей между персонажами Marvel</strong>. Всего на карте 369 персонажей, 144 фильма и сериала, 166 комиксов и 12 вселенных.</p>
+  <p>Интерактивная карта вселенных Marvel собирает в одном месте <strong>хронологию киновселенной Marvel (MCU)</strong>, удобный способ понять, <strong>в каком порядке смотреть фильмы и сериалы</strong>, <strong>в каком порядке читать комиксы Marvel</strong>, и наглядный граф <strong>связей между персонажами Marvel</strong>. Всего на карте 370 персонажей, 149 фильмов и сериалов, 166 комиксов и 12 вселенных.</p>
   <h2>Хронология MCU и порядок просмотра</h2>
   <p>Режим «Истории» строит таймлайн фильмов и сериалов Marvel по фазам MCU и по внутренней хронологии событий. Так видно правильный порядок просмотра — по событиям во вселенной, а не только по дате выхода, — а также пересечения линий Sony, Fox и анимации.</p>
   <h2>Порядок чтения комиксов Marvel</h2>
@@ -97,7 +98,7 @@ ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
 </section>
 <section class="seo-content" aria-hidden="false" lang="en">
   <h2>Marvel Multiverse Map: timeline, MCU watch order and character connections</h2>
-  <p>An interactive map of the Marvel universes that brings together the <strong>Marvel Cinematic Universe (MCU) timeline</strong>, an easy way to figure out the <strong>order to watch the movies and shows</strong>, the <strong>Marvel comics reading order</strong>, and a visual graph of <strong>Marvel character connections</strong>. It covers 369 characters, 144 movies and series, 166 comics and 12 universes.</p>
+  <p>An interactive map of the Marvel universes that brings together the <strong>Marvel Cinematic Universe (MCU) timeline</strong>, an easy way to figure out the <strong>order to watch the movies and shows</strong>, the <strong>Marvel comics reading order</strong>, and a visual graph of <strong>Marvel character connections</strong>. It covers 370 characters, 149 movies and series, 166 comics and 12 universes.</p>
   <p>Use the Stories mode for the MCU watch order (by phase or in-universe chronology), the Comics mode for the reading order across 12 lines, and the Characters mode to explore teams, family, allies, enemies and multiverse variants — including the shortest path between any two heroes.</p>
 </section>
 <div id="app">
@@ -177,16 +178,17 @@ ym(110599531, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
   </nav>
 </div>
 
-<script src="data.part1.js?v=20260902c"></script>
-<script src="data.part2.js?v=20260902c"></script>
-<script src="data.part3.js?v=20260902c"></script>
-<script src="data.part4.js?v=20260902c"></script>
-<script src="data.part5.js?v=20260902c"></script>
-<script src="data.part6.js?v=20260902c"></script>
-<script src="data.part7.js?v=20260902c"></script>
-<script src="data.part8.js?v=20260902c"></script>
-<script src="data.loader.js?v=20260902c"></script>
-<script src="app.js?v=20260902c"></script>
+<script defer src="data.part1.js?v=20260930a"></script>
+<script defer src="data.part2.js?v=20260930a"></script>
+<script defer src="data.part3.js?v=20260930a"></script>
+<script defer src="data.part4.js?v=20260930a"></script>
+<script defer src="data.part5.js?v=20260930a"></script>
+<script defer src="data.part6.js?v=20260930a"></script>
+<script defer src="data.part7.js?v=20260930a"></script>
+<script defer src="data.part8.js?v=20260930a"></script>
+<script defer src="data.loader.js?v=20260930a"></script>
+<script defer src="layout.js?v=20260930a"></script>
+<script defer src="app.js?v=20260930a"></script>
 
 </body>
 </html>
