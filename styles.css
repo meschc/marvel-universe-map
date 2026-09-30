@@ -86,7 +86,7 @@
 
   svg.far .node text { display:none; }
   .node.path-on .ring { stroke:#f2c14e !important; stroke-width:4px !important; }
-  .link.path-on { stroke:#f2c14e !important; stroke-width:3px !important; stroke-opacity:1 !important; }
+  .link.path-on { stroke:#f2c14e !important; stroke-width:calc(3px * var(--ls, 1)) !important; stroke-opacity:1 !important; }
   .act-btn { display:inline-block; background:#1c2131; border:1px solid var(--panel-border); border-radius:8px;
     color:var(--text); padding:6px 12px; font-size:12px; cursor:pointer; margin:8px 6px 0 0; }
   .act-btn:hover { border-color:var(--accent); }
