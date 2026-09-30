@@ -1,221 +1,81 @@
-# Marvel Universe Map — Инструкции для Клода
+# Marvel Multiverse Map — инструкции для Claude
 
-## Обзор проекта
+Интерактивная карта мультивселенной Marvel: граф персонажей, таймлайн фильмов/сериалов и каталог комиксов.
+Живой сайт — https://marvel.kirmesch.ru (GitHub Pages из ветки `main`, домен в `CNAME`). Без сборки и без npm-зависимостей: ванильный JS + D3 v7 с cdnjs.
 
-Интерактивная веб-карта Marvel Cinematic Universe (MCU), визуализирующая взаимосвязи между:
-- **360 персонажей** (герои, злодеи, побочные персонажи)
-- **139 фильмов и сериалов** (MCU Phases 1-6, One-shots, Disney+ Series)
-- **65+ комиксов** (разные линии комиксов Marvel)
-- **12 вселенных** (MCU Prime, What If, Sony Marvel, Fox предыдущие версии)
+Сейчас: 370 персонажей · 725 связей · 149 фильмов и сериалов · 166 комиксов · 12 вселенных (числа — из `node scripts/validate-data.js`).
 
-**Файл:** `Marvel_Universe_Map_v6.html` (1259 строк, ~550KB, встраивает все данные)
+## Файлы
 
----
+| Файл | Что внутри |
+|---|---|
+| `index.html` | разметка, SEO-мета, JSON-LD, SEO-тексты (скрыты визуально), аналитика (Clarity + Метрика, грузятся после `load`), подключение скриптов |
+| `styles.css` | все стили; мобильная версия — `@media (max-width: 720px)`; в конце — слой анимаций и «phone performance» |
+| `data.part1-8.js` | данные: один JSON, разрезанный на 8 строк (`window.__DP.push("…")`) |
+| `data.loader.js` | склеивает части → `window.DATA` |
+| `layout.js` | **генерируется** `scripts/build-layout.js`: готовые координаты графа персонажей (`window.LAYOUT.force / .universe`) |
+| `app.js` | вся логика: три режима, D3-граф, фильтры, поиск, карточки, путь между персонажами, мобильный UI |
+| `images/<characters|stories|comics>/<id>.webp` | картинки 420px по высоте; `images/thumbs/…` — те же 160px |
+| `scripts/` | инструменты для данных (ниже) |
 
-## Архитектура
+Все скрипты в `index.html` подключены с `defer` и выполняются по порядку: d3 → data.part1-8 → data.loader → layout → app.
+При изменении `app.js`/`styles.css`/данных поднимай версию `?v=YYYYMMDDx` у всех подключений в `index.html` (иначе GitHub Pages/браузер отдадут старое из кэша).
 
-### Три режима отображения (MODE)
+## Данные (`window.DATA`)
 
-1. **characters** — граф персонажей (Force или Universe layout)
-   - Узлы: персонажи
-   - Ребра: team, family, romantic, ally, enemy, variant
-   - Фильтры: вселенные, группы (Avengers, X-Men и т.д.), типы связей
-   - Подробно: имя, реальное имя, актёр, аффилиации, появления
+```js
+DATA.characters.nodes  // { id, name, name_ru, real_name, real_name_ru, actor, group, universe, image,
+                       //   wiki_url, affiliation[], appearances:{movie[],tv_series[],game[],comic[]},
+                       //   appearance_count, degree }            ← degree/appearance_count — производные
+DATA.characters.edges  // { source, target, type, label? }   type: team|family|romantic|ally|enemy|variant
+DATA.stories.nodes     // { id, title, title_ru, type: movie|tv_series|one_shot, date: 'YYYY-MM-DD'|'TBA',
+                       //   phase: '1'…'7'|netflix|xmen|raimi|webb|sony|animation|spiderverse|other,
+                       //   universe, event_year, event_date_ru/en, poster, characters[], char_count }
+DATA.stories.edges     // { source, target, type: chronology|shared_characters, weight? }
+DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in?, tie_in_chars[]? }
+DATA.comics.edges      // { source, target, type: 'sequence' }
+DATA.comics.line_labels_ru / line_labels_en, DATA.group_labels_ru / group_labels_en
+```
 
-2. **stories** — временная шкала фильмов/сериалов (Phase или Chrono layout)
-   - Узлы: фильмы/сериалы с постерами
-   - Ребра: chronology (хронология), shared_characters (общие персонажи)
-   - Фильтры: фазы MCU, типы (movie/tv_series/one_shot)
-   - Подробно: дата выхода, дата события, персонажи, кнопка "Watched" (отслеживание)
+Сериалы хранятся по сезонам (`…_s1`, `…_s2`). В `appearances` персонажа можно писать и «Show», и «Show Season 2» — `resolveStoryId()` в app.js сводит оба к нужному сезону.
 
-3. **comics** — каталог комиксов (Lines или Chrono layout)
-   - Узлы: комиксы с обложками
-   - Ребра: связи между комиксами
-   - Фильтры: линии комиксов
-   - Подробно: дата, линия, tie-in персонажи
+**Никогда не правь `data.part*.js` руками** — куски нарезаны в произвольных местах, ручная правка ломает JSON. Всё через `scripts/data-io.js`:
 
-### Макеты (LAYOUT)
+```js
+const { readData, writeData, recomputeDerived } = require('./scripts/data-io');
+const DATA = readData();  /* правки */  recomputeDerived(DATA);  writeData(DATA);
+```
 
-- **Characters:**
-  - `force` — Force-directed layout (D3 simulation)
-  - `universe` — Группировка по вселенным (сетка)
+## Порядок работы с данными
 
-- **Stories:**
-  - `phase` — По MCU фазам (горизонтальные полосы)
-  - `chrono` — По хронологии (временная шкала)
+1. Правка через `data-io.js` (новый персонаж — обязательно хотя бы одна связь, иначе остров и «путь не найден»).
+2. `node scripts/fetch-images.js` — докачает картинки для всего, у чего их нет (Fandom API → webp 420/160px, нужен ImageMagick). Страница берётся из `wiki_url`; для тайтлов или неточных ссылок — `--page id=URL`. **Смотри результат глазами**: по одному названию Fandom иногда отдаёт чужую страницу.
+3. `node scripts/build-layout.js` — пересчитать `layout.js` (если менялись персонажи/связи). Силы в скрипте продублированы из `buildCharGraph()` — меняешь в одном месте, меняй и в другом.
+4. `node scripts/validate-data.js` — дубли, битые ссылки, острова в графе, пропавшие картинки, устаревший `layout.js`. Ошибок должно быть 0.
+5. `node scripts/update-counts.js` — обновит числа в SEO-текстах `index.html` (с русскими склонениями). Числа в README правь руками.
+6. Подними `?v=` в `index.html`.
 
-- **Comics:**
-  - `lines` — По линиям комиксов (колонки)
-  - `chrono` — По дате выхода (временная шкала)
+Подписи связей (`label`) переводятся через `EDGE_LABEL_TR` в app.js — новую подпись добавь туда (ru + en), иначе в английской версии она покажется как есть.
 
-### Ключевые данные
+## Как устроен app.js (важное)
 
-**Встроены в HTML:**
-- `charNodes[]` — персонажи (id, name, name_ru, group, universe, image, actor, wiki_url, etc.)
-- `charLinks[]` — связи между персонажами (source, target, type, label, weight)
-- `storyNodes[]` — фильмы/сериалы (id, title, title_ru, type, phase, poster, date, characters[])
-- `storyLinksRaw[]` — хронология/персонажи
-- `comicNodes[]` — комиксы (id, title, title_ru, line, cover, date, tie_in, tie_in_chars[])
-- `comicLinksRaw[]` — связи между комиксами
+- Всё внутри `initApp()`; `LANG`, `MODE`, `*_LAYOUT` — `let` в этой области (функции верхнего уровня получают язык аргументом).
+- Режимы: `buildCharGraph()` (force / universe), `buildStoryGraph()` (phase / chrono), `buildComicsGraph()` (lines / chrono). Переключение режима пересобирает граф.
+- **Производительность на телефоне** (`IS_MOBILE` = ширина ≤ 720px):
+  - позиции графа берутся из `layout.js` (`placeFromLayout()`), симуляция не запускается; если `layout.js` не покрывает всех — старый путь (синхронные тики, ~1–1,5 с фриза);
+  - при отдалении (`svg.lod`, зум < 0.6) аватарки скрыты CSS-ом и не грузятся;
+  - на десктопе force-граф по-прежнему анимируется вживую.
+- `resize` реагирует только на смену ширины (клавиатура и адресная строка на телефоне шлют resize по высоте) и сохраняет выбранный узел.
+- Мобильный UI: одна нижняя шторка `MSheet`, в которую «одалживаются» `#search-wrap`, `#filters`, `#detail-body-wrap`, `#cr-body`. Карточка открывается через MutationObserver на `#detail` (см. комментарий в `setupMobileUI`).
+- Картинки: `thumbUrl()` отдаёт `images/thumbs/…` для узлов графа; в карточке всегда полный файл.
+- Путь между персонажами: `startPath()` → `finishPath()` (BFS по всем связям).
+- Deep-link: `…/#<id>` открывает персонажа/тайтл/комикс при загрузке.
 
-**Словари:**
-- `UNIVERSE_COLORS`, `PHASE_COLORS`, `GROUP_COLORS`, `LINE_COLORS` — цветовые схемы
-- `UNIVERSE_LABELS()`, `PHASE_LABELS()`, `EDGE_LABELS()`, `GROUP_LABELS()`, `MEDIA_LABELS()`, `LINE_LABELS()` — локализованные подписи
-- `EDGE_COLORS` — цвета типов связей
+## Перед релизом
 
----
-
-## Функциональность
-
-### Поиск
-- **searchAll(q)** — Полнотекстовый поиск по персонажам, фильмам, комиксам
-- Поиск по: имя, реальное имя, актёр (персонажи); название (фильмы, комиксы)
-- Результаты сгруппированы по типам, приоритет — текущий режим
-
-### Фильтры
-- **renderFilters()** — Динамическое отображение фильтров в левой панели
-- **updateVisibilityChar()**, **updateVisibilityStory()**, **updateVisibilityComics()** — Скрытие узлов/ребер
-
-**Active Sets:**
-- `activeGroups`, `activeUniverses`, `activeEdgeTypesChar` (characters)
-- `activePhases`, `activeStoryTypes`, `activeEdgeTypesStory` (stories)
-- `activeComicLines` (comics)
-
-### Детальная панель
-- **showCharDetail(d)** — Информация о персонаже
-- **showStoryDetail(d)** — Информация о фильме (+ кнопка "Watched")
-- **showComicDetail(d)** — Информация о комиксе
-- Клики на теги-ссылки переключают режимы и открывают связанные узлы
-
-### Просмотренные фильмы
-- **watched** (Set) — ID просмотренных фильмов
-- **saveWatched()** — localStorage (ключ: 'watched')
-- Бейджик ✓ на узлах, счётчик в title bar
-
-### Путь между персонажами (Path mode)
-- **startPath(id)** — Начать поиск пути
-- **finishPath(node)** — Завершить, показать кратчайший путь
-- **clearPath()** — Отменить
-- Выделение: узлы жёлтые (#f2c14e), ребра жирные
-
-### Масштабирование & навигация
-- **d3.zoom** — Зум и панорамирование мышью
-- **focusNode(d)** — Плавный zoom на узел (1.4x)
-- **fitViewToNodes()** — Fit to view
-- Drag-and-drop узлов (characters mode с force layout)
-
-### Локализация
-- **LANG** ('ru' или 'en')
-- **UI()** — Объект с локализованными строками
-- `name_ru`, `title_ru`, `real_name_ru` в данных
-- Кнопка в top bar
-
----
-
-## Когда разрабатывать
-
-### Добавить персонажа
-1. Добавить объект в `charNodes` (после строки ~100):
-   ```js
-   { id: 'char_name', name: 'Name', name_ru: 'Имя', group: 'Avengers', universe: 'mcu_prime', 
-     image: 'url', actor: 'Actor Name', real_name: 'Real', wiki_url: 'url' }
-   ```
-2. Если нужны связи — добавить в `charLinks` (source/target по id, type, label)
-3. Перестроить граф: `buildCharGraph()`
-
-### Добавить фильм/сериал
-1. Добавить в `storyNodes` (~line 150):
-   ```js
-   { id: 'story_slug', title: 'Title', title_ru: 'Название', type: 'movie', 
-     phase: 'phase1', poster: 'url', date: '2021-06-11', characters: ['char_id1', 'char_id2'] }
-   ```
-2. Если есть хронологическая связь — добавить в `storyLinksRaw`
-3. Перестроить: `buildStoryGraph()`
-
-### Добавить комикс
-1. Добавить в `comicNodes` (~line 200):
-   ```js
-   { id: 'comic_id', title: 'Title', title_ru: 'Название', line: 'main', 
-     cover: 'url', date: '2020-01-15', tie_in: 'story_id', tie_in_chars: ['char_id'] }
-   ```
-2. Перестроить: `buildComicsGraph()`
-
-### Обновить локализацию
-1. Найти **UI()** функцию (строка ~150):
-   ```js
-   if (LANG === 'ru') return { app_title: '...', ... }
-   else return { app_title: '...', ... }
-   ```
-2. Добавить/изменить ключи в обе версии
-
-### Обновить цвета
-- `UNIVERSE_COLORS` — {universe_key: '#hex'}
-- `PHASE_COLORS` — {phase_key: '#hex'}
-- `GROUP_COLORS` — {group_key: '#hex'}
-- `LINE_COLORS` — {line_key: '#hex'}
-- `EDGE_COLORS` — {type: '#hex'} (team, family, romantic, etc.)
-
----
-
-## Производительность & советы
-
-### Оптимизация
-- **1259 строк** — файл встроенный, чтобы не было запросов
-- **Lazy loading изображений** — `runLazyPatterns()` на постерах/обложках
-- **Reduced motion** — уважение к `prefers-reduced-motion`
-- **Дроссельное обновление** на resize (debounce 250ms)
-
-### Визуализация D3
-- **Force simulation** — 300 nodes, 500+ links — быстро на modern браузерах
-- **Дашпат ребер** — типы связей визуально различаются (сплошные/пунктирные)
-- **Опакова градиента** — фон с radial-gradient для глубины
-- **Paint order** — text with stroke для читаемости на изображениях
-
-### Адаптивность
-- **Мобильная** — `max-width: 720px`
-  - Фильтры скрываются за кнопку
-  - Уменьшены отступы
-  - Detail panel занимает больше экрана
-- **Тёмный режим** — CSS variables (--bg, --panel, --text, --accent)
-
----
-
-## Типичные задачи
-
-**«Добавить персонажа Петра Паркера»**
-→ Найти массив `charNodes`, добавить объект, установить `group: 'Avengers'`, `universe: 'mcu_prime'`, связь с Tony Stark в `charLinks`
-
-**«Отметить фильм как просмотренный»**
-→ Клик на кнопку "Watched" в detail panel → вызовет `watched.add(d.id)` и сохранит в localStorage
-
-**«Изменить цвет фазы»**
-→ Найти `PHASE_COLORS`, отредактировать HEX для нужной фазы
-
-**«Добавить новую линию комиксов»**
-→ Добавить ключ в `LINE_LABELS_RU`, `LINE_COLORS`, комиксы с этой линией в `comicNodes`, перестроить
-
-**«Исправить опечатку в русском переводе»**
-→ Найти узел в `charNodes`/`storyNodes`/`comicNodes`, обновить `name_ru`/`title_ru`
-
----
-
-## Ссылки
-
-- **MCU Fandom Wiki:** https://marvelcinematicuniverse.fandom.com/
-- **Marvel Official:** https://www.marvel.com/
-- **Marvel Films Fandom:** https://marvel.fandom.com/wiki/Marvel_Films
-- **D3.js Docs:** https://d3js.org/
-
----
-
-## Контрольный список перед релизом
-
-- [ ] Все персонажи/фильмы в текущем MCU canon добавлены
-- [ ] Изображения (постеры, обложки) загружаются быстро (оптимизированы)
-- [ ] Поиск находит все типы узлов
-- [ ] Фильтры работают (группировка, скрытие правильные)
-- [ ] Русский & English локализация согласованы
-- [ ] Мобильный дизайн (720px) тестирован
-- [ ] Performance: no jank при zoom/pan с 300+ узлами
-- [ ] Path finding между персонажами корректно
-
+- [ ] `node scripts/validate-data.js` — 0 ошибок
+- [ ] `layout.js` пересобран, если менялись персонажи/связи
+- [ ] `node scripts/update-counts.js`; числа в README
+- [ ] версия `?v=` поднята во всех подключениях `index.html`
+- [ ] проверено на ширине 390px: главный экран, карточка, путь, «Истории», «Комиксы», «По вселенным»
+- [ ] RU и EN: новые подписи есть в `EDGE_LABEL_TR`, у новых узлов заполнены `name_ru`/`title_ru`

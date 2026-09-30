@@ -423,3 +423,14 @@
     animation-duration:0.001ms !important; animation-iteration-count:1 !important;
     transition-duration:0.001ms !important; scroll-behavior:auto !important; }
 }
+
+/* ===== phone performance =====
+   Zoomed out, the character avatars are 2–10 px on screen: unrecognisable as photos, but
+   ~350 <foreignObject> layers to repaint on every pan/zoom frame. Hide them until the user
+   zooms in (app.js toggles svg.lod below 0.6×); the coloured node circles carry the
+   group/universe colours meanwhile. Lazy <img>s inside display:none aren't fetched either.
+   The opacity transitions on .node/.link animate 1 100+ elements per tap — instant on phones. */
+@media (max-width: 720px) {
+  svg.lod .node foreignObject { display:none; }
+  .node, .link { transition:none; }
+}

@@ -34,8 +34,8 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 
 |  |  |
 |:--:|:--:|
-| **369** characters | **717** connections |
-| **144** movies & series | **166** comics |
+| **370** characters | **725** connections |
+| **149** movies & series | **166** comics |
 | **12** universes | **RU / EN** |
 
 </div>
@@ -55,9 +55,9 @@ I built a single-page, zero-dependency web app that lays out the whole Marvel un
 
 ## 🎬 The three modes
 
-**Characters.** A D3 force simulation of 369 heroes and 717 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
+**Characters.** A D3 force simulation of 370 heroes and 725 links, typed as team, family, romantic, ally, enemy and multiverse-variant. Node size = number of connections, ring colour = universe, fill = photo.
 
-**Stories.** 144 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how the Sony, Fox and animation lines interleave. This is the watch-order view.
+**Stories.** 149 films and series on a timeline — grouped by MCU phase or by in-universe chronology, with universe bands showing how the Sony, Fox and animation lines interleave. This is the watch-order view.
 
 **Comics.** 166 key issues in 12 lines (Spider-Man, X-Men, Iron Man, Thor, Captain America, Avengers, Cosmic, Street-Level, plus movie preludes, adaptations, first appearances and classic events), viewable by line or on a shared release-year timeline.
 
@@ -68,6 +68,8 @@ index.html    markup, meta, structured data, script/style includes
 styles.css    all styles and the dark theme
 data.part1-8.js  the data (window.DATA), split into chunks
 data.loader.js   joins the chunks into one object at load time
+layout.js     precomputed graph positions (generated — scripts/build-layout.js)
+scripts/      data tools: edit, validate, fetch images, rebuild layout, update counts
 app.js        all logic — D3 graph, modes, search, filters, cards, mobile UI
 social-banner-en.png / social-banner-ru.png  social preview (1200×630)  ·  preview-graph.png  README preview
 ```
@@ -81,11 +83,11 @@ DATA.stories.nodes     // { id, title, title_ru, type, phase, date, poster, char
 DATA.comics.nodes      // { id, title, title_ru, line, date, cover, tie_in, tie_in_chars[] }
 ```
 
-To add a character I drop an object into `DATA.characters.nodes`, add at least one edge to `DATA.characters.edges`, and refresh — the graph recomputes itself.
+The chunks are cut at arbitrary offsets, so I never edit them by hand — `scripts/data-io.js` reads and writes them. To add a character: add the node and at least one edge through `readData()` / `writeData()`, then run `node scripts/fetch-images.js` (picture), `node scripts/build-layout.js` (graph positions) and `node scripts/validate-data.js` (checks for broken links, duplicates, islands, missing images).
 
 ## 🤝 Contributing
 
-I welcome contributions — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates in [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Data changes only touch `data.part*.js`, so they're easy to review.
+I welcome contributions — new characters, connections, titles or fixes. Open a pull request, or file an issue with one of the ready-made templates in [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE). Data changes touch `data.part*.js` (plus `layout.js` and images), and `scripts/validate-data.js` checks them.
 
 ## 📄 License & credits
 
